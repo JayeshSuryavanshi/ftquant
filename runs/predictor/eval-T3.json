@@ -1,0 +1,89 @@
+{
+ "nsr_model": {
+  "n": 7,
+  "mae": 0.15373931031780957,
+  "safe_agreement": 0.8571428571428571
+ },
+ "kld_only": {
+  "n": 7,
+  "mae": 0.1107696596627122,
+  "safe_agreement": 0.7142857142857143
+ },
+ "bits_only": {
+  "n": 7,
+  "mae": 0.0980445273295424,
+  "safe_agreement": 0.7142857142857143
+ },
+ "points": [
+  {
+   "config": "q17-lora-lowlr",
+   "variant": "gguf-Q2_K",
+   "nsr": 14.295408223874325,
+   "kld": 2.785703,
+   "retention": 0.0,
+   "predicted": 6.716431434585923e-05,
+   "predicted_kld_only": 0.22051636132375743,
+   "predicted_bits_only": 0.2980740316680594
+  },
+  {
+   "config": "q17-lora-lowlr",
+   "variant": "gguf-Q3_K_M",
+   "nsr": 7.3031985233792565,
+   "kld": 0.489327,
+   "retention": 1.1413133832086453,
+   "predicted": 0.2999916856284677,
+   "predicted_kld_only": 0.7496259071725652,
+   "predicted_bits_only": 0.848954594285264
+  },
+  {
+   "config": "q17-lora-lowlr",
+   "variant": "gguf-Q4_K_M",
+   "nsr": 6.469440089366865,
+   "kld": 0.108205,
+   "retention": 1.0191188694929343,
+   "predicted": 0.9832551225004099,
+   "predicted_kld_only": 0.958655739226924,
+   "predicted_bits_only": 0.937119181059856
+  },
+  {
+   "config": "q17-lora-lowlr",
+   "variant": "gguf-Q6_K",
+   "nsr": 2.2116575143743056,
+   "kld": 0.012789,
+   "retention": 1.0432252701579385,
+   "predicted": 0.999999914483714,
+   "predicted_kld_only": 0.9976249288906448,
+   "predicted_bits_only": 1.0
+  },
+  {
+   "config": "q17-lora-lowlr",
+   "variant": "mlx-q3",
+   "nsr": 7.586212584749422,
+   "kld": 1.0751864910125732,
+   "retention": 0.35619834710743803,
+   "predicted": 0.036701351365264714,
+   "predicted_kld_only": 0.5071863452512599,
+   "predicted_bits_only": 0.38300110496359124
+  },
+  {
+   "config": "q17-lora-lowlr",
+   "variant": "mlx-q4",
+   "nsr": 5.2746991670312315,
+   "kld": 0.2275826260447502,
+   "retention": 1.1157024793388433,
+   "predicted": 0.960142664225838,
+   "predicted_kld_only": 0.8942636092682064,
+   "predicted_bits_only": 0.8524913228722957
+  },
+  {
+   "config": "q17-lora-lowlr",
+   "variant": "mlx-q6",
+   "nsr": 2.3839806040528595,
+   "kld": 0.01898940186947584,
+   "retention": 1.0132231404958678,
+   "predicted": 0.9999996009934224,
+   "predicted_kld_only": 0.9959465572702536,
+   "predicted_bits_only": 1.0
+  }
+ ]
+}

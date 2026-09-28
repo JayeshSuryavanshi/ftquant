@@ -1,0 +1,175 @@
+{
+ "model": "Qwen/Qwen3-0.6B",
+ "params": 751632384,
+ "bpw": {
+  "bf16": 16.065,
+  "Q8_0": 8.565,
+  "Q6_K": 6.628,
+  "Q4_K_M": 5.154,
+  "Q3_K_M": 4.406,
+  "Q2_K": 3.696
+ },
+ "configs": {
+  "q06-lora-lr3e-6": {
+   "delta_norm": 4.030548178771347,
+   "Q8_0": {
+    "signal_retained": 0.9999157736294774,
+    "noise_to_signal": 0.9992649419318613
+   },
+   "Q6_K": {
+    "signal_retained": 1.0000161471943074,
+    "noise_to_signal": 2.580197403300696
+   },
+   "Q4_K_M": {
+    "signal_retained": 0.9978543881547373,
+    "noise_to_signal": 7.632198445272769
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.9939149825102874,
+    "noise_to_signal": 8.318110174459349
+   },
+   "Q2_K": {
+    "signal_retained": 0.9864599576209198,
+    "noise_to_signal": 16.137156813819484
+   }
+  },
+  "q06-lora-lr3e-5": {
+   "delta_norm": 25.185245626008005,
+   "Q8_0": {
+    "signal_retained": 1.0000648644472128,
+    "noise_to_signal": 0.18301050455744178
+   },
+   "Q6_K": {
+    "signal_retained": 0.9999548299051069,
+    "noise_to_signal": 0.5957172486785962
+   },
+   "Q4_K_M": {
+    "signal_retained": 0.9976373965896387,
+    "noise_to_signal": 1.977793020319467
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.9946366840232351,
+    "noise_to_signal": 2.73056220559582
+   },
+   "Q2_K": {
+    "signal_retained": 0.9861332956337022,
+    "noise_to_signal": 5.155299477637188
+   }
+  },
+  "q06-lora-lr3e-4": {
+   "delta_norm": 335.51599405883337,
+   "Q8_0": {
+    "signal_retained": 1.0000069415566155,
+    "noise_to_signal": 0.015115225056377371
+   },
+   "Q6_K": {
+    "signal_retained": 0.9999468137501081,
+    "noise_to_signal": 0.04874998556098885
+   },
+   "Q4_K_M": {
+    "signal_retained": 0.9977652633677749,
+    "noise_to_signal": 0.1832086219759511
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.9958445446421775,
+    "noise_to_signal": 0.34948541990216864
+   },
+   "Q2_K": {
+    "signal_retained": 0.9872264305678982,
+    "noise_to_signal": 0.682525740315842
+   }
+  },
+  "q06-full-lr3e-6": {
+   "delta_norm": 1.0380158683333045,
+   "Q8_0": {
+    "signal_retained": 1.002091907846502,
+    "noise_to_signal": 1.3400488547853153
+   },
+   "Q6_K": {
+    "signal_retained": 0.9525566079092952,
+    "noise_to_signal": 2.948614478042052
+   },
+   "Q4_K_M": {
+    "signal_retained": 0.9956229979409906,
+    "noise_to_signal": 11.877587685994198
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.5021490469448877,
+    "noise_to_signal": 8.320282031101726
+   },
+   "Q2_K": {
+    "signal_retained": 0.7823008560855783,
+    "noise_to_signal": 15.167529313398969
+   }
+  },
+  "q06-full-lr3e-5": {
+   "delta_norm": 18.625494969594666,
+   "Q8_0": {
+    "signal_retained": 1.0000696110456793,
+    "noise_to_signal": 0.22003835350046588
+   },
+   "Q6_K": {
+    "signal_retained": 1.0001030169526302,
+    "noise_to_signal": 0.754942014928166
+   },
+   "Q4_K_M": {
+    "signal_retained": 0.9997618259587504,
+    "noise_to_signal": 2.379258532037883
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.983522402379747,
+    "noise_to_signal": 2.985542185057803
+   },
+   "Q2_K": {
+    "signal_retained": 0.9944259115133351,
+    "noise_to_signal": 5.292393201835636
+   }
+  },
+  "q06-lora-lowlr-s1": {
+   "delta_norm": 9.639956139650474,
+   "Q8_0": {
+    "signal_retained": 1.0000398914867985,
+    "noise_to_signal": 0.4693276043020854
+   },
+   "Q6_K": {
+    "signal_retained": 0.9998761614005538,
+    "noise_to_signal": 1.3869247554321444
+   },
+   "Q4_K_M": {
+    "signal_retained": 0.997360752826914,
+    "noise_to_signal": 4.120969973406586
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.9941588780174401,
+    "noise_to_signal": 4.998576492679486
+   },
+   "Q2_K": {
+    "signal_retained": 0.9849117547090124,
+    "noise_to_signal": 9.74629366665019
+   }
+  },
+  "q06-lora-s1": {
+   "delta_norm": 88.56236943334244,
+   "Q8_0": {
+    "signal_retained": 1.0000869316474443,
+    "noise_to_signal": 0.05191487520367337
+   },
+   "Q6_K": {
+    "signal_retained": 1.0000107757642012,
+    "noise_to_signal": 0.17308618615167606
+   },
+   "Q4_K_M": {
+    "signal_retained": 0.9977251962101321,
+    "noise_to_signal": 0.6443944914137458
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.9954872536001833,
+    "noise_to_signal": 1.116721256962028
+   },
+   "Q2_K": {
+    "signal_retained": 0.9865378868939843,
+    "noise_to_signal": 2.0446158680663302
+   }
+  }
+ }
+}

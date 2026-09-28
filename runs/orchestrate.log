@@ -1,0 +1,68 @@
+2026-09-27 18:02:59 orchestrator waiting for week-1 sweep
+2026-09-27 23:33:18 week-1 sweep complete
+2026-09-27 23:33:18 start kld Qwen3-0.6B
+2026-09-27 23:35:13 done kld Qwen3-0.6B (115s)
+2026-09-27 23:35:13 start kld Qwen3-1.7B
+2026-09-27 23:39:30 done kld Qwen3-1.7B (257s)
+2026-09-27 23:39:30 start mechanism mlx q17
+2026-09-27 23:41:13 done mechanism mlx q17 (103s)
+2026-09-27 23:41:13 start mechanism gguf q17
+2026-09-27 23:47:59 done mechanism gguf q17 (406s)
+2026-09-27 23:47:59 start analysis week1
+2026-09-27 23:48:08 done analysis week1 (9s)
+2026-09-27 23:48:08 start predictor fit (frozen)
+2026-09-27 23:48:08 FAILED predictor fit (frozen) after 1s
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/jayeshsuryavanshi/github-updates/ftquant/src/ftquant/predictor.py", line 167, in <module>
+    main()
+    ~~~~^^
+  File "/Users/jayeshsuryavanshi/github-updates/ftquant/src/ftquant/predictor.py", line 135, in main
+    Path(args.out).write_text(json.dumps(res, indent=1))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jayeshsuryavanshi/miniconda3/lib/python3.13/pathlib/_local.py", line 555, in write_text
+    return PathBase.write_text(self, data, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jayeshsuryavanshi/miniconda3/lib/python3.13/pathlib/_abc.py", line 651, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jayeshsuryavanshi/miniconda3/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/jayeshsuryavanshi/github-updates/ftquant/runs/predictor/predictor-v1.json'
+
+2026-09-27 23:48:34 orchestrator waiting for week-1 sweep
+2026-09-27 23:48:34 week-1 sweep complete
+2026-09-27 23:48:34 skip kld Qwen3-0.6B (exists)
+2026-09-27 23:48:34 skip kld Qwen3-1.7B (exists)
+2026-09-27 23:48:34 skip mechanism mlx q17 (exists)
+2026-09-27 23:48:34 skip mechanism gguf q17 (exists)
+2026-09-27 23:48:34 skip analysis week1 (exists)
+2026-09-27 23:48:34 start predictor fit (frozen)
+2026-09-27 23:48:35 done predictor fit (frozen) (1s)
+2026-09-27 23:48:35 predictor frozen sha256 5df7d6205785b620ebb353c9d025ddb93b7ea0921da6e5cbf987bb08fa9c22af
+2026-09-27 23:48:35 start week2 sweep
+2026-09-28 08:01:11 done week2 sweep (29557s)
+2026-09-28 08:01:11 start mechanism mlx week2 q06
+2026-09-28 08:04:40 done mechanism mlx week2 q06 (209s)
+2026-09-28 08:04:40 start mechanism gguf week2 q06
+2026-09-28 08:14:53 done mechanism gguf week2 q06 (613s)
+2026-09-28 08:14:53 start mechanism mlx week2 q17
+2026-09-28 08:16:30 done mechanism mlx week2 q17 (97s)
+2026-09-28 08:16:30 start mechanism gguf week2 q17
+2026-09-28 08:21:51 done mechanism gguf week2 q17 (321s)
+2026-09-28 08:21:51 start analysis all
+2026-09-28 08:22:10 done analysis all (19s)
+2026-09-28 08:22:10 start predictor eval T1
+2026-09-28 08:22:10 done predictor eval T1 (0s)
+2026-09-28 08:22:10 start predictor eval T2
+2026-09-28 08:22:10 done predictor eval T2 (0s)
+2026-09-28 08:22:10 start predictor eval T3
+2026-09-28 08:22:10 done predictor eval T3 (0s)
+2026-09-28 08:22:10 orchestrator complete
+2026-09-28 08:46:19 week-3 orchestrator start
+2026-09-28 08:46:19 start kld olmo
+2026-09-28 08:48:26 done kld olmo (127s)
+2026-09-28 08:48:26 start sweep week3

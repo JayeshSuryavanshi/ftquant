@@ -1,0 +1,24 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.DS_Store
+
+# datasets and the pinned llama.cpp converter are fetched by scripts/, never committed
+data/
+vendor/
+
+# run outputs: keep only small result and provenance files
+runs/**
+!runs/**/
+!runs/analysis-all.json
+!runs/orchestrate.log
+!runs/predictor/*.json
+!runs/predictor/*.sha256
+!runs/kld/*.json
+!runs/bpw/*.json
+!runs/week*/*.json
+!runs/week*/*.sha256
+!runs/week*/sweep.log
+!runs/week*/verdicts.txt

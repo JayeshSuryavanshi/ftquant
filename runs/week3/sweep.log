@@ -1,0 +1,7 @@
+2026-09-28 08:48:27 sweep start: ['olmo1-base', 'olmo1-lora-lowlr', 'olmo1-lora', 'mas06-base', 'mas06-lora-lowlr', 'mas06-lora', 'mas06-full']
+2026-09-28 08:54:27 eval olmo1-base/mlx-bf16: acc 0.1451 n=3080 (360s)
+2026-09-28 08:59:01 eval olmo1-base/mlx-q6: acc 0.1370 n=3080 (269s)
+2026-09-28 09:03:06 eval olmo1-base/mlx-q4: acc 0.1461 n=3080 (242s)
+2026-09-28 09:07:27 eval olmo1-base/mlx-q3: acc 0.0679 n=3080 (257s)
+2026-09-28 09:14:14 eval olmo1-base/gguf-bf16: acc 0.1464 n=3080 (388s)
+2026-09-28 09:18:25 eval olmo1-base/gguf-Q6_K: acc 0.1484 n=3080 (242s)

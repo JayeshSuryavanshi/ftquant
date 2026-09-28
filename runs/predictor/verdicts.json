@@ -1,0 +1,217 @@
+{
+ "dropped_undefined_R": [
+  [
+   "q06-lora-lr3e-4",
+   "gguf-Q2_K"
+  ],
+  [
+   "q06-lora-lr3e-4",
+   "gguf-Q3_K_M"
+  ],
+  [
+   "q06-lora-lr3e-4",
+   "gguf-Q4_K_M"
+  ],
+  [
+   "q06-lora-lr3e-4",
+   "gguf-Q6_K"
+  ],
+  [
+   "q06-lora-lr3e-4",
+   "mlx-q3"
+  ],
+  [
+   "q06-lora-lr3e-4",
+   "mlx-q4"
+  ],
+  [
+   "q06-lora-lr3e-4",
+   "mlx-q6"
+  ]
+ ],
+ "T2": {
+  "nsr_model": {
+   "n": 42,
+   "mae": 0.10653077551033065,
+   "safe_agreement": 0.8809523809523809,
+   "mae_ci_config_bootstrap": [
+    0.04844755409400933,
+    0.18196851834902844
+   ]
+  },
+  "kld_only": {
+   "n": 42,
+   "mae": 0.16951951750969899,
+   "safe_agreement": 0.7857142857142857,
+   "mae_ci_config_bootstrap": [
+    0.11713600577389267,
+    0.22282602482991357
+   ]
+  },
+  "bits_only": {
+   "n": 42,
+   "mae": 0.17330897761248168,
+   "safe_agreement": 0.7857142857142857,
+   "mae_ci_config_bootstrap": [
+    0.12703315445712415,
+    0.22427652676536433
+   ]
+  }
+ },
+ "T1+T3": {
+  "nsr_model": {
+   "n": 17,
+   "mae": 0.10266733550511198,
+   "safe_agreement": 0.8823529411764706,
+   "mae_ci_config_bootstrap": [
+    0.06691695313622366,
+    0.15373931031780957
+   ]
+  },
+  "kld_only": {
+   "n": 17,
+   "mae": 0.146644657622994,
+   "safe_agreement": 0.6470588235294118,
+   "mae_ci_config_bootstrap": [
+    0.1107696596627122,
+    0.1717571561951913
+   ]
+  },
+  "bits_only": {
+   "n": 17,
+   "mae": 0.14011199040308725,
+   "safe_agreement": 0.6470588235294118,
+   "mae_ci_config_bootstrap": [
+    0.09804452732954241,
+    0.16955921455456863
+   ]
+  }
+ },
+ "T1": {
+  "nsr_model": {
+   "n": 10,
+   "mae": 0.06691695313622364,
+   "safe_agreement": 0.9,
+   "mae_ci_config_bootstrap": [
+    0.06691695313622364,
+    0.06691695313622364
+   ]
+  },
+  "kld_only": {
+   "n": 10,
+   "mae": 0.17175715619519133,
+   "safe_agreement": 0.6,
+   "mae_ci_config_bootstrap": [
+    0.17175715619519133,
+    0.17175715619519133
+   ]
+  },
+  "bits_only": {
+   "n": 10,
+   "mae": 0.16955921455456863,
+   "safe_agreement": 0.6,
+   "mae_ci_config_bootstrap": [
+    0.16955921455456863,
+    0.16955921455456863
+   ]
+  }
+ },
+ "T3": {
+  "nsr_model": {
+   "n": 7,
+   "mae": 0.15373931031780957,
+   "safe_agreement": 0.8571428571428571,
+   "mae_ci_config_bootstrap": [
+    0.15373931031780957,
+    0.15373931031780957
+   ]
+  },
+  "kld_only": {
+   "n": 7,
+   "mae": 0.1107696596627122,
+   "safe_agreement": 0.7142857142857143,
+   "mae_ci_config_bootstrap": [
+    0.1107696596627122,
+    0.1107696596627122
+   ]
+  },
+  "bits_only": {
+   "n": 7,
+   "mae": 0.0980445273295424,
+   "safe_agreement": 0.7142857142857143,
+   "mae_ci_config_bootstrap": [
+    0.0980445273295424,
+    0.0980445273295424
+   ]
+  }
+ },
+ "P1": "not met",
+ "P2": "met",
+ "P3": "met",
+ "largest_errors": [
+  {
+   "config": "q06-full-lr3e-6",
+   "variant": "mlx-q3",
+   "nsr": 2.156798355008859,
+   "kld": 1.206734448671341,
+   "retention": 0.0,
+   "predicted": 0.9762663548709662
+  },
+  {
+   "config": "q06-full-lr3e-5",
+   "variant": "gguf-Q2_K",
+   "nsr": 5.292393201835636,
+   "kld": 2.765845,
+   "retention": 0.8855911919578746,
+   "predicted": 0.021553350051474882
+  },
+  {
+   "config": "q17-lora-lowlr",
+   "variant": "gguf-Q3_K_M",
+   "nsr": 7.3031985233792565,
+   "kld": 0.489327,
+   "retention": 1.1413133832086453,
+   "predicted": 0.2999916856284677
+  },
+  {
+   "config": "q06-full-lr3e-6",
+   "variant": "mlx-q4",
+   "nsr": 4.950889739362179,
+   "kld": 0.25505863316357136,
+   "retention": 0.27430910951893556,
+   "predicted": 0.9619991778022379
+  },
+  {
+   "config": "q17-lora",
+   "variant": "gguf-Q2_K",
+   "nsr": 3.0270668719590343,
+   "kld": 2.785703,
+   "retention": 1.7778801843317973,
+   "predicted": 0.356704145227782
+  },
+  {
+   "config": "q17-lora-lowlr",
+   "variant": "mlx-q3",
+   "nsr": 7.586212584749422,
+   "kld": 1.0751864910125732,
+   "retention": 0.35619834710743803,
+   "predicted": 0.036701351365264714
+  },
+  {
+   "config": "q06-lora-lr3e-6",
+   "variant": "gguf-Q3_K_M",
+   "nsr": 8.318110174459349,
+   "kld": 0.441442,
+   "retention": 0.44567841622404636,
+   "predicted": 0.21155301160989268
+  },
+  {
+   "config": "q06-full-lr3e-6",
+   "variant": "gguf-Q4_K_M",
+   "nsr": 11.877587685994198,
+   "kld": 0.103895,
+   "retention": 0.8813905930470347,
+   "predicted": 0.6584945277968937
+  }
+ ]
+}

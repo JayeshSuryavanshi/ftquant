@@ -1,0 +1,83 @@
+{
+ "model": "Qwen/Qwen3-0.6B",
+ "params": 751632384,
+ "bpw": {
+  "bf16": 16.065,
+  "Q8_0": 8.565,
+  "Q6_K": 6.628,
+  "Q4_K_M": 5.154,
+  "Q3_K_M": 4.406,
+  "Q2_K": 3.696
+ },
+ "configs": {
+  "q06-lora": {
+   "delta_norm": 87.10502936912178,
+   "Q8_0": {
+    "signal_retained": 1.0000832365266077,
+    "noise_to_signal": 0.05279090396583664
+   },
+   "Q6_K": {
+    "signal_retained": 1.000010938874172,
+    "noise_to_signal": 0.17597261542299644
+   },
+   "Q4_K_M": {
+    "signal_retained": 0.99771012854577,
+    "noise_to_signal": 0.6550566601535722
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.995408783516229,
+    "noise_to_signal": 1.1347532095240551
+   },
+   "Q2_K": {
+    "signal_retained": 0.9863263337540811,
+    "noise_to_signal": 2.0752832669194268
+   }
+  },
+  "q06-lora-lowlr": {
+   "delta_norm": 9.470496619316135,
+   "Q8_0": {
+    "signal_retained": 1.0000482514200637,
+    "noise_to_signal": 0.4772211197288432
+   },
+   "Q6_K": {
+    "signal_retained": 0.9999639602134592,
+    "noise_to_signal": 1.4052292368208583
+   },
+   "Q4_K_M": {
+    "signal_retained": 0.9977267868587024,
+    "noise_to_signal": 4.172308845992663
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.9937775702958999,
+    "noise_to_signal": 5.050727972374312
+   },
+   "Q2_K": {
+    "signal_retained": 0.9870852580269933,
+    "noise_to_signal": 9.851638682081362
+   }
+  },
+  "q06-full": {
+   "delta_norm": 4.286239605744592,
+   "Q8_0": {
+    "signal_retained": 1.0000167138586553,
+    "noise_to_signal": 0.6703892424976753
+   },
+   "Q6_K": {
+    "signal_retained": 1.0007011330586297,
+    "noise_to_signal": 1.8224905264065459
+   },
+   "Q4_K_M": {
+    "signal_retained": 1.0013114584844534,
+    "noise_to_signal": 5.945430896027859
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.8806591271921786,
+    "noise_to_signal": 5.781722614527925
+   },
+   "Q2_K": {
+    "signal_retained": 0.9889169179935576,
+    "noise_to_signal": 9.743205442189806
+   }
+  }
+ }
+}

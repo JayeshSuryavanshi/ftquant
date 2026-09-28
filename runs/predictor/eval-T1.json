@@ -1,0 +1,119 @@
+{
+ "nsr_model": {
+  "n": 10,
+  "mae": 0.06691695313622364,
+  "safe_agreement": 0.9
+ },
+ "kld_only": {
+  "n": 10,
+  "mae": 0.17175715619519133,
+  "safe_agreement": 0.6
+ },
+ "bits_only": {
+  "n": 10,
+  "mae": 0.16955921455456863,
+  "safe_agreement": 0.6
+ },
+ "points": [
+  {
+   "config": "q17-lora",
+   "variant": "gguf-Q2_K",
+   "nsr": 3.0270668719590343,
+   "kld": 2.785703,
+   "retention": 1.7778801843317973,
+   "predicted": 0.356704145227782,
+   "predicted_kld_only": 0.22051636132375743,
+   "predicted_bits_only": 0.2980740316680594
+  },
+  {
+   "config": "q17-lora",
+   "variant": "gguf-Q3_K_M",
+   "nsr": 1.6564617448471732,
+   "kld": 0.489327,
+   "retention": 1.7465437788018436,
+   "predicted": 0.9995788290499743,
+   "predicted_kld_only": 0.7496259071725652,
+   "predicted_bits_only": 0.848954594285264
+  },
+  {
+   "config": "q17-lora",
+   "variant": "gguf-Q4_K_M",
+   "nsr": 1.040781060382756,
+   "kld": 0.108205,
+   "retention": 1.1142857142857143,
+   "predicted": 0.9999995819749805,
+   "predicted_kld_only": 0.958655739226924,
+   "predicted_bits_only": 0.937119181059856
+  },
+  {
+   "config": "q17-lora",
+   "variant": "gguf-Q6_K",
+   "nsr": 0.2882701473339401,
+   "kld": 0.012789,
+   "retention": 1.072811059907834,
+   "predicted": 0.999999999999382,
+   "predicted_kld_only": 0.9976249288906448,
+   "predicted_bits_only": 1.0
+  },
+  {
+   "config": "q17-lora",
+   "variant": "gguf-Q8_0",
+   "nsr": 0.08630465041705883,
+   "kld": 0.001624,
+   "retention": 1.0110599078341016,
+   "predicted": 1.0,
+   "predicted_kld_only": 0.9998551653993085,
+   "predicted_bits_only": 1.0
+  },
+  {
+   "config": "q17-lora",
+   "variant": "mlx-q2",
+   "nsr": 3.208921484624044,
+   "kld": 11.275263786315918,
+   "retention": 0.0,
+   "predicted": 0.007886563214662778,
+   "predicted_kld_only": 0.04072977887329006,
+   "predicted_bits_only": 0.0
+  },
+  {
+   "config": "q17-lora",
+   "variant": "mlx-q3",
+   "nsr": 2.1621812999799066,
+   "kld": 1.0751864910125732,
+   "retention": 1.632783882783883,
+   "predicted": 0.9824471581146974,
+   "predicted_kld_only": 0.5071863452512599,
+   "predicted_bits_only": 0.38300110496359124
+  },
+  {
+   "config": "q17-lora",
+   "variant": "mlx-q4",
+   "nsr": 1.3097192171444452,
+   "kld": 0.2275826260447502,
+   "retention": 1.2454212454212457,
+   "predicted": 0.9999873174915072,
+   "predicted_kld_only": 0.8942636092682064,
+   "predicted_bits_only": 0.8524913228722957
+  },
+  {
+   "config": "q17-lora",
+   "variant": "mlx-q6",
+   "nsr": 0.35145516309755387,
+   "kld": 0.01898940186947584,
+   "retention": 1.045787545787546,
+   "predicted": 0.9999999999941029,
+   "predicted_kld_only": 0.9959465572702536,
+   "predicted_bits_only": 1.0
+  },
+  {
+   "config": "q17-lora",
+   "variant": "mlx-q8",
+   "nsr": 0.08929524909424648,
+   "kld": 0.004146801453316584,
+   "retention": 1.014652014652015,
+   "predicted": 1.0,
+   "predicted_kld_only": 0.9994836031184573,
+   "predicted_bits_only": 0.9847676196052472
+  }
+ ]
+}

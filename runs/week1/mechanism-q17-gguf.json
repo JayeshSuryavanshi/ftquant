@@ -1,0 +1,37 @@
+{
+ "model": "Qwen/Qwen3-1.7B",
+ "params": 2031739904,
+ "bpw": {
+  "bf16": 16.024,
+  "Q8_0": 8.525,
+  "Q6_K": 6.587,
+  "Q4_K_M": 5.05,
+  "Q3_K_M": 4.226,
+  "Q2_K": 3.465
+ },
+ "configs": {
+  "q17-lora": {
+   "delta_norm": 116.95817804728274,
+   "Q8_0": {
+    "signal_retained": 1.0002576234010767,
+    "noise_to_signal": 0.08630465041705883
+   },
+   "Q6_K": {
+    "signal_retained": 1.000202790675518,
+    "noise_to_signal": 0.2882701473339401
+   },
+   "Q4_K_M": {
+    "signal_retained": 0.997903191203639,
+    "noise_to_signal": 1.040781060382756
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.9954342331623908,
+    "noise_to_signal": 1.6564617448471732
+   },
+   "Q2_K": {
+    "signal_retained": 0.9872192311190333,
+    "noise_to_signal": 3.0270668719590343
+   }
+  }
+ }
+}

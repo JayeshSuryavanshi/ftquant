@@ -1,0 +1,509 @@
+{
+ "nsr_model": {
+  "n": 49,
+  "mae": NaN,
+  "safe_agreement": 0.7551020408163265
+ },
+ "kld_only": {
+  "n": 49,
+  "mae": NaN,
+  "safe_agreement": 0.7551020408163265
+ },
+ "bits_only": {
+  "n": 49,
+  "mae": NaN,
+  "safe_agreement": 0.7551020408163265
+ },
+ "points": [
+  {
+   "config": "q06-full-lr3e-5",
+   "variant": "gguf-Q2_K",
+   "nsr": 5.292393201835636,
+   "kld": 2.765845,
+   "retention": 0.8855911919578746,
+   "predicted": 0.021553350051474882,
+   "predicted_kld_only": 0.22218899419266958,
+   "predicted_bits_only": 0.2980740316680594
+  },
+  {
+   "config": "q06-full-lr3e-5",
+   "variant": "gguf-Q3_K_M",
+   "nsr": 2.985542185057803,
+   "kld": 0.441442,
+   "retention": 0.9755864049784586,
+   "predicted": 0.9904091383096791,
+   "predicted_kld_only": 0.774922379476231,
+   "predicted_bits_only": 0.848954594285264
+  },
+  {
+   "config": "q06-full-lr3e-5",
+   "variant": "gguf-Q4_K_M",
+   "nsr": 2.379258532037883,
+   "kld": 0.103895,
+   "retention": 0.9612254667304931,
+   "predicted": 0.999954499829084,
+   "predicted_kld_only": 0.9607866929561664,
+   "predicted_bits_only": 0.937119181059856
+  },
+  {
+   "config": "q06-full-lr3e-5",
+   "variant": "gguf-Q6_K",
+   "nsr": 0.754942014928166,
+   "kld": 0.0113,
+   "retention": 1.0114887505983725,
+   "predicted": 0.9999999998825422,
+   "predicted_kld_only": 0.9979913116987797,
+   "predicted_bits_only": 1.0
+  },
+  {
+   "config": "q06-full-lr3e-5",
+   "variant": "mlx-q3",
+   "nsr": 3.593302884715037,
+   "kld": 1.206734448671341,
+   "retention": 0.7767686424474188,
+   "predicted": 0.6794651878886229,
+   "predicted_kld_only": 0.4680868636187253,
+   "predicted_bits_only": 0.38300110496359124
+  },
+  {
+   "config": "q06-full-lr3e-5",
+   "variant": "mlx-q4",
+   "nsr": 2.3992863302542724,
+   "kld": 0.25505863316357136,
+   "retention": 0.9263862332695983,
+   "predicted": 0.9994130039071005,
+   "predicted_kld_only": 0.8787276527068939,
+   "predicted_bits_only": 0.8524913228722957
+  },
+  {
+   "config": "q06-full-lr3e-5",
+   "variant": "mlx-q6",
+   "nsr": 0.8548587706628484,
+   "kld": 0.02074618195183575,
+   "retention": 1.012906309751434,
+   "predicted": 0.9999999986797292,
+   "predicted_kld_only": 0.9954319996593447,
+   "predicted_bits_only": 1.0
+  },
+  {
+   "config": "q06-full-lr3e-6",
+   "variant": "gguf-Q2_K",
+   "nsr": 15.167529313398969,
+   "kld": 2.765845,
+   "retention": 0.0,
+   "predicted": 4.857493880631637e-05,
+   "predicted_kld_only": 0.22218899419266958,
+   "predicted_bits_only": 0.2980740316680594
+  },
+  {
+   "config": "q06-full-lr3e-6",
+   "variant": "gguf-Q3_K_M",
+   "nsr": 8.320282031101726,
+   "kld": 0.441442,
+   "retention": 0.19478527607361965,
+   "predicted": 0.21130013846484774,
+   "predicted_kld_only": 0.774922379476231,
+   "predicted_bits_only": 0.848954594285264
+  },
+  {
+   "config": "q06-full-lr3e-6",
+   "variant": "gguf-Q4_K_M",
+   "nsr": 11.877587685994198,
+   "kld": 0.103895,
+   "retention": 0.8813905930470347,
+   "predicted": 0.6584945277968937,
+   "predicted_kld_only": 0.9607866929561664,
+   "predicted_bits_only": 0.937119181059856
+  },
+  {
+   "config": "q06-full-lr3e-6",
+   "variant": "gguf-Q6_K",
+   "nsr": 2.948614478042052,
+   "kld": 0.0113,
+   "retention": 0.9841513292433539,
+   "predicted": 0.9999996782730192,
+   "predicted_kld_only": 0.9979913116987797,
+   "predicted_bits_only": 1.0
+  },
+  {
+   "config": "q06-full-lr3e-6",
+   "variant": "mlx-q3",
+   "nsr": 2.156798355008859,
+   "kld": 1.206734448671341,
+   "retention": 0.0,
+   "predicted": 0.9762663548709662,
+   "predicted_kld_only": 0.4680868636187253,
+   "predicted_bits_only": 0.38300110496359124
+  },
+  {
+   "config": "q06-full-lr3e-6",
+   "variant": "mlx-q4",
+   "nsr": 4.950889739362179,
+   "kld": 0.25505863316357136,
+   "retention": 0.27430910951893556,
+   "predicted": 0.9619991778022379,
+   "predicted_kld_only": 0.8787276527068939,
+   "predicted_bits_only": 0.8524913228722957
+  },
+  {
+   "config": "q06-full-lr3e-6",
+   "variant": "mlx-q6",
+   "nsr": 3.156726630269232,
+   "kld": 0.02074618195183575,
+   "retention": 0.9733879222108498,
+   "predicted": 0.9999973894412018,
+   "predicted_kld_only": 0.9954319996593447,
+   "predicted_bits_only": 1.0
+  },
+  {
+   "config": "q06-lora-lowlr-s1",
+   "variant": "gguf-Q2_K",
+   "nsr": 9.74629366665019,
+   "kld": 2.765845,
+   "retention": 0.0,
+   "predicted": 0.0006339452959133781,
+   "predicted_kld_only": 0.22218899419266958,
+   "predicted_bits_only": 0.2980740316680594
+  },
+  {
+   "config": "q06-lora-lowlr-s1",
+   "variant": "gguf-Q3_K_M",
+   "nsr": 4.998576492679486,
+   "kld": 0.441442,
+   "retention": 0.785816962146622,
+   "predicted": 0.8379656563483816,
+   "predicted_kld_only": 0.774922379476231,
+   "predicted_bits_only": 0.848954594285264
+  },
+  {
+   "config": "q06-lora-lowlr-s1",
+   "variant": "gguf-Q4_K_M",
+   "nsr": 4.120969973406586,
+   "kld": 0.103895,
+   "retention": 0.9429803545759464,
+   "predicted": 0.9988946649080318,
+   "predicted_kld_only": 0.9607866929561664,
+   "predicted_bits_only": 0.937119181059856
+  },
+  {
+   "config": "q06-lora-lowlr-s1",
+   "variant": "gguf-Q6_K",
+   "nsr": 1.3869247554321444,
+   "kld": 0.0113,
+   "retention": 1.0119789171058937,
+   "predicted": 0.9999999959779868,
+   "predicted_kld_only": 0.9979913116987797,
+   "predicted_bits_only": 1.0
+  },
+  {
+   "config": "q06-lora-lowlr-s1",
+   "variant": "mlx-q3",
+   "nsr": 5.53994516952195,
+   "kld": 1.206734448671341,
+   "retention": 0.0,
+   "predicted": 0.14631953692915986,
+   "predicted_kld_only": 0.4680868636187253,
+   "predicted_bits_only": 0.38300110496359124
+  },
+  {
+   "config": "q06-lora-lowlr-s1",
+   "variant": "mlx-q4",
+   "nsr": 3.8086959831047,
+   "kld": 0.25505863316357136,
+   "retention": 0.8875540605478135,
+   "predicted": 0.9914663497778022,
+   "predicted_kld_only": 0.8787276527068939,
+   "predicted_bits_only": 0.8524913228722957
+  },
+  {
+   "config": "q06-lora-lowlr-s1",
+   "variant": "mlx-q6",
+   "nsr": 1.593148728640558,
+   "kld": 0.02074618195183575,
+   "retention": 1.0182604517059106,
+   "predicted": 0.9999999508667061,
+   "predicted_kld_only": 0.9954319996593447,
+   "predicted_bits_only": 1.0
+  },
+  {
+   "config": "q06-lora-lr3e-4",
+   "variant": "gguf-Q2_K",
+   "nsr": 0.682525740315842,
+   "kld": 2.765845,
+   "retention": NaN,
+   "predicted": 0.9996916829851952,
+   "predicted_kld_only": 0.22218899419266958,
+   "predicted_bits_only": 0.2980740316680594
+  },
+  {
+   "config": "q06-lora-lr3e-4",
+   "variant": "gguf-Q3_K_M",
+   "nsr": 0.34948541990216864,
+   "kld": 0.441442,
+   "retention": NaN,
+   "predicted": 0.9999999625207286,
+   "predicted_kld_only": 0.774922379476231,
+   "predicted_bits_only": 0.848954594285264
+  },
+  {
+   "config": "q06-lora-lr3e-4",
+   "variant": "gguf-Q4_K_M",
+   "nsr": 0.1832086219759511,
+   "kld": 0.103895,
+   "retention": NaN,
+   "predicted": 0.9999999999845477,
+   "predicted_kld_only": 0.9607866929561664,
+   "predicted_bits_only": 0.937119181059856
+  },
+  {
+   "config": "q06-lora-lr3e-4",
+   "variant": "gguf-Q6_K",
+   "nsr": 0.04874998556098885,
+   "kld": 0.0113,
+   "retention": NaN,
+   "predicted": 1.0,
+   "predicted_kld_only": 0.9979913116987797,
+   "predicted_bits_only": 1.0
+  },
+  {
+   "config": "q06-lora-lr3e-4",
+   "variant": "mlx-q3",
+   "nsr": 0.5165527803392572,
+   "kld": 1.206734448671341,
+   "retention": NaN,
+   "predicted": 0.9999939776894536,
+   "predicted_kld_only": 0.4680868636187253,
+   "predicted_bits_only": 0.38300110496359124
+  },
+  {
+   "config": "q06-lora-lr3e-4",
+   "variant": "mlx-q4",
+   "nsr": 0.24950542602930023,
+   "kld": 0.25505863316357136,
+   "retention": NaN,
+   "predicted": 0.9999999988571864,
+   "predicted_kld_only": 0.8787276527068939,
+   "predicted_bits_only": 0.8524913228722957
+  },
+  {
+   "config": "q06-lora-lr3e-4",
+   "variant": "mlx-q6",
+   "nsr": 0.06105531968031418,
+   "kld": 0.02074618195183575,
+   "retention": NaN,
+   "predicted": 0.9999999999999998,
+   "predicted_kld_only": 0.9954319996593447,
+   "predicted_bits_only": 1.0
+  },
+  {
+   "config": "q06-lora-lr3e-5",
+   "variant": "gguf-Q2_K",
+   "nsr": 5.155299477637188,
+   "kld": 2.765845,
+   "retention": 0.007504690431519701,
+   "predicted": 0.025014709559137618,
+   "predicted_kld_only": 0.22218899419266958,
+   "predicted_bits_only": 0.2980740316680594
+  },
+  {
+   "config": "q06-lora-lr3e-5",
+   "variant": "gguf-Q3_K_M",
+   "nsr": 2.73056220559582,
+   "kld": 0.441442,
+   "retention": 0.9127579737335836,
+   "predicted": 0.9942680935536105,
+   "predicted_kld_only": 0.774922379476231,
+   "predicted_bits_only": 0.848954594285264
+  },
+  {
+   "config": "q06-lora-lr3e-5",
+   "variant": "gguf-Q4_K_M",
+   "nsr": 1.977793020319467,
+   "kld": 0.103895,
+   "retention": 0.9596622889305816,
+   "predicted": 0.9999844497442213,
+   "predicted_kld_only": 0.9607866929561664,
+   "predicted_bits_only": 0.937119181059856
+  },
+  {
+   "config": "q06-lora-lr3e-5",
+   "variant": "gguf-Q6_K",
+   "nsr": 0.5957172486785962,
+   "kld": 0.0113,
+   "retention": 1.0079737335834897,
+   "predicted": 0.9999999999703366,
+   "predicted_kld_only": 0.9979913116987797,
+   "predicted_bits_only": 1.0
+  },
+  {
+   "config": "q06-lora-lr3e-5",
+   "variant": "mlx-q3",
+   "nsr": 3.3124379976750453,
+   "kld": 1.206734448671341,
+   "retention": 0.627764705882353,
+   "predicted": 0.7727927665584149,
+   "predicted_kld_only": 0.4680868636187253,
+   "predicted_bits_only": 0.38300110496359124
+  },
+  {
+   "config": "q06-lora-lr3e-5",
+   "variant": "mlx-q4",
+   "nsr": 2.1806480233267562,
+   "kld": 0.25505863316357136,
+   "retention": 0.9077647058823531,
+   "predicted": 0.9996629743701739,
+   "predicted_kld_only": 0.8787276527068939,
+   "predicted_bits_only": 0.8524913228722957
+  },
+  {
+   "config": "q06-lora-lr3e-5",
+   "variant": "mlx-q6",
+   "nsr": 0.7216043036826718,
+   "kld": 0.02074618195183575,
+   "retention": 1.0174117647058825,
+   "predicted": 0.9999999995067137,
+   "predicted_kld_only": 0.9954319996593447,
+   "predicted_bits_only": 1.0
+  },
+  {
+   "config": "q06-lora-lr3e-6",
+   "variant": "gguf-Q2_K",
+   "nsr": 16.137156813819484,
+   "kld": 2.765845,
+   "retention": 0.0,
+   "predicted": 3.3889710269448976e-05,
+   "predicted_kld_only": 0.22218899419266958,
+   "predicted_bits_only": 0.2980740316680594
+  },
+  {
+   "config": "q06-lora-lr3e-6",
+   "variant": "gguf-Q3_K_M",
+   "nsr": 8.318110174459349,
+   "kld": 0.441442,
+   "retention": 0.44567841622404636,
+   "predicted": 0.21155301160989268,
+   "predicted_kld_only": 0.774922379476231,
+   "predicted_bits_only": 0.848954594285264
+  },
+  {
+   "config": "q06-lora-lr3e-6",
+   "variant": "gguf-Q4_K_M",
+   "nsr": 7.632198445272769,
+   "kld": 0.103895,
+   "retention": 0.8807339449541285,
+   "predicted": 0.9618038707076022,
+   "predicted_kld_only": 0.9607866929561664,
+   "predicted_bits_only": 0.937119181059856
+  },
+  {
+   "config": "q06-lora-lr3e-6",
+   "variant": "gguf-Q6_K",
+   "nsr": 2.580197403300696,
+   "kld": 0.0113,
+   "retention": 1.0101400289715114,
+   "predicted": 0.9999998518403783,
+   "predicted_kld_only": 0.9979913116987797,
+   "predicted_bits_only": 1.0
+  },
+  {
+   "config": "q06-lora-lr3e-6",
+   "variant": "mlx-q3",
+   "nsr": 8.445588249312552,
+   "kld": 1.206734448671341,
+   "retention": 0.0,
+   "predicted": 0.014579299052088553,
+   "predicted_kld_only": 0.4680868636187253,
+   "predicted_bits_only": 0.38300110496359124
+  },
+  {
+   "config": "q06-lora-lr3e-6",
+   "variant": "mlx-q4",
+   "nsr": 5.881219575651917,
+   "kld": 0.25505863316357136,
+   "retention": 0.7456563706563707,
+   "predicted": 0.9029989389002413,
+   "predicted_kld_only": 0.8787276527068939,
+   "predicted_bits_only": 0.8524913228722957
+  },
+  {
+   "config": "q06-lora-lr3e-6",
+   "variant": "mlx-q6",
+   "nsr": 2.703257209141176,
+   "kld": 0.02074618195183575,
+   "retention": 1.0212355212355213,
+   "predicted": 0.9999989396350187,
+   "predicted_kld_only": 0.9954319996593447,
+   "predicted_bits_only": 1.0
+  },
+  {
+   "config": "q06-lora-s1",
+   "variant": "gguf-Q2_K",
+   "nsr": 2.0446158680663302,
+   "kld": 2.765845,
+   "retention": 0.8698358800226372,
+   "predicted": 0.8468246749385953,
+   "predicted_kld_only": 0.22218899419266958,
+   "predicted_bits_only": 0.2980740316680594
+  },
+  {
+   "config": "q06-lora-s1",
+   "variant": "gguf-Q3_K_M",
+   "nsr": 1.116721256962028,
+   "kld": 0.441442,
+   "retention": 1.0016977928692699,
+   "predicted": 0.999968022417691,
+   "predicted_kld_only": 0.774922379476231,
+   "predicted_bits_only": 0.848954594285264
+  },
+  {
+   "config": "q06-lora-s1",
+   "variant": "gguf-Q4_K_M",
+   "nsr": 0.6443944914137458,
+   "kld": 0.103895,
+   "retention": 0.9575551782682511,
+   "predicted": 0.9999999769713847,
+   "predicted_kld_only": 0.9607866929561664,
+   "predicted_bits_only": 0.937119181059856
+  },
+  {
+   "config": "q06-lora-s1",
+   "variant": "gguf-Q6_K",
+   "nsr": 0.17308618615167606,
+   "kld": 0.0113,
+   "retention": 1.0237691001697793,
+   "predicted": 0.9999999999999774,
+   "predicted_kld_only": 0.9979913116987797,
+   "predicted_bits_only": 1.0
+  },
+  {
+   "config": "q06-lora-s1",
+   "variant": "mlx-q3",
+   "nsr": 1.5307557325306749,
+   "kld": 1.206734448671341,
+   "retention": 0.9206081081081082,
+   "predicted": 0.9966941935212242,
+   "predicted_kld_only": 0.4680868636187253,
+   "predicted_bits_only": 0.38300110496359124
+  },
+  {
+   "config": "q06-lora-s1",
+   "variant": "mlx-q4",
+   "nsr": 0.8488179889660349,
+   "kld": 0.25505863316357136,
+   "retention": 0.9234234234234235,
+   "predicted": 0.9999985966188041,
+   "predicted_kld_only": 0.8787276527068939,
+   "predicted_bits_only": 0.8524913228722957
+  },
+  {
+   "config": "q06-lora-s1",
+   "variant": "mlx-q6",
+   "nsr": 0.21134491888651047,
+   "kld": 0.02074618195183575,
+   "retention": 1.0253378378378382,
+   "predicted": 0.9999999999996068,
+   "predicted_kld_only": 0.9954319996593447,
+   "predicted_bits_only": 1.0
+  }
+ ]
+}
