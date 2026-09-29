@@ -80,3 +80,7 @@ FileNotFoundError: [Errno 2] No such file or directory: '/Users/jayeshsuryavansh
 2026-09-28 17:40:47 start verdicts week3
 2026-09-28 17:40:48 done verdicts week3 (1s)
 2026-09-28 17:40:48 week-3 orchestrator complete
+2026-09-28 18:25:25 week-4 orchestrator start
+2026-09-28 18:25:25 start kld qwen3-4b
+2026-09-28 18:31:55 done kld qwen3-4b (391s)
+2026-09-28 18:31:55 start sweep week4

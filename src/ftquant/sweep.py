@@ -77,7 +77,22 @@ SMOKE = [
     Config("olmo1-lora", OLMO, "lora", lr=1e-4, iters=30, grad_ckpt=True, limit=40, **W3),
     Config("mas06-lora", "Qwen/Qwen3-0.6B", "lora", lr=1e-4, iters=30, task="massive", limit=40, **W3),
 ]
-PLANS = {"week1": lambda: Plan().configs, "week2": lambda: WEEK2, "week3": lambda: WEEK3, "smoke": lambda: SMOKE}
+Q4B = "Qwen/Qwen3-4B"
+WEEK4 = [
+    Config("olmo1-lora-lowlr-s1", OLMO, "lora", lr=1e-5, seed=1, grad_ckpt=True, **W3),
+    Config("olmo1-lora-s1", OLMO, "lora", lr=1e-4, seed=1, grad_ckpt=True, **W3),
+    Config("mas06-lora-lowlr-s1", "Qwen/Qwen3-0.6B", "lora", lr=1e-5, seed=1, task="massive", **W3),
+    Config("mas06-lora-s1", "Qwen/Qwen3-0.6B", "lora", lr=1e-4, seed=1, task="massive", **W3),
+    Config("q4b-base", Q4B, "base", **W3),
+    Config("q4b-lora-lowlr", Q4B, "lora", lr=1e-5, grad_ckpt=True, **W3),
+    Config("q4b-lora", Q4B, "lora", lr=1e-4, grad_ckpt=True, **W3),
+]
+SMOKE4B = [
+    Config("q4b-lora", Q4B, "lora", lr=1e-4, iters=10, grad_ckpt=True, limit=20, mlx_bits=(3,),
+           gguf_types=("Q3_K_M",), unfused_bits=(), generic_eval=True),
+]
+PLANS = {"week1": lambda: Plan().configs, "week2": lambda: WEEK2, "week3": lambda: WEEK3, "week4": lambda: WEEK4,
+         "smoke": lambda: SMOKE, "smoke4b": lambda: SMOKE4B}
 
 
 def log(msg: str) -> None:
@@ -133,6 +148,8 @@ def fused_dir(c: Config, out: Path, adapter: Path | None) -> Path:
         return Path(snapshot_download(c.base))
     d = out / "fused-bf16"
     if not (d / "config.json").exists():
+        from huggingface_hub import snapshot_download
+        snapshot_download(c.base)
         run([sys.executable, "-m", "mlx_lm", "fuse", "--model", c.base, "--adapter-path", str(adapter), "--save-path", str(d)])
     return d
 

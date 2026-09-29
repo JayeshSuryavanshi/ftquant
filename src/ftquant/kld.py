@@ -38,6 +38,8 @@ def mlx_kld(model_id: str, bits_list: list[int], n_chunks: int, ctx: int) -> dic
         lp = logits - mx.logsumexp(logits, axis=-1, keepdims=True)
         mx.eval(lp)
         ref_lp.append(lp)
+    del ref
+    mx.clear_cache()
     out = {}
     for bits in bits_list:
         qpath = WORK / f"{model_id.split('/')[-1]}-mlx-q{bits}"
