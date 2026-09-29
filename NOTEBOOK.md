@@ -46,7 +46,7 @@ A chronological record: what ran and when, what was decided and why, what went w
 ## 2026-09-29
 
 - 22:26 on 09-28 to 00:25: the laptop was unplugged. Training drained the battery from 100% to 1% in about 1 h 45 min, and macOS forced a low-battery hibernate at 00:11. After it was woken on AC power at 00:25, all processes resumed.
-  - No evaluation spanned the pause: `mas06-lora-s1/mlx-q3` finished just before it, and the next evaluation started after.
+  - `mas06-lora-s1/mlx-q3` was logged at 00:11:34, one second after the sleep began. The GGUF conversion that followed completed after the wake. Evaluation is deterministic, so a pause cannot change a result.
   - Every result file has the full line count.
 - 00:57: all four seed-1 runs finished. Interim accuracy kept against each model's own bf16:
 
@@ -75,9 +75,9 @@ Everything ran on one Apple M1 Pro laptop (16 GB). Typical wall times:
 
 | model | LoRA training, 500 steps | evaluations |
 |---|---|---|
-| Qwen3-0.6B | about 10 to 20 min (full fine-tuning 20 to 25 min) | 3 to 5 min each on banking77; 4 to 14 min on MASSIVE |
-| Qwen3-1.7B | about 52 min | 6 to 9 min each |
-| OLMo-2 1B | 42 to 53 min | 4 to 8 min each |
-| Qwen3-4B | 2 h 24 min (micro-batch 2) | 14 to 25 min each |
+| Qwen3-0.6B | 10 to 20 min (full fine-tuning 13 to 25 min) | 3 to 8 min each on banking77; 4 to 15 min on MASSIVE |
+| Qwen3-1.7B | about 52 min | 5 to 9 min each |
+| OLMo-2 1B | 40 to 53 min | 4 to 9 min each |
+| Qwen3-4B | 2 h 24 min (micro-batch 2) | 13 to 25 min each |
 
 Base KLD takes 2 to 7 minutes per base model.
