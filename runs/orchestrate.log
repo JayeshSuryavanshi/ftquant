@@ -153,3 +153,6 @@ Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 1678
 Fetching 13 files:   0%|          | 0/13 [00:00<?, ?it/s]
 Fetching 13 files: 100%|██████████| 13/13 [00:00<00:00, 1844.52it/s]
 
+2026-09-29 05:16:30 week-4 orchestrator start
+2026-09-29 05:16:30 skip kld qwen3-4b (exists)
+2026-09-29 05:16:30 start sweep week4

@@ -158,7 +158,11 @@ def fused_dir(c: Config, out: Path, adapter: Path | None) -> Path:
     if not (d / "config.json").exists():
         from huggingface_hub import snapshot_download
         snapshot_download(c.base)
-        run([sys.executable, "-m", "mlx_lm", "fuse", "--model", c.base, "--adapter-path", str(adapter), "--save-path", str(d)])
+        tmp = d.with_name(d.name + ".partial")
+        shutil.rmtree(tmp, ignore_errors=True)
+        run([sys.executable, "-m", "mlx_lm", "fuse", "--model", c.base, "--adapter-path", str(adapter), "--save-path", str(tmp)])
+        shutil.rmtree(d, ignore_errors=True)
+        tmp.rename(d)
     return d
 
 
@@ -196,7 +200,10 @@ def do_config(c: Config, keep: bool) -> None:
         q = work / f"mlx-q{b}"
         if not (out / "eval" / f"mlx-q{b}.jsonl").exists():
             if not q.exists():
-                run([sys.executable, "-m", "mlx_lm", "convert", "--hf-path", str(src), "--mlx-path", str(q), "-q", "--q-bits", str(b), "--q-group-size", "64"])
+                tmp = q.with_name(q.name + ".partial")
+                shutil.rmtree(tmp, ignore_errors=True)
+                run([sys.executable, "-m", "mlx_lm", "convert", "--hf-path", str(src), "--mlx-path", str(tmp), "-q", "--q-bits", str(b), "--q-group-size", "64"])
+                tmp.rename(q)
             evaluate("mlx", f"mlx-q{b}", out, c, model=str(q))
             if not keep:
                 shutil.rmtree(q, ignore_errors=True)
@@ -212,13 +219,17 @@ def do_config(c: Config, keep: bool) -> None:
     bf16 = work / "gguf-bf16.gguf"
     if not all((out / "eval" / f"gguf-{t}.jsonl").exists() for t in ["bf16", *c.gguf_types]):
         if not bf16.exists():
-            run([sys.executable, str(CONVERT), str(src), "--outtype", "bf16", "--outfile", str(bf16)])
+            tmp = bf16.with_suffix(".partial")
+            run([sys.executable, str(CONVERT), str(src), "--outtype", "bf16", "--outfile", str(tmp)])
+            tmp.rename(bf16)
         evaluate("gguf", "gguf-bf16", out, c, gguf=str(bf16), tokenizer=c.base)
         for t in c.gguf_types:
             g = work / f"gguf-{t}.gguf"
             if not (out / "eval" / f"gguf-{t}.jsonl").exists():
                 if not g.exists():
-                    run(["llama-quantize", str(bf16), str(g), t])
+                    tmp = g.with_suffix(".partial")
+                    run(["llama-quantize", str(bf16), str(tmp), t])
+                    tmp.rename(g)
                 evaluate("gguf", f"gguf-{t}", out, c, gguf=str(g), tokenizer=c.base)
                 if not keep:
                     g.unlink(missing_ok=True)

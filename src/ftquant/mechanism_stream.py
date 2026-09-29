@@ -35,10 +35,10 @@ def mlx(model: str, configs: list[str], bits: list[int], runs: Path) -> list[dic
 def gguf(
     model: str, base_cfg: str, configs: list[str], types: list[str], runs: Path
 ) -> dict:
-    base = bf16_gguf(base_cfg, model, runs)
     res: dict = {"model": model, "configs": {}}
     for cfg in configs:
         ft = bf16_gguf(cfg, model, runs)
+        base = bf16_gguf(base_cfg, model, runs)
         rows = gguf_run(str(base), str(ft), types)["results"]
         res["configs"][cfg] = {
             t: {
@@ -49,7 +49,7 @@ def gguf(
         }
         print(cfg, res["configs"][cfg], flush=True)
         shutil.rmtree(WORK / cfg, ignore_errors=True)
-    shutil.rmtree(WORK / base_cfg, ignore_errors=True)
+        shutil.rmtree(WORK / base_cfg, ignore_errors=True)
     return res
 
 

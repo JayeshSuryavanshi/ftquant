@@ -120,3 +120,17 @@ Traceback (most recent call last):
     ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 RuntimeError: [METAL] Command buffer execution failed: Insufficient Memory (00000008:kIOGPUCommandBufferCallbackErrorOutOfMemory).
 
+2026-09-29 05:16:30 sweep start: ['olmo1-lora-lowlr-s1', 'olmo1-lora-s1', 'mas06-lora-lowlr-s1', 'mas06-lora-s1', 'q4b-base', 'q4b-lora-lowlr', 'q4b-lora']
+2026-09-29 05:16:38 done olmo1-lora-lowlr-s1
+2026-09-29 05:16:44 done olmo1-lora-s1
+2026-09-29 05:16:49 done mas06-lora-lowlr-s1
+2026-09-29 05:16:53 done mas06-lora-s1
+2026-09-29 05:16:54 done q4b-base
+2026-09-29 07:40:41 trained q4b-lora-lowlr in 8627s
+2026-09-29 08:04:05 eval q4b-lora-lowlr/mlx-bf16: acc 0.8464 n=3080 (1375s)
+2026-09-29 08:19:14 eval q4b-lora-lowlr/mlx-q6: acc 0.8455 n=3080 (899s)
+2026-09-29 08:32:57 eval q4b-lora-lowlr/mlx-q4: acc 0.7938 n=3080 (817s)
+2026-09-29 08:47:08 eval q4b-lora-lowlr/mlx-q3: acc 0.6792 n=3080 (844s)
+2026-09-29 09:13:23 eval q4b-lora-lowlr/gguf-bf16: acc 0.8487 n=3080 (1515s)
+2026-09-29 09:37:21 eval q4b-lora-lowlr/gguf-Q6_K: acc 0.8432 n=3080 (1410s)
+2026-09-29 09:55:54 eval q4b-lora-lowlr/gguf-Q4_K_M: acc 0.8318 n=3080 (1071s)

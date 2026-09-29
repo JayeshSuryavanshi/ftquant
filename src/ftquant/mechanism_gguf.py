@@ -36,6 +36,7 @@ def bf16_gguf(cfg: str, model_id: str, runs: Path) -> Path:
     path = out / "bf16.gguf"
     if path.exists():
         return path
+    tmp = path.with_suffix(".partial")
     if cfg.endswith("-base"):
         src = Path(snapshot_download(model_id))
         sh(
@@ -46,9 +47,10 @@ def bf16_gguf(cfg: str, model_id: str, runs: Path) -> Path:
                 "--outtype",
                 "bf16",
                 "--outfile",
-                str(path),
+                str(tmp),
             ]
         )
+        tmp.rename(path)
         return path
     fused = out / "fused"
     sh(
@@ -73,17 +75,20 @@ def bf16_gguf(cfg: str, model_id: str, runs: Path) -> Path:
             "--outtype",
             "bf16",
             "--outfile",
-            str(path),
+            str(tmp),
         ]
     )
     shutil.rmtree(fused, ignore_errors=True)
+    tmp.rename(path)
     return path
 
 
 def quantized(bf16: Path, qtype: str) -> Path:
     p = bf16.with_name(f"{qtype}.gguf")
     if not p.exists():
-        sh(["llama-quantize", str(bf16), str(p), qtype])
+        tmp = p.with_suffix(".partial")
+        sh(["llama-quantize", str(bf16), str(tmp), qtype])
+        tmp.rename(p)
     return p
 
 
