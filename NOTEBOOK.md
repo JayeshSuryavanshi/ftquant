@@ -70,6 +70,11 @@ A chronological record: what ran and when, what was decided and why, what went w
 - Archived the per-item predictions for weeks 1 to 3 (`records/`, about 30 MB), and added training configs and logs to git.
 - 10:33: 4B LoRA 1e-5 evaluations done. Accuracy kept against its own bf16: 80% at MLX 3-bit, 93% at Q3_K_M (79.1% vs 84.9%), 60% at Q2_K (51.0%).
 - 12:41: 4B LoRA 1e-4 trained in 2 h 8 min (micro-batch 2). Its evaluations started, and 18 GB of disk was free.
+- 13:41: its MLX evaluations finished. Accuracy kept against its own bf16 (78.6%): 99.8% at MLX 6-bit, 98.7% at 4-bit, 93.8% at 3-bit (73.7%). LoRA 1e-5 kept 99.9%, 93.8% and 80.2% from a higher bf16 of 84.6%. So at 4B the gentle LoRA is again the more accurate model at bf16 and keeps less at 4 and 3 bits. This is an observation; the pre-registered 4B test (W4-H2) is on gain retention and runs after the GGUF evaluations.
+- 13:42: the pipeline stopped as the GGUF evaluations of LoRA 1e-4 were starting. Most likely cause: it ran as a background job of an interactive terminal session, and that session ended at about 13:43 (its session log was last written then). The kernel log shows no out-of-memory kill around that time, and 29 GB of disk was free at 14:03.
+  - The sweep process had started at 05:16, before the 10:10 atomic-write change, so its GGUF bf16 file was checked before reuse: 398 tensors, and the tensor data ends exactly at the file size. It was complete and was reused.
+  - The four MLX result files each have all 3,080 lines. The evaluators score every item before they open the output file, so an interrupted evaluation leaves no partial file that a resume could mistake for a finished one.
+  - 14:06: restarted in its own process session, detached from any terminal session, so closing a window can no longer stop it. Finished configurations were skipped. About 25 minutes were lost.
 
 ## Compute used
 
