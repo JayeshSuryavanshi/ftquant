@@ -22,3 +22,5 @@ runs/**
 !runs/week*/*.sha256
 !runs/week*/sweep.log
 !runs/week*/verdicts.txt
+!runs/week*/*/train.yaml
+!runs/week*/*/train.log

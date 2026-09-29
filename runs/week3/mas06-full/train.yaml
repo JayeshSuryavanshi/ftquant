@@ -1,0 +1,28 @@
+adapter_path: /Users/jayeshsuryavanshi/github-updates/ftquant/runs/week3/mas06-full/adapter
+batch_size: 4
+data: data/massive
+fine_tune_type: full
+grad_checkpoint: true
+iters: 500
+learning_rate: 1.0e-05
+lora_parameters:
+  dropout: 0.0
+  keys:
+  - self_attn.q_proj
+  - self_attn.k_proj
+  - self_attn.v_proj
+  - self_attn.o_proj
+  - mlp.gate_proj
+  - mlp.up_proj
+  - mlp.down_proj
+  rank: 8
+  scale: 20.0
+mask_prompt: true
+max_seq_length: 512
+model: Qwen/Qwen3-0.6B
+num_layers: -1
+seed: 0
+steps_per_eval: 100
+steps_per_report: 50
+train: true
+val_batches: 25
