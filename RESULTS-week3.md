@@ -62,7 +62,7 @@ Accuracy kept relative to each model's own bf16 accuracy, LoRA 1e-5 vs LoRA 1e-4
 
 | setting | bf16 accuracy | MLX 4-bit | MLX 3-bit | Q4_K_M | Q3_K_M | Q2_K |
 |---|---|---|---|---|---|---|
-| Qwen3-0.6B, banking77 | 78.5% vs 73.5% | 0.89 vs 0.98 | 0.06 vs 0.85 | 0.95 vs 1.00 | 0.79 vs 0.99 | 0.00 vs 0.78 |
+| Qwen3-0.6B, banking77 | 78.5% vs 73.5% | 0.88 vs 0.98 | 0.06 vs 0.85 | 0.95 vs 1.00 | 0.79 vs 0.98 | 0.00 vs 0.78 |
 | Qwen3-1.7B, banking77 | 77.2% vs 73.4% | 0.91 vs 0.96 | 0.32 vs 0.93 | 0.96 vs 1.00 | 0.71 vs 0.98 | 0.00 vs 0.85 |
 | OLMo-2 1B, banking77 | 78.3% vs 76.8% | 0.94 vs 0.99 | 0.76 vs 0.97 | 0.99 vs 1.00 | 0.95 vs 1.00 | 0.55 vs 0.95 |
 | Qwen3-0.6B, MASSIVE | 65.3% vs 62.6% | 0.93 vs 1.01 | 0.32 vs 0.62 | 0.98 vs 0.99 | 0.84 vs 0.95 | 0.00 vs 0.62 |
