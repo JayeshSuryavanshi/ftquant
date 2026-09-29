@@ -37,6 +37,8 @@ class Config:
     generic_eval: bool = False
     grad_ckpt: bool = False
     limit: int | None = None
+    micro_batch: int = 4
+    grad_accum: int = 1
 
 
 @dataclass
@@ -84,8 +86,8 @@ WEEK4 = [
     Config("mas06-lora-lowlr-s1", "Qwen/Qwen3-0.6B", "lora", lr=1e-5, seed=1, task="massive", **W3),
     Config("mas06-lora-s1", "Qwen/Qwen3-0.6B", "lora", lr=1e-4, seed=1, task="massive", **W3),
     Config("q4b-base", Q4B, "base", **W3),
-    Config("q4b-lora-lowlr", Q4B, "lora", lr=1e-5, grad_ckpt=True, **W3),
-    Config("q4b-lora", Q4B, "lora", lr=1e-4, grad_ckpt=True, **W3),
+    Config("q4b-lora-lowlr", Q4B, "lora", lr=1e-5, grad_ckpt=True, micro_batch=2, grad_accum=2, **W3),
+    Config("q4b-lora", Q4B, "lora", lr=1e-4, grad_ckpt=True, micro_batch=2, grad_accum=2, **W3),
 ]
 SMOKE4B = [
     Config("q4b-lora", Q4B, "lora", lr=1e-4, iters=10, grad_ckpt=True, limit=20, mlx_bits=(3,),
@@ -126,6 +128,12 @@ def train(c: Config, out: Path) -> Path:
         "grad_checkpoint": c.kind == "full" or "1.7B" in c.base or c.grad_ckpt, "adapter_path": str(adapter), "seed": c.seed,
         "lora_parameters": {"keys": LORA_KEYS, "rank": c.rank, "scale": 20.0, "dropout": 0.0},
     }
+    if c.grad_accum > 1:
+        cfg.update({
+            "batch_size": c.micro_batch, "grad_accumulation_steps": c.grad_accum, "iters": c.iters * c.grad_accum,
+            "steps_per_report": 50 * c.grad_accum, "steps_per_eval": 100 * c.grad_accum,
+            "val_batches": 25 * 4 // c.micro_batch,
+        })
     out.mkdir(parents=True, exist_ok=True)
     (out / "train.yaml").write_text(yaml.safe_dump(cfg))
     t0 = time.time()
