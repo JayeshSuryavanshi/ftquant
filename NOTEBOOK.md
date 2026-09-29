@@ -68,6 +68,8 @@ A chronological record: what ran and when, what was decided and why, what went w
   - Made the pipeline write fused, quantized and GGUF files under a temporary name and rename them when complete, so a disk-full failure cannot leave a truncated file that a resume would reuse.
   - Reordered the GGUF mechanism step to lower its disk peak. The reordered version was checked on a 0.6B configuration and was bit-identical.
 - Archived the per-item predictions for weeks 1 to 3 (`records/`, about 30 MB), and added training configs and logs to git.
+- 10:33: 4B LoRA 1e-5 evaluations done. Accuracy kept against its own bf16: 80% at MLX 3-bit, 93% at Q3_K_M (79.1% vs 84.9%), 60% at Q2_K (51.0%).
+- 12:41: 4B LoRA 1e-4 trained in 2 h 8 min (micro-batch 2). Its evaluations started, and 18 GB of disk was free.
 
 ## Compute used
 
