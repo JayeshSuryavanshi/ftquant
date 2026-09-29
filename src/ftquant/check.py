@@ -118,6 +118,21 @@ def reading(kept: float, nsr: float, base_kld: float | None = None) -> str:
     )
 
 
+def predict(
+    kept: float, nsr: float, base_kld: float | None, key: str | None
+) -> float | None:
+    model = load_resource("predictor.json")
+    if not model or base_kld is None or key not in model["tested_formats"]:
+        return None
+    t = model["theta"]
+    z = (
+        t[0]
+        + t[1] * (math.log(max(kept, 1e-6)) - math.log(max(nsr, 1e-6)))
+        + t[2] * math.log(max(base_kld, 1e-6))
+    )
+    return 1.0 / (1.0 + math.exp(-z))
+
+
 def kld_key(spec: str) -> str | None:
     s = spec.strip().lower()
     if s.startswith("mlx:"):
@@ -137,13 +152,15 @@ def run(base_model: str, finetuned: str, specs: list[str]) -> dict:
     for spec, (label, _) in zip(specs, formats):
         nsr = res[label]["noise_to_signal"]
         kept = res[label]["signal_retained"]
-        k = kld.get(kld_key(spec))
+        key = kld_key(spec)
+        k = kld.get(key)
         rows.append(
             {
                 "format": label,
                 "noise_to_signal": nsr,
                 "signal_retained": kept,
                 "base_kld": k,
+                "predicted_retention": predict(kept, nsr, k, key),
                 "reading": reading(kept, nsr, k),
             }
         )
@@ -181,13 +198,24 @@ def main(argv: list[str] | None = None) -> None:
         print(json.dumps(out, indent=1))
         return
     print(f"{out['layers']} fine-tuned linear layers compared against {args.base}\n")
+    print_table(out["results"], 26)
+
+
+def print_table(results: list[dict], width: int) -> None:
     print(
-        f"{'format':26s} {'noise/update':>12s} {'update kept':>12s} {'base damage':>12s}  reading"
+        f"{'format':{width}s} {'noise/update':>12s} {'update kept':>12s} {'base damage':>12s} {'predicted gain kept':>20s}  reading"
     )
-    for x in out["results"]:
+    for x in results:
         k = f"{x['base_kld']:.3f}" if x["base_kld"] is not None else "n/a"
+        r = x["predicted_retention"]
+        r = f"{100 * r:.0f}%" if r is not None else "n/a"
         print(
-            f"{x['format']:26s} {x['noise_to_signal']:12.2f} {100 * x['signal_retained']:11.0f}% {k:>12s}  {x['reading']}"
+            f"{x['format']:{width}s} {x['noise_to_signal']:12.2f} {100 * x['signal_retained']:11.0f}% {k:>12s} {r:>20s}  {x['reading']}"
+        )
+    if any(x["predicted_retention"] is None for x in results):
+        print(
+            "\nn/a: the prediction is shown only for the formats it was tested on (MLX 6/4/3-bit group 64,"
+            " GGUF Q6_K/Q4_K_M/Q3_K_M/Q2_K) and bases with a measured base damage."
         )
 
 

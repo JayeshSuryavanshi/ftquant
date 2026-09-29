@@ -14,8 +14,14 @@ def to_bf16_bytes(x: np.ndarray) -> bytes:
 def write_safetensors(path: Path, tensors: dict[str, tuple[np.ndarray, str]]) -> None:
     header, blobs, offset = {}, [], 0
     for name, (arr, dtype) in tensors.items():
-        data = to_bf16_bytes(arr) if dtype == "BF16" else arr.astype(np.float32).tobytes()
-        header[name] = {"dtype": dtype, "shape": list(arr.shape), "data_offsets": [offset, offset + len(data)]}
+        data = (
+            to_bf16_bytes(arr) if dtype == "BF16" else arr.astype(np.float32).tobytes()
+        )
+        header[name] = {
+            "dtype": dtype,
+            "shape": list(arr.shape),
+            "data_offsets": [offset, offset + len(data)],
+        }
         blobs.append(data)
         offset += len(data)
     h = json.dumps(header).encode()

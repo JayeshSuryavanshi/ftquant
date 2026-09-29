@@ -86,7 +86,7 @@ def run(
 
 
 def main(argv: list[str] | None = None) -> None:
-    from ftquant.check import reading
+    from ftquant.check import load_resource, predict, print_table, reading
 
     ap = argparse.ArgumentParser(
         prog="ftquant check-gguf",
@@ -98,18 +98,28 @@ def main(argv: list[str] | None = None) -> None:
         "--types", nargs="+", default=["Q8_0", "Q6_K", "Q5_K_M", "Q4_K_M", "Q3_K_M"]
     )
     ap.add_argument("--llama-quantize", default="llama-quantize")
+    ap.add_argument(
+        "--base-name",
+        help="base model name for the base-damage lookup, e.g. Qwen3-0.6B",
+    )
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args(argv)
     out = run(args.base_gguf, args.finetuned_gguf, args.types, args.llama_quantize)
+    kld = load_resource("kld.json").get(args.base_name or "", {})
+    for x, qtype in zip(out["results"], args.types):
+        key = f"gguf-{qtype.upper()}"
+        x["base_kld"] = kld.get(key)
+        x["predicted_retention"] = predict(
+            x["signal_retained"], x["noise_to_signal"], x["base_kld"], key
+        )
+        x["reading"] = reading(
+            x["signal_retained"], x["noise_to_signal"], x["base_kld"]
+        )
     if args.json:
         print(json.dumps(out, indent=1))
         return
     print(f"{out['layers']} linear tensors compared\n")
-    print(f"{'format':14s} {'noise/update':>12s} {'update kept':>12s}  reading")
-    for x in out["results"]:
-        print(
-            f"{x['format']:14s} {x['noise_to_signal']:12.2f} {100 * x['signal_retained']:11.0f}%  {reading(x['signal_retained'], x['noise_to_signal'])}"
-        )
+    print_table(out["results"], 14)
 
 
 if __name__ == "__main__":

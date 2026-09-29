@@ -1,0 +1,19 @@
+{
+ "form": "R = sigmoid(t0 + t1*ln(kept/NSR) + t2*ln(KLD_base))",
+ "theta": [
+  5.6123253056702405,
+  3.2955309441880085,
+  -1.554738633657948
+ ],
+ "source": "runs/predictor/predictor-v2.json sha256 6fd78627c73120629847fae574fc2942ef01a81fc37c2e7565371261fa027580",
+ "tested_formats": [
+  "mlx-q6",
+  "mlx-q4",
+  "mlx-q3",
+  "gguf-Q6_K",
+  "gguf-Q4_K_M",
+  "gguf-Q3_K_M",
+  "gguf-Q2_K"
+ ],
+ "tested_on": "fit on Qwen3-0.6B and 1.7B (banking77); pre-registered test on OLMo-2 1B (banking77) and Qwen3-0.6B (MASSIVE): MAE 0.059, safe-call agreement 0.943, n=35"
+}

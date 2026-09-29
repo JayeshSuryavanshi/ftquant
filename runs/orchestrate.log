@@ -66,3 +66,17 @@ FileNotFoundError: [Errno 2] No such file or directory: '/Users/jayeshsuryavansh
 2026-09-28 08:46:19 start kld olmo
 2026-09-28 08:48:26 done kld olmo (127s)
 2026-09-28 08:48:26 start sweep week3
+2026-09-28 17:26:20 done sweep week3 (31074s)
+2026-09-28 17:26:20 start mechanism mlx olmo1
+2026-09-28 17:28:06 done mechanism mlx olmo1 (106s)
+2026-09-28 17:28:06 start mechanism mlx mas06
+2026-09-28 17:29:11 done mechanism mlx mas06 (65s)
+2026-09-28 17:29:11 start mechanism gguf olmo1
+2026-09-28 17:35:46 done mechanism gguf olmo1 (394s)
+2026-09-28 17:35:46 start mechanism gguf mas06
+2026-09-28 17:40:41 done mechanism gguf mas06 (295s)
+2026-09-28 17:40:41 start analysis week3
+2026-09-28 17:40:47 done analysis week3 (6s)
+2026-09-28 17:40:47 start verdicts week3
+2026-09-28 17:40:48 done verdicts week3 (1s)
+2026-09-28 17:40:48 week-3 orchestrator complete

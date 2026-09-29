@@ -11,7 +11,9 @@ def test_mlx_affine_matches_mlx(bits):
     w = (rng.standard_normal((64, 256)) * 0.02).astype(np.float32)
     ours = mlx_affine(bits)(w)
     q, s, b = mx.quantize(mx.array(w), group_size=64, bits=bits, stream=mx.cpu)
-    assert np.array_equal(ours, np.array(mx.dequantize(q, s, b, group_size=64, bits=bits, stream=mx.cpu)))
+    assert np.array_equal(
+        ours, np.array(mx.dequantize(q, s, b, group_size=64, bits=bits, stream=mx.cpu))
+    )
     q, s, b = mx.quantize(mx.array(w), group_size=64, bits=bits, stream=mx.gpu)
     gpu = np.array(mx.dequantize(q, s, b, group_size=64, bits=bits, stream=mx.gpu))
     step = (w.max() - w.min()) / (2**bits - 1)

@@ -375,7 +375,85 @@ def predictor_chart(out: Path, dpi: int = 200) -> None:
     ax.set_ylim(-3, 103)
     ax.set_xlabel("Predicted before quantizing (%)", fontsize=13)
     ax.set_ylabel("Measured gain retained (%, capped at 100)", fontsize=13)
-    leg = ax.legend(loc="lower left", bbox_to_anchor=(0.3, 0.07), frameon=False, fontsize=10.5)
+    leg = ax.legend(
+        loc="lower left", bbox_to_anchor=(0.3, 0.07), frameon=False, fontsize=10.5
+    )
+    for t in leg.get_texts():
+        t.set_color(INK)
+    fig.tight_layout()
+    fig.savefig(out, facecolor=GROUND, metadata={"Software": None})
+    plt.close(fig)
+
+
+def replication_chart(out: Path, dpi: int = 200) -> None:
+    fonts()
+    data = json.loads((RUNS / "week3" / "summary.json").read_text())
+    names = list(data)
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4.6), dpi=dpi, sharey=True)
+    fig.patch.set_facecolor(GROUND)
+    for ax, (variant, title) in zip(
+        axes, (("mlx-q3", "MLX 3-bit"), ("gguf-Q3_K_M", "GGUF Q3_K_M"))
+    ):
+        frame(ax)
+        ax.grid(True, axis="x", color=GRID, linewidth=1, linestyle=":")
+        ax.grid(False, axis="y")
+        for i, name in enumerate(names):
+            y = len(names) - 1 - i
+            g = 100 * data[name]["LoRA 1e-5"]["accuracy"][variant]
+            s = 100 * data[name]["LoRA 1e-4"]["accuracy"][variant]
+            ax.plot([g, s], [y, y], color=LIGHT, linewidth=3, zorder=2)
+            ax.scatter(g, y, s=90, color=WARM, zorder=3)
+            ax.scatter(s, y, s=90, color=ACCENT, zorder=3)
+        ax.set_xlim(-3, 105)
+        ax.set_xlabel("Accuracy kept, % of its own bf16", fontsize=13)
+        ax.set_title(title, fontsize=13, color=INK, loc="left")
+    axes[0].set_yticks(range(len(names)))
+    axes[0].set_yticklabels(
+        [
+            f"{n}\n(bf16: {100 * data[n]['LoRA 1e-5']['acc_bf16']:.1f}% vs {100 * data[n]['LoRA 1e-4']['acc_bf16']:.1f}%)"
+            for n in reversed(names)
+        ],
+        fontsize=11,
+    )
+    axes[0].tick_params(axis="y", length=0)
+    axes[1].scatter([], [], s=90, color=WARM, label="LoRA, learning rate 1e-5")
+    axes[1].scatter([], [], s=90, color=ACCENT, label="LoRA, learning rate 1e-4")
+    leg = axes[1].legend(loc="lower left", frameon=False, fontsize=10.5)
+    for t in leg.get_texts():
+        t.set_color(INK)
+    fig.tight_layout()
+    fig.savefig(out, facecolor=GROUND, metadata={"Software": None})
+    plt.close(fig)
+
+
+def predictor_v2_chart(out: Path, dpi: int = 200) -> None:
+    fonts()
+    pts = json.loads((RUNS / "week3" / "verdicts.json").read_text())["points"]
+    fig, ax = plt.subplots(figsize=(6.2, 5.6), dpi=dpi)
+    fig.patch.set_facecolor(GROUND)
+    frame(ax)
+    ax.fill_between([0, 100], [-10, 90], [10, 110], color=GRID, alpha=0.5, lw=0)
+    ax.plot([0, 100], [0, 100], color=INK2, linewidth=1)
+    for p in pts:
+        olmo = p["config"].startswith("olmo1")
+        ax.scatter(
+            100 * p["pred_v2"],
+            100 * min(max(p["retention"], 0.0), 1.0),
+            s=50,
+            color=NEUTRAL if olmo else ACCENT,
+            marker="s" if olmo else "o",
+            alpha=0.9,
+            zorder=3,
+        )
+    ax.scatter([], [], s=50, color=NEUTRAL, marker="s", label="OLMo-2 1B, banking77")
+    ax.scatter([], [], s=50, color=ACCENT, marker="o", label="Qwen3-0.6B, MASSIVE")
+    ax.set_xlim(-3, 103)
+    ax.set_ylim(-3, 103)
+    ax.set_xlabel("Predicted before quantizing (%)", fontsize=13)
+    ax.set_ylabel("Measured gain retained (%, capped at 100)", fontsize=13)
+    leg = ax.legend(
+        loc="lower left", bbox_to_anchor=(0.3, 0.07), frameon=False, fontsize=10.5
+    )
     for t in leg.get_texts():
         t.set_color(INK)
     fig.tight_layout()
@@ -386,6 +464,11 @@ def predictor_chart(out: Path, dpi: int = 200) -> None:
 if __name__ == "__main__":
     import sys
 
+    if sys.argv[1:] == ["week3"]:
+        replication_chart(FIGS / "replication.png")
+        predictor_v2_chart(FIGS / "predictor-v2-week3.png")
+        print("wrote replication.png predictor-v2-week3.png")
+        raise SystemExit
     if sys.argv[1:] == ["week2"]:
         lr_sweep_chart(FIGS / "lr-sweep.png")
         predictor_chart(FIGS / "predictor-heldout.png")

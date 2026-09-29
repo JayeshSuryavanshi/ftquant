@@ -1,0 +1,60 @@
+{
+ "model": "allenai/OLMo-2-0425-1B-Instruct",
+ "params": 1484916736,
+ "bpw": {
+  "bf16": 16.021,
+  "Q8_0": 8.521,
+  "Q6_K": 6.584,
+  "Q4_K_M": 5.04,
+  "Q3_K_M": 4.197,
+  "Q2_K": 3.412
+ },
+ "configs": {
+  "olmo1-lora-lowlr": {
+   "delta_norm": 11.82372863252804,
+   "Q8_0": {
+    "signal_retained": 1.0001653480810802,
+    "noise_to_signal": 0.4172344338933801
+   },
+   "Q6_K": {
+    "signal_retained": 1.0000800794581655,
+    "noise_to_signal": 1.2607547226429814
+   },
+   "Q4_K_M": {
+    "signal_retained": 0.9975099498125077,
+    "noise_to_signal": 3.7538578333250023
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.9953080189270331,
+    "noise_to_signal": 4.67016333902401
+   },
+   "Q2_K": {
+    "signal_retained": 0.9862968853284826,
+    "noise_to_signal": 9.138335965168865
+   }
+  },
+  "olmo1-lora": {
+   "delta_norm": 113.04008748439203,
+   "Q8_0": {
+    "signal_retained": 1.0000220176951533,
+    "noise_to_signal": 0.04461970763328468
+   },
+   "Q6_K": {
+    "signal_retained": 0.9999981495314273,
+    "noise_to_signal": 0.1471887406661528
+   },
+   "Q4_K_M": {
+    "signal_retained": 0.9977256230654861,
+    "noise_to_signal": 0.5446344844642048
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.9956648780033761,
+    "noise_to_signal": 0.9891497979695044
+   },
+   "Q2_K": {
+    "signal_retained": 0.9862415851005186,
+    "noise_to_signal": 1.8156139073648925
+   }
+  }
+ }
+}

@@ -9,7 +9,10 @@ from ftquant.tensors import Checkpoint, round_to
 
 from helpers import write_safetensors
 
-NAMES = ["model.layers.0.self_attn.q_proj.weight", "model.layers.0.mlp.down_proj.weight"]
+NAMES = [
+    "model.layers.0.self_attn.q_proj.weight",
+    "model.layers.0.mlp.down_proj.weight",
+]
 
 
 @pytest.fixture
@@ -17,15 +20,23 @@ def base(tmp_path):
     rng = np.random.default_rng(0)
     d = tmp_path / "base"
     d.mkdir()
-    w = {n: ((rng.standard_normal((64, 128)) * 0.02).astype(np.float32), "BF16") for n in NAMES}
+    w = {
+        n: ((rng.standard_normal((64, 128)) * 0.02).astype(np.float32), "BF16")
+        for n in NAMES
+    }
     write_safetensors(d / "model.safetensors", w)
     return d
 
 
 def lora(rank=4, seed=1, size=0.05):
     rng = np.random.default_rng(seed)
-    return {n: ((rng.standard_normal((128, rank)) * size).astype(np.float32),
-                (rng.standard_normal((rank, 64)) * size).astype(np.float32)) for n in NAMES}
+    return {
+        n: (
+            (rng.standard_normal((128, rank)) * size).astype(np.float32),
+            (rng.standard_normal((rank, 64)) * size).astype(np.float32),
+        )
+        for n in NAMES
+    }
 
 
 def mlx_adapter(path, lo, scale):
@@ -36,7 +47,9 @@ def mlx_adapter(path, lo, scale):
         t[stem + ".lora_a"] = (a, "F32")
         t[stem + ".lora_b"] = (b, "F32")
     write_safetensors(path / "adapters.safetensors", t)
-    (path / "adapter_config.json").write_text(json.dumps({"fine_tune_type": "lora", "lora_parameters": {"scale": scale}}))
+    (path / "adapter_config.json").write_text(
+        json.dumps({"fine_tune_type": "lora", "lora_parameters": {"scale": scale}})
+    )
 
 
 def peft_adapter(path, lo, r, alpha):
@@ -65,7 +78,9 @@ def test_mlx_and_peft_adapters_agree(base, tmp_path):
     _, a = noise_to_signal(Checkpoint(base), str(tmp_path / "mlx"), fmts)
     _, b = noise_to_signal(Checkpoint(base), str(tmp_path / "peft"), fmts)
     for k in a:
-        assert a[k]["noise_to_signal"] == pytest.approx(b[k]["noise_to_signal"], rel=1e-6)
+        assert a[k]["noise_to_signal"] == pytest.approx(
+            b[k]["noise_to_signal"], rel=1e-6
+        )
 
 
 def test_smaller_updates_have_higher_noise(base, tmp_path):
@@ -88,6 +103,23 @@ def test_full_model_folder_is_supported(base, tmp_path):
     ft.mkdir()
     ck = Checkpoint(base)
     rng = np.random.default_rng(3)
-    write_safetensors(ft / "model.safetensors",
-                      {n: (ck.get(n) + rng.standard_normal((64, 128)).astype(np.float32) * 0.01, "BF16") for n in NAMES})
+    write_safetensors(
+        ft / "model.safetensors",
+        {
+            n: (
+                ck.get(n) + rng.standard_normal((64, 128)).astype(np.float32) * 0.01,
+                "BF16",
+            )
+            for n in NAMES
+        },
+    )
     assert len(list(pairs(ck, str(ft)))) == 2
+
+
+def test_prediction_only_within_tested_scope():
+    from ftquant.check import predict
+
+    assert predict(0.989, 5.52, 1.2067, "mlx-q3") == pytest.approx(0.414, abs=0.01)
+    assert predict(1.0, 0.5, 0.004, "mlx-q8") is None
+    assert predict(1.0, 0.5, None, "mlx-q4") is None
+    assert predict(1.0, 0.5, 0.1, None) is None

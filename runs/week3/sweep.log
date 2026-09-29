@@ -5,3 +5,73 @@
 2026-09-28 09:07:27 eval olmo1-base/mlx-q3: acc 0.0679 n=3080 (257s)
 2026-09-28 09:14:14 eval olmo1-base/gguf-bf16: acc 0.1464 n=3080 (388s)
 2026-09-28 09:18:25 eval olmo1-base/gguf-Q6_K: acc 0.1484 n=3080 (242s)
+2026-09-28 09:23:32 eval olmo1-base/gguf-Q4_K_M: acc 0.1127 n=3080 (293s)
+2026-09-28 09:30:21 eval olmo1-base/gguf-Q3_K_M: acc 0.0987 n=3080 (402s)
+2026-09-28 09:34:27 eval olmo1-base/gguf-Q2_K: acc 0.0594 n=3080 (236s)
+2026-09-28 09:34:28 done olmo1-base
+2026-09-28 10:15:50 trained olmo1-lora-lowlr in 2482s
+2026-09-28 10:22:15 eval olmo1-lora-lowlr/mlx-bf16: acc 0.7828 n=3080 (378s)
+2026-09-28 10:26:59 eval olmo1-lora-lowlr/mlx-q6: acc 0.7815 n=3080 (279s)
+2026-09-28 10:31:16 eval olmo1-lora-lowlr/mlx-q4: acc 0.7351 n=3080 (252s)
+2026-09-28 10:35:43 eval olmo1-lora-lowlr/mlx-q3: acc 0.5948 n=3080 (263s)
+2026-09-28 10:44:28 eval olmo1-lora-lowlr/gguf-bf16: acc 0.7818 n=3080 (505s)
+2026-09-28 10:49:51 eval olmo1-lora-lowlr/gguf-Q6_K: acc 0.7815 n=3080 (314s)
+2026-09-28 10:55:30 eval olmo1-lora-lowlr/gguf-Q4_K_M: acc 0.7763 n=3080 (325s)
+2026-09-28 11:00:41 eval olmo1-lora-lowlr/gguf-Q3_K_M: acc 0.7455 n=3080 (303s)
+2026-09-28 11:05:00 eval olmo1-lora-lowlr/gguf-Q2_K: acc 0.4276 n=3080 (250s)
+2026-09-28 11:05:01 done olmo1-lora-lowlr
+2026-09-28 11:45:31 trained olmo1-lora in 2430s
+2026-09-28 11:51:48 eval olmo1-lora/mlx-bf16: acc 0.7679 n=3080 (369s)
+2026-09-28 11:56:26 eval olmo1-lora/mlx-q6: acc 0.7646 n=3080 (273s)
+2026-09-28 12:00:37 eval olmo1-lora/mlx-q4: acc 0.7607 n=3080 (247s)
+2026-09-28 12:04:57 eval olmo1-lora/mlx-q3: acc 0.7477 n=3080 (257s)
+2026-09-28 12:12:28 eval olmo1-lora/gguf-bf16: acc 0.7666 n=3080 (430s)
+2026-09-28 12:17:03 eval olmo1-lora/gguf-Q6_K: acc 0.7669 n=3080 (267s)
+2026-09-28 12:21:35 eval olmo1-lora/gguf-Q4_K_M: acc 0.7695 n=3080 (258s)
+2026-09-28 12:26:05 eval olmo1-lora/gguf-Q3_K_M: acc 0.7659 n=3080 (262s)
+2026-09-28 12:30:12 eval olmo1-lora/gguf-Q2_K: acc 0.7266 n=3080 (237s)
+2026-09-28 12:30:13 done olmo1-lora
+2026-09-28 12:43:27 eval mas06-base/mlx-bf16: acc 0.0000 n=2974 (793s)
+2026-09-28 12:51:24 eval mas06-base/mlx-q6: acc 0.0000 n=2974 (474s)
+2026-09-28 13:05:11 eval mas06-base/mlx-q4: acc 0.0000 n=2974 (824s)
+2026-09-28 13:27:57 eval mas06-base/mlx-q3: acc 0.0000 n=2974 (1362s)
+2026-09-28 13:34:06 eval mas06-base/gguf-bf16: acc 0.0000 n=2974 (359s)
+2026-09-28 13:40:55 eval mas06-base/gguf-Q6_K: acc 0.0000 n=2974 (405s)
+2026-09-28 13:49:58 eval mas06-base/gguf-Q4_K_M: acc 0.0000 n=2974 (535s)
+2026-09-28 13:58:33 eval mas06-base/gguf-Q3_K_M: acc 0.0003 n=2974 (512s)
+2026-09-28 14:11:31 eval mas06-base/gguf-Q2_K: acc 0.0000 n=2974 (773s)
+2026-09-28 14:11:32 done mas06-base
+2026-09-28 14:21:41 trained mas06-lora-lowlr in 610s
+2026-09-28 14:29:33 eval mas06-lora-lowlr/mlx-bf16: acc 0.6530 n=2974 (467s)
+2026-09-28 14:35:20 eval mas06-lora-lowlr/mlx-q6: acc 0.6580 n=2974 (343s)
+2026-09-28 14:40:21 eval mas06-lora-lowlr/mlx-q4: acc 0.6076 n=2974 (298s)
+2026-09-28 14:52:39 eval mas06-lora-lowlr/mlx-q3: acc 0.2085 n=2974 (734s)
+2026-09-28 14:56:58 eval mas06-lora-lowlr/gguf-bf16: acc 0.6533 n=2974 (250s)
+2026-09-28 15:01:16 eval mas06-lora-lowlr/gguf-Q6_K: acc 0.6453 n=2974 (254s)
+2026-09-28 15:05:26 eval mas06-lora-lowlr/gguf-Q4_K_M: acc 0.6392 n=2974 (245s)
+2026-09-28 15:09:54 eval mas06-lora-lowlr/gguf-Q3_K_M: acc 0.5511 n=2974 (263s)
+2026-09-28 15:23:47 eval mas06-lora-lowlr/gguf-Q2_K: acc 0.0000 n=2974 (830s)
+2026-09-28 15:23:47 done mas06-lora-lowlr
+2026-09-28 15:33:58 trained mas06-lora in 611s
+2026-09-28 15:42:03 eval mas06-lora/mlx-bf16: acc 0.6264 n=2974 (480s)
+2026-09-28 15:48:02 eval mas06-lora/mlx-q6: acc 0.6163 n=2974 (355s)
+2026-09-28 15:53:13 eval mas06-lora/mlx-q4: acc 0.6315 n=2974 (307s)
+2026-09-28 15:59:38 eval mas06-lora/mlx-q3: acc 0.3887 n=2974 (382s)
+2026-09-28 16:04:01 eval mas06-lora/gguf-bf16: acc 0.6295 n=2974 (255s)
+2026-09-28 16:08:21 eval mas06-lora/gguf-Q6_K: acc 0.6244 n=2974 (256s)
+2026-09-28 16:12:31 eval mas06-lora/gguf-Q4_K_M: acc 0.6247 n=2974 (245s)
+2026-09-28 16:17:00 eval mas06-lora/gguf-Q3_K_M: acc 0.5955 n=2974 (266s)
+2026-09-28 16:22:07 eval mas06-lora/gguf-Q2_K: acc 0.3877 n=2974 (303s)
+2026-09-28 16:22:08 done mas06-lora
+2026-09-28 16:35:34 trained mas06-full in 806s
+2026-09-28 16:43:17 eval mas06-full/mlx-bf16: acc 0.6896 n=2974 (458s)
+2026-09-28 16:49:00 eval mas06-full/mlx-q6: acc 0.6833 n=2974 (340s)
+2026-09-28 16:54:04 eval mas06-full/mlx-q4: acc 0.6103 n=2974 (300s)
+2026-09-28 17:04:12 eval mas06-full/mlx-q3: acc 0.2418 n=2974 (605s)
+2026-09-28 17:08:25 eval mas06-full/gguf-bf16: acc 0.6870 n=2974 (245s)
+2026-09-28 17:12:41 eval mas06-full/gguf-Q6_K: acc 0.6839 n=2974 (253s)
+2026-09-28 17:16:49 eval mas06-full/gguf-Q4_K_M: acc 0.6711 n=2974 (242s)
+2026-09-28 17:21:12 eval mas06-full/gguf-Q3_K_M: acc 0.5656 n=2974 (259s)
+2026-09-28 17:26:20 eval mas06-full/gguf-Q2_K: acc 0.0757 n=2974 (303s)
+2026-09-28 17:26:20 done mas06-full
+2026-09-28 17:26:20 sweep complete
