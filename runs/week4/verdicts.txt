@@ -1,0 +1,12 @@
+W4-H1 olmo1 mlx-q3       supported      R 1.105 vs 0.813, diff +0.292 [+0.263, +0.322]
+W4-H1 olmo1 gguf-Q3_K_M  supported      R 1.064 vs 1.002, diff +0.061 [+0.042, +0.079]
+W4-H1 mas06 mlx-q3       supported      R 0.685 vs 0.052, diff +0.633 [+0.604, +0.659]
+W4-H1 mas06 gguf-Q3_K_M  supported      R 0.916 vs 0.777, diff +0.138 [+0.111, +0.168]
+W4-H2 q4b mlx-q3         supported      R 1.464 vs 0.925, diff +0.539 [+0.451, +0.642]
+W4-H2 q4b gguf-Q3_K_M    supported      R 1.075 vs 0.871, diff +0.204 [+0.153, +0.256]
+pred_v2         n=42 MAE 0.084 [0.031, 0.146] safe 0.905
+pred_v1         n=42 MAE 0.090 [0.026, 0.174] safe 0.905
+pred_kld_only   n=42 MAE 0.113 [0.083, 0.137] safe 0.690
+pred_bits_only  n=42 MAE 0.170 [0.131, 0.210] safe 0.643
+dropped: []
+W4-H1 supported | W4-H2 supported | W4-H3 supported | W4-H4 supported

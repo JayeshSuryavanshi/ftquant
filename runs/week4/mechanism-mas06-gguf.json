@@ -1,0 +1,41 @@
+{
+ "model": "Qwen/Qwen3-0.6B",
+ "configs": {
+  "mas06-lora-lowlr-s1": {
+   "Q6_K": {
+    "signal_retained": 1.0000430424971947,
+    "noise_to_signal": 1.3949997326372947
+   },
+   "Q4_K_M": {
+    "signal_retained": 0.9976214096792473,
+    "noise_to_signal": 4.14078769236609
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.9939463766829303,
+    "noise_to_signal": 5.015713258696394
+   },
+   "Q2_K": {
+    "signal_retained": 0.9870470338297082,
+    "noise_to_signal": 9.776996239098912
+   }
+  },
+  "mas06-lora-s1": {
+   "Q6_K": {
+    "signal_retained": 1.0000148992648779,
+    "noise_to_signal": 0.17095575334913282
+   },
+   "Q4_K_M": {
+    "signal_retained": 0.9977183347149041,
+    "noise_to_signal": 0.6372956606333102
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.9953924109374904,
+    "noise_to_signal": 1.1100177924644714
+   },
+   "Q2_K": {
+    "signal_retained": 0.986561433710483,
+    "noise_to_signal": 2.031874973877034
+   }
+  }
+ }
+}

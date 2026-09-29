@@ -15,5 +15,5 @@
   "gguf-Q3_K_M",
   "gguf-Q2_K"
  ],
- "tested_on": "fit on Qwen3-0.6B and 1.7B (banking77); pre-registered test on OLMo-2 1B (banking77) and Qwen3-0.6B (MASSIVE): MAE 0.059, safe-call agreement 0.943, n=35"
+ "tested_on": "fit on Qwen3-0.6B and 1.7B (banking77); pre-registered test on OLMo-2 1B (banking77) and Qwen3-0.6B (MASSIVE): MAE 0.059, safe-call agreement 0.943, n=35; second pre-registered test on second seeds and Qwen3-4B (week 4): MAE 0.084 [0.031, 0.146], safe-call agreement 0.905, n=42; not used for Qwen3-4B (MAE 0.115 on its 14 points)"
 }

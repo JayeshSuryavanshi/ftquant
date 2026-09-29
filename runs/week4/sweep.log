@@ -149,3 +149,10 @@ RuntimeError: [METAL] Command buffer execution failed: Insufficient Memory (0000
 2026-09-29 14:07:20 done mas06-lora-s1
 2026-09-29 14:07:20 done q4b-base
 2026-09-29 14:08:04 done q4b-lora-lowlr
+2026-09-29 14:28:15 eval q4b-lora/gguf-bf16: acc 0.7864 n=3080 (1211s)
+2026-09-29 14:46:36 eval q4b-lora/gguf-Q6_K: acc 0.7870 n=3080 (1076s)
+2026-09-29 15:01:51 eval q4b-lora/gguf-Q4_K_M: acc 0.7860 n=3080 (871s)
+2026-09-29 15:17:54 eval q4b-lora/gguf-Q3_K_M: acc 0.7799 n=3080 (940s)
+2026-09-29 15:30:20 eval q4b-lora/gguf-Q2_K: acc 0.7565 n=3080 (720s)
+2026-09-29 15:30:23 done q4b-lora
+2026-09-29 15:30:23 sweep complete

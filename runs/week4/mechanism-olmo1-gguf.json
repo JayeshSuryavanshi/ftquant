@@ -1,0 +1,41 @@
+{
+ "model": "allenai/OLMo-2-0425-1B-Instruct",
+ "configs": {
+  "olmo1-lora-lowlr-s1": {
+   "Q6_K": {
+    "signal_retained": 1.0001045819121035,
+    "noise_to_signal": 1.2478142235270564
+   },
+   "Q4_K_M": {
+    "signal_retained": 0.9976375567737098,
+    "noise_to_signal": 3.7192646913352503
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.9954330808486359,
+    "noise_to_signal": 4.635947105594638
+   },
+   "Q2_K": {
+    "signal_retained": 0.9859693602461945,
+    "noise_to_signal": 9.069475864632222
+   }
+  },
+  "olmo1-lora-s1": {
+   "Q6_K": {
+    "signal_retained": 0.9999974158618785,
+    "noise_to_signal": 0.13627363409234372
+   },
+   "Q4_K_M": {
+    "signal_retained": 0.997725266610431,
+    "noise_to_signal": 0.5048240182365016
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.995682768279629,
+    "noise_to_signal": 0.9262095196703105
+   },
+   "Q2_K": {
+    "signal_retained": 0.9862615710567822,
+    "noise_to_signal": 1.7076328467481685
+   }
+  }
+ }
+}

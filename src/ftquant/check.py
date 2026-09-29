@@ -215,7 +215,7 @@ def print_table(results: list[dict], width: int) -> None:
     if any(x["predicted_retention"] is None for x in results):
         print(
             "\nn/a: the prediction is shown only for the formats it was tested on (MLX 6/4/3-bit group 64,"
-            " GGUF Q6_K/Q4_K_M/Q3_K_M/Q2_K) and bases with a measured base damage."
+            " GGUF Q6_K/Q4_K_M/Q3_K_M/Q2_K) and bases whose base damage ships with ftquant."
         )
 
 

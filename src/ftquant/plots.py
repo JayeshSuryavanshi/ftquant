@@ -385,11 +385,14 @@ def predictor_chart(out: Path, dpi: int = 200) -> None:
     plt.close(fig)
 
 
-def replication_chart(out: Path, dpi: int = 200) -> None:
+def replication_chart(out: Path, data: dict | None = None, dpi: int = 200) -> None:
     fonts()
-    data = json.loads((RUNS / "week3" / "summary.json").read_text())
+    if data is None:
+        data = json.loads((RUNS / "week3" / "summary.json").read_text())
     names = list(data)
-    fig, axes = plt.subplots(1, 2, figsize=(10, 4.6), dpi=dpi, sharey=True)
+    fig, axes = plt.subplots(
+        1, 2, figsize=(10, 1.2 + 0.85 * len(names)), dpi=dpi, sharey=True
+    )
     fig.patch.set_facecolor(GROUND)
     for ax, (variant, title) in zip(
         axes, (("mlx-q3", "MLX 3-bit"), ("gguf-Q3_K_M", "GGUF Q3_K_M"))
@@ -426,27 +429,50 @@ def replication_chart(out: Path, dpi: int = 200) -> None:
     plt.close(fig)
 
 
-def predictor_v2_chart(out: Path, dpi: int = 200) -> None:
+PRED_ARMS_W3 = {
+    "olmo1": ("OLMo-2 1B, banking77", NEUTRAL, "s"),
+    "mas06": ("Qwen3-0.6B, MASSIVE", ACCENT, "o"),
+}
+PRED_ARMS_W4 = {
+    "olmo1": ("OLMo-2 1B, banking77, seed 1", NEUTRAL, "s"),
+    "mas06": ("Qwen3-0.6B, MASSIVE, seed 1", ACCENT, "o"),
+    "q4b": ("Qwen3-4B, banking77", WARM, "^"),
+}
+REPLICATION_ORDER = [
+    "Qwen3-0.6B, banking77",
+    "Qwen3-1.7B, banking77",
+    "Qwen3-4B, banking77",
+    "OLMo-2 1B, banking77",
+    "OLMo-2 1B, banking77, seed 1",
+    "Qwen3-0.6B, MASSIVE",
+    "Qwen3-0.6B, MASSIVE, seed 1",
+]
+
+
+def predictor_v2_chart(
+    out: Path, run: str = "week3", arms: dict | None = None, dpi: int = 200
+) -> None:
     fonts()
-    pts = json.loads((RUNS / "week3" / "verdicts.json").read_text())["points"]
+    arms = arms or PRED_ARMS_W3
+    pts = json.loads((RUNS / run / "verdicts.json").read_text())["points"]
     fig, ax = plt.subplots(figsize=(6.2, 5.6), dpi=dpi)
     fig.patch.set_facecolor(GROUND)
     frame(ax)
     ax.fill_between([0, 100], [-10, 90], [10, 110], color=GRID, alpha=0.5, lw=0)
     ax.plot([0, 100], [0, 100], color=INK2, linewidth=1)
     for p in pts:
-        olmo = p["config"].startswith("olmo1")
+        _, color, marker = arms[p["config"].split("-")[0]]
         ax.scatter(
             100 * p["pred_v2"],
             100 * min(max(p["retention"], 0.0), 1.0),
             s=50,
-            color=NEUTRAL if olmo else ACCENT,
-            marker="s" if olmo else "o",
+            color=color,
+            marker=marker,
             alpha=0.9,
             zorder=3,
         )
-    ax.scatter([], [], s=50, color=NEUTRAL, marker="s", label="OLMo-2 1B, banking77")
-    ax.scatter([], [], s=50, color=ACCENT, marker="o", label="Qwen3-0.6B, MASSIVE")
+    for label, color, marker in arms.values():
+        ax.scatter([], [], s=50, color=color, marker=marker, label=label)
     ax.set_xlim(-3, 103)
     ax.set_ylim(-3, 103)
     ax.set_xlabel("Predicted before quantizing (%)", fontsize=13)
@@ -468,6 +494,17 @@ if __name__ == "__main__":
         replication_chart(FIGS / "replication.png")
         predictor_v2_chart(FIGS / "predictor-v2-week3.png")
         print("wrote replication.png predictor-v2-week3.png")
+        raise SystemExit
+    if sys.argv[1:] == ["week4"]:
+        merged = {
+            **json.loads((RUNS / "week3" / "summary.json").read_text()),
+            **json.loads((RUNS / "week4" / "summary.json").read_text())["settings"],
+        }
+        replication_chart(
+            FIGS / "replication-week4.png", {k: merged[k] for k in REPLICATION_ORDER}
+        )
+        predictor_v2_chart(FIGS / "predictor-v2-week4.png", "week4", PRED_ARMS_W4)
+        print("wrote replication-week4.png predictor-v2-week4.png")
         raise SystemExit
     if sys.argv[1:] == ["week2"]:
         lr_sweep_chart(FIGS / "lr-sweep.png")

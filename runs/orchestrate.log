@@ -159,3 +159,15 @@ Fetching 13 files: 100%|██████████| 13/13 [00:00<00:00, 1844
 2026-09-29 14:06:54 week-4 orchestrator start
 2026-09-29 14:06:54 skip kld qwen3-4b (exists)
 2026-09-29 14:06:54 start sweep week4
+2026-09-29 15:30:23 done sweep week4 (5010s)
+2026-09-29 15:30:23 start mechanism olmo1
+2026-09-29 15:38:29 done mechanism olmo1 (486s)
+2026-09-29 15:38:29 start mechanism mas06
+2026-09-29 15:42:59 done mechanism mas06 (270s)
+2026-09-29 15:42:59 start mechanism q4b
+2026-09-29 16:12:35 done mechanism q4b (1776s)
+2026-09-29 16:12:35 start analysis week4
+2026-09-29 16:12:43 done analysis week4 (8s)
+2026-09-29 16:12:43 start verdicts week4
+2026-09-29 16:12:44 done verdicts week4 (1s)
+2026-09-29 16:12:44 week-4 orchestrator complete

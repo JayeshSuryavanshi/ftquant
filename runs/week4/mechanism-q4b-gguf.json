@@ -1,0 +1,41 @@
+{
+ "model": "Qwen/Qwen3-4B",
+ "configs": {
+  "q4b-lora-lowlr": {
+   "Q6_K": {
+    "signal_retained": 1.0001907635596463,
+    "noise_to_signal": 1.914796855525761
+   },
+   "Q4_K_M": {
+    "signal_retained": 0.9977662710867878,
+    "noise_to_signal": 5.62261430249171
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.9946942819002528,
+    "noise_to_signal": 6.515764018305105
+   },
+   "Q2_K": {
+    "signal_retained": 0.985014911409128,
+    "noise_to_signal": 12.730909747599128
+   }
+  },
+  "q4b-lora": {
+   "Q6_K": {
+    "signal_retained": 1.0001040963646295,
+    "noise_to_signal": 0.18728332960462027
+   },
+   "Q4_K_M": {
+    "signal_retained": 0.9977563541071351,
+    "noise_to_signal": 0.6968294019945097
+   },
+   "Q3_K_M": {
+    "signal_retained": 0.9955002326912225,
+    "noise_to_signal": 1.1953781111264254
+   },
+   "Q2_K": {
+    "signal_retained": 0.9859735742825015,
+    "noise_to_signal": 2.1651292338885693
+   }
+  }
+ }
+}

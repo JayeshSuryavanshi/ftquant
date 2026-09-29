@@ -75,6 +75,19 @@ A chronological record: what ran and when, what was decided and why, what went w
   - The sweep process had started at 05:16, before the 10:10 atomic-write change, so its GGUF bf16 file was checked before reuse: 398 tensors, and the tensor data ends exactly at the file size. It was complete and was reused.
   - The four MLX result files each have all 3,080 lines. The evaluators score every item before they open the output file, so an interrupted evaluation leaves no partial file that a resume could mistake for a finished one.
   - 14:06: restarted in its own process session, detached from any terminal session, so closing a window can no longer stop it. Finished configurations were skipped. About 25 minutes were lost.
+- 14:08 to 15:30: 4B LoRA 1e-4 GGUF evaluations: 78.6% at bf16, 78.7% at Q6_K, 78.6% at Q4_K_M, 78.0% at Q3_K_M, 75.6% at Q2_K. The sweep finished at 15:30.
+- About 14:30, before the verdicts were computed: `verdicts_w4.py` was checked against `PREREGISTRATION-week4.md` (bootstrap, verdict rules, thresholds, mechanism and KLD file layouts, base pairing through the week-3 links), and the analysis was dry-run on the partial data. By then the per-item results behind all four W4-H1 tests and the 4B MLX evaluations existed; the W4-H2 GGUF evaluations and the mechanism files did not. No change was needed, and the script was not modified.
+- 15:30 to 16:12: mechanism measurements (OLMo 8 min, MASSIVE 5 min, 4B 30 min), analysis and verdicts. The week-4 pipeline finished at 16:12:44.
+- Verdicts: W4-H1 supported (4 of 4), W4-H2 supported (2 of 2), W4-H3 supported (v2 MAE 0.084 [0.031, 0.146], safe-call agreement 0.905), W4-H4 supported (KLD-only 0.113, bits-only 0.170). The MAE interval reaches above 0.10, and on the 14 Qwen3-4B points alone v2 misses both bars (0.115, 0.79).
+- Decision after seeing the results: `ftquant check` does not predict for Qwen3-4B, and its base damage is not bundled.
+- Exploratory: across seven settings (two are second seeds), the gentle LoRA was more accurate at bf16 in all seven and kept less at every format of 4 bits or fewer, 35 of 35. The five smallest margins are all at Q4_K_M, under 2 points. At 4B the gap at MLX 3-bit shrinks to 80% against 94% of accuracy kept.
+- Written: `RESULTS-week4.md`, `src/ftquant/week4.py` (`runs/week4/summary.json`), `figures/replication-week4.png` and `figures/predictor-v2-week4.png` (the chart functions now take their data; the week-3 figures re-render byte-identical), README updates, and `records/eval-week4.tar.gz`.
+- 16:25: before committing, two independent agents audited the write-up. One recomputed 165 numbers from the raw per-item files with its own code, including all six bootstrap tests and the predictor metrics. The other checked 64 claims against the pre-registrations and the earlier results. Corrections applied:
+  - Two rounding slips in `RESULTS-week3.md`, Qwen3-0.6B banking77 row: MLX 4-bit 0.89 → 0.88 (2,138/2,417 = 0.8846) and Q3_K_M 0.99 → 0.98 (2,224/2,259 = 0.9845). No comparison changes direction.
+  - Overstated wording in `RESULTS-week4.md` and the README was rewritten: a trend with size claimed from one 4B model, an untested "which is why", "no longer limited to 1.7B", and confirmatory and exploratory results mixed in the README introduction.
+  - A deviation not disclosed until now: the week-1 pre-registration planned to fit the drift threshold on the validation split from week 2 on, but weeks 2 to 4 kept fitting it on half of the test set. It is logged in `PREREGISTRATION.md` (re-hashed at 16:29) and in the week-4 limits. Only exploratory drift numbers are affected.
+  - Smaller fixes: a stale footnote in `ftquant check` and the bundled predictor's test record now mention week 4.
+  - One reported problem was rejected after checking: week 4 did run 63 new evaluations (7 configurations × 9), not 45.
 
 ## Compute used
 
@@ -85,6 +98,6 @@ Everything ran on one Apple M1 Pro laptop (16 GB). Typical wall times:
 | Qwen3-0.6B | 10 to 20 min (full fine-tuning 13 to 25 min) | 3 to 8 min each on banking77; 4 to 15 min on MASSIVE |
 | Qwen3-1.7B | about 52 min | 5 to 9 min each |
 | OLMo-2 1B | 40 to 53 min | 4 to 9 min each |
-| Qwen3-4B | 2 h 24 min (micro-batch 2) | 13 to 25 min each |
+| Qwen3-4B | 2 h 8 min to 2 h 24 min (micro-batch 2) | 12 to 25 min each |
 
-Base KLD takes 2 to 7 minutes per base model.
+Base KLD takes 2 to 7 minutes per base model. The mechanism measurements for two fine-tunes take 5 to 8 minutes on 0.6B and 1B models and 30 minutes on 4B.
