@@ -1,0 +1,1716 @@
+{
+ "constants": [
+  {
+   "pattern": "Qwen3-(?:0\\.6|1\\.7)B|\\b(?:0\\.6|1\\.7)B\\b",
+   "reason": "model name"
+  },
+  {
+   "pattern": "mlx-lm 0\\.31\\.3|MLX 0\\.32\\.2",
+   "reason": "software version"
+  },
+  {
+   "pattern": "width=0\\.\\d+\\\\linewidth|p\\{\\d\\.\\dcm\\}",
+   "reason": "layout"
+  },
+  {
+   "pattern": "at most 0\\.1[05]|at least 0\\.8[05]|the 0\\.10 bar|bar of 0\\.10|bar 0\\.10",
+   "reason": "pre-registered threshold"
+  },
+  {
+   "pattern": "at least 9[08]\\\\%|less than 60\\\\%|at most 5\\\\%|\\$\\\\ge 90\\\\%\\$|at least 0\\.9\\b|side of 0\\.9\\b",
+   "reason": "threshold defined in the text"
+  },
+  {
+   "pattern": "95\\\\%",
+   "reason": "interval level"
+  },
+  {
+   "pattern": "99\\.5\\\\%",
+   "reason": "Bonferroni level for ten tests"
+  },
+  {
+   "pattern": "0\\\\% task success|1\\.0 percentage point",
+   "reason": "number from a cited work"
+  },
+  {
+   "pattern": "above 125\\\\% are drawn at 125\\\\%|capped at 100\\\\%",
+   "reason": "plotting convention"
+  },
+  {
+   "pattern": "adds 0\\.5 bits per weight",
+   "reason": "32 bits of scale and bias per 64 weights"
+  }
+ ],
+ "findings": [
+  {
+   "evidence": "Pre-registered, supported (W3-H1, W4-H1, W4-H2); section sec:replication",
+   "finding": "At MLX 3-bit and Q3_K_M, the gentle LoRA keeps less of its gain than the strong one",
+   "id": "F1",
+   "result": "5 pairs on 3 base models and 2 tasks: R_{strong} - R_{gentle} from +0.06 to +0.63, interval above 0 in 10 of 10 tests, also at the 99.5% level",
+   "section": "sec:replication",
+   "status": "pre-registered",
+   "values": {
+    "rep.diff_max": "+0.63",
+    "rep.diff_min": "+0.06",
+    "rep.n_supported": "10",
+    "rep.n_tests": "10"
+   }
+  },
+  {
+   "evidence": "Exploratory; section sec:replication",
+   "finding": "The gentle LoRA keeps a smaller share of its accuracy at every format compared",
+   "id": "F2",
+   "result": "A_{strong} - A_{gentle} > 0 in 40 of 40 cells: at least 3.8 points at MLX 4-bit and 4.5 at MLX 3-bit, Q3_K_M and Q2_K; under 2 points in 6 of 8 at Q4_K_M",
+   "section": "sec:replication",
+   "status": "exploratory",
+   "values": {
+    "pat.cells": "40",
+    "pat.lower": "40",
+    "pat.min_gap_low": "4.5",
+    "pat.min_gap_q4": "3.8",
+    "pat.q4km_under2_n": "6"
+   }
+  },
+  {
+   "evidence": "Exploratory; section sec:replication",
+   "finding": "Which LoRA is more accurate after quantization depends on the format",
+   "id": "F3",
+   "result": "Strong more accurate in 8 of 8 settings at MLX 3-bit, 8 at Q2_K, 7 at Q3_K_M, 5 at MLX 4-bit and 0 at Q4_K_M; its bf16 cost: 1.5 to 9.9 points",
+   "section": "sec:replication",
+   "status": "exploratory",
+   "values": {
+    "abs.cost_max": "9.9",
+    "abs.cost_min": "1.5",
+    "abs.n.Q2K": "8",
+    "abs.n.Q3KM": "7",
+    "abs.n.Q4KM": "0",
+    "abs.n.q3": "8",
+    "abs.n.q4": "5"
+   }
+  },
+  {
+   "evidence": "Pre-registered, supported (W5-H1, bound +0.08); section sec:round5",
+   "finding": "In MLX, keeping a gentle update exact does not restore its gain",
+   "id": "F4",
+   "result": "Unfused minus fused R, OLMo-2 1B at MLX 3-bit, 2 seeds: +0.008 [-0.010, +0.027] and +0.023 [+0.002, +0.042]: 5% and 12% of the lost gain, upper bounds 16% and 22%",
+   "section": "sec:round5",
+   "status": "pre-registered",
+   "values": {
+    "r5.h1.margin": "+0.08",
+    "r5.h1.s0.d": "+0.008",
+    "r5.h1.s0.hi": "+0.027",
+    "r5.h1.s0.lo": "-0.010",
+    "r5.h1.s0.share": "5",
+    "r5.h1.s0.share_hi": "16",
+    "r5.h1.s1.d": "+0.023",
+    "r5.h1.s1.hi": "+0.042",
+    "r5.h1.s1.lo": "+0.002",
+    "r5.h1.s1.share": "12",
+    "r5.h1.s1.share_hi": "22"
+   }
+  },
+  {
+   "evidence": "Pre-registered at 4-bit for the gentle LoRA, supported (W5-H2); rest exploratory; section sec:round5",
+   "finding": "In MLX, training a gentle LoRA on the quantized base recovers its gain",
+   "id": "F5",
+   "result": "Gain delivered minus fused R, Qwen3-0.6B, 1 seed: +0.116 [+0.097, +0.135] at 4-bit and +0.890 [+0.865, +0.916] at 3-bit; for the strong LoRA, -0.158 [-0.181, -0.136] and -0.007 [-0.032, +0.018]",
+   "section": "sec:round5",
+   "status": "pre-registered",
+   "values": {
+    "r5.h2.d": "+0.116",
+    "r5.h2.hi": "+0.135",
+    "r5.h2.lo": "+0.097",
+    "r5.q3g.d": "+0.890",
+    "r5.q3g.hi": "+0.916",
+    "r5.q3g.lo": "+0.865",
+    "r5.q3s.d": "-0.007",
+    "r5.q3s.hi": "+0.018",
+    "r5.q3s.lo": "-0.032",
+    "r5.q4s.d": "-0.158",
+    "r5.q4s.hi": "-0.136",
+    "r5.q4s.lo": "-0.181"
+   }
+  },
+  {
+   "evidence": "Pre-registered, supported (W3-H2, W3-H3, W4-H3, W4-H4); norm model post hoc; section sec:predictor",
+   "finding": "A weight-only predictor meets its pre-registered bar, but the size of the update predicts as well",
+   "id": "F6",
+   "result": "Held-out MAE of v2: 0.059 [0.028, 0.090] and 0.084 [0.031, 0.146], bar 0.10; update norm with base damage: 0.049 and 0.049; v2 on Qwen3-4B alone: 0.115",
+   "section": "sec:predictor",
+   "status": "pre-registered",
+   "values": {
+    "pb.norm.r3": "0.049",
+    "pb.norm.r4": "0.049",
+    "pred.q4b.mae": "0.115",
+    "pred.v2.r3.hi": "0.090",
+    "pred.v2.r3.lo": "0.028",
+    "pred.v2.r3.mae": "0.059",
+    "pred.v2.r4.hi": "0.146",
+    "pred.v2.r4.lo": "0.031",
+    "pred.v2.r4.mae": "0.084"
+   }
+  },
+  {
+   "evidence": "Exploratory; pre-registered H4 not supported; section sec:drift",
+   "finding": "At a confidence threshold fixed at bf16, the gentle LoRA loses more coverage",
+   "id": "F7",
+   "result": "Coverage fell further for the gentle LoRA in 36 of 40 cells; in the pre-registered 4-bit test on a Qwen3-1.7B LoRA, Q4_K_M moved coverage by -1.2 points",
+   "section": "sec:drift",
+   "status": "exploratory",
+   "values": {
+    "drift.n_cases": "40",
+    "drift.n_fell": "36",
+    "r1.h4.gguf": "-1.2"
+   }
+  },
+  {
+   "evidence": "Controls; section sec:setup, section sec:round5",
+   "finding": "Measurement repeatability",
+   "id": "C",
+   "result": "MLX and GGUF agree on 97.1% to 99.4% of the bf16 predictions of each fine-tune that learned its task; one and four llama-server slots differ on 2 of 3,080 items; decoding restricted to valid labels changes A by at most 0.003",
+   "section": "sec:setup",
+   "status": "control",
+   "values": {
+    "nf.ft_hi": "99.4",
+    "nf.ft_lo": "97.1",
+    "r5.lab.max_change": "0.003",
+    "r5.rep.diff_np": "2",
+    "r5.rep.n": "3,080"
+   }
+  }
+ ],
+ "quoted_in_text": [
+  "delivered 96\\% of the bf16 gain at 4 bits, against 84\\% when trained in bf16, fused and quantized",
+  "evaluation uses all 3,080 test items, 40 per intent",
+  "all 77 intent names",
+  "2,974 test utterances",
+  "Base Qwen3-0.6B scores 0\\% on this task zero-shot",
+  "the strong LoRA's update was 8.7 to 12.9 times larger than the gentle one's",
+  "(21\\% of banking77, 17\\% of MASSIVE)",
+  "(final validation loss 1.95, against 0.05 to 0.14 for every other run, and 0\\% test accuracy)",
+  "Q3\\_K\\_M, at 4.2 to 4.4 bits per weight, is closer in size to MLX~4-bit (4.5) than to MLX~3-bit (3.5)",
+  "the two engines agreed on 97.1\\% to 99.4\\% of the bf16 test predictions of every fine-tune that learned its task, and their accuracies differed by at most 0.61 points",
+  "Base models with nonzero accuracy agreed on 95.9\\% to 98.5\\%.",
+  "(2,000 resamples, seed 0, 95\\% percentile intervals)",
+  "on 8 chunks of 512 tokens of WikiText-2 test text",
+  "At MLX~3-bit the base's accuracy fell from 37.9\\% to 10.4\\% and its rate of valid labels from 83.9\\% to 36.3\\%, while the fine-tune kept 93\\% of its own accuracy (98\\% at Q3\\_K\\_M and 85\\% at Q2\\_K)",
+  "The 4-bit operating point moved on MLX (coverage $-4.2$ points) but not on GGUF~($-1.2$)",
+  "The LoRA at $10^{-4}$ kept 95\\% of its gain at MLX~3-bit and 101\\% at Q3\\_K\\_M.",
+  "full fine-tuning at $3\\times10^{-5}$ ($\\lVert\\Delta\\rVert = 18.6$) kept 0.78 of its gain at MLX~3-bit and 0.89 at Q2\\_K, while LoRA at $3\\times10^{-5}$ (25.2) kept 0.63 and 0.01.",
+  "and $0.8$ for LoRA at Q4\\_K\\_M, where $3\\times10^{-5}$ and $10^{-4}$ are tied to within 0.001.",
+  "the LoRA at $10^{-5}$, kept 6\\% of its gain at MLX~3-bit.",
+  "On Qwen3-1.7B, the LoRA at $10^{-5}$ kept 36\\% of its gain at MLX~3-bit and the LoRA at $10^{-4}$ kept 163\\%. In accuracy retention, which the collapsing base does not inflate, the pair is 0.32 against 0.93.",
+  "all 44 pairs with NSR below 3 kept at least 90\\% of their gain, against 3 of 7 between 3 and 5 and 4 of 10 at 5 or more",
+  "only 5.5\\% of its update's projection survives MLX~3-bit",
+  "its NSR (2.16) looks benign, and its measured gain retention is 0\\%",
+  "the same fine-tune keeps 50\\% of its update and 27\\% of its gain",
+  "the five pairs that kept less than 60\\% of their update were all exploratory Qwen3-0.6B full fine-tunes, four of them from the run at $3\\times10^{-6}$",
+  "the lowest update kept in rounds 3 and 4 was 74\\%",
+  "In 168 of all 192 measured pairs",
+  "only large updates held on: 4 of 24 such pairs kept 90\\% of their gain",
+  "at MLX~3-bit the Qwen3-0.6B base scored 0\\%, while its LoRA at $10^{-4}$ kept 95\\% of its gain",
+  "kept 89\\% and 1\\% of their gain with almost the same NSR (5.29 and 5.16)",
+  "All 10 tests were supported",
+  "The differences ranged from $+0.06$ (OLMo at Q3\\_K\\_M, with both seeds) to $+0.63$ (MASSIVE at MLX~3-bit, seed 1)",
+  "For Qwen3-4B at MLX~3-bit, 0.155 of the 0.539 difference comes from the base's own drop.",
+  "It was positive in all ten, by 3.6 to 41.8 points, with every interval above zero.",
+  "40 comparisons in the same direction",
+  "left both Qwen3-0.6B LoRAs at 0\\%",
+  "six of the eight are under 2 points",
+  "At MLX~4-bit every gap is at least 3.8 points, and at MLX~3-bit, Q3\\_K\\_M and Q2\\_K at least 4.5.",
+  "at MLX~3-bit and Q2\\_K in all eight settings and at Q3\\_K\\_M in seven, but only in five of eight at MLX~4-bit and in none at Q4\\_K\\_M",
+  "The strong LoRA's bf16 cost was 1.5 to 9.9 points.",
+  "the gentle LoRA still answered 89.6\\% correctly after quantization and the strong LoRA 99.8\\%",
+  "(base damage 0.64, against 1.21 for Qwen3-0.6B and 1.08 for 1.7B)",
+  "accuracy retention 0.80 against 0.94, compared with 0.06 against 0.85 at 0.6B",
+  "the gentle 4B LoRA still loses 40\\% of its accuracy",
+  "went from 0.32 with seed 0 to 0.05 with seed 1, and the strong LoRA's bf16 accuracy fell 7.7 points",
+  "$R$ was 0.83 unfused against 0.84 fused at MLX~4-bit, and 0.02 against 0.06 at 3-bit",
+  "A 20-item plumbing test",
+  "(14.5\\% at bf16, 6.8\\% at 3-bit) while the fused gentle LoRAs kept only 0.83 and 0.81 of their gain",
+  "recover most of the missing 0.17 to 0.19; the plan called the hypothesis supported if each seed's upper bound stayed below $+0.08$",
+  "Unfusing changed $R$ by $+0.008$ [$-0.010$, $+0.027$] for seed~0 and $+0.023$ [$+0.002$, $+0.042$] for seed~1",
+  "recovered 5\\% and 12\\% of the loss by point estimate",
+  "within 0.015 of each other in $R$",
+  "delivered 96\\% of the bf16 gain, against 84\\% for the same LoRA trained in bf16, fused and quantized: a difference of $+0.116$ [$+0.097$, $+0.135$]",
+  "(final validation loss 0.110 at 4 bits and 0.121 at 3 bits, against 0.067 in bf16) and delivered 78\\% of the gain at 4 bits and 94\\% at 3 bits, against 94\\% and 95\\% when trained in bf16, fused and quantized",
+  "restricting decoding to the 77 intent names",
+  "(the gentle LoRA at Q3\\_K\\_M kept 0.793 of its accuracy with the restriction and 0.791 without; the strong one 0.987 and 0.985)",
+  "At Q2\\_K it kept 2\\% of its accuracy even when forced to name a valid intent.",
+  "on new learning rates and seeds, by 0.007",
+  "\\hat R = \\sigma\\left(5.612 + 3.296 \\ln \\frac{\\mathrm{kept}}{\\mathrm{NSR}} - 1.555 \\ln \\mathrm{KLD}_{\\mathrm{base}}\\right)",
+  "chosen among four candidates by leave-one-fine-tune-out cross-validation on all 89 round-1 and round-2 points (error 0.071, against 0.095 for the v1 form)",
+  "Its MAE was 0.059 on round~3 (OLMo-2 1B and MASSIVE, 35 points) and 0.084 on round~4 (second seeds and Qwen3-4B, 42 points), where the interval reaches 0.146",
+  "Predictor v1 would also have met the accuracy bar in both rounds (0.071 and 0.090)",
+  "With five or six held-out fine-tunes per round",
+  "the lowest update kept was 74\\% in round~3 and 98.5\\% in round~4",
+  "scores 0.153 in round~3, where v2 beats it by 0.094 [0.003, 0.188] (paired, resampling fine-tunes), but 0.102 in round~4, where the difference, 0.019, has an interval from $-0.076$ to 0.127",
+  "its leave-one-fine-tune-out error is 0.061 against 0.071, its held-out error is 0.049 in both rounds, and in round~4 it beats v2 by 0.035 [0.006, 0.070]",
+  "correlate at $-0.83$ to $-0.97$ within nine of the ten formats ($-0.55$ at MLX~3-bit; three formats have only four points)",
+  "was predicted to keep 98\\% of its gain and kept 62\\% (seed 0) and 69\\% (seed 1)",
+  "the gentle 4B LoRA kept 92\\% of its gain at MLX~3-bit with NSR 6.85, where v2 predicted 48\\%",
+  "has $R = 1.28$ against a prediction of 5\\%, but only because its base collapsed; the fine-tune itself kept 60\\% of its accuracy",
+  "On the 14 Qwen3-4B points alone, v2's MAE was 0.115 and its agreement 0.79, short of both bars",
+  "the same 41\\% prediction at MLX~3-bit, but kept 32\\% and 5\\% of their gain",
+  "because GGUF~Q4\\_K\\_M moved coverage by only 1.2 points",
+  "MLX~3-bit kept 93\\% of the accuracy but cut the share of auto-accepted items from 38.1\\% to 27.8\\%, and Q2\\_K kept 85\\% of the accuracy but cut coverage from 36.4\\% to 10.1\\%",
+  "the gentle LoRA's coverage fell further than the strong LoRA's in 36 of 40 cases",
+  "the Qwen3-0.6B LoRA at $10^{-5}$ kept 88.5\\% of its accuracy but accepted 19.4 points fewer items",
+  "\\hat R = \\sigma\\left(8.707 - 5.81 \\ln \\mathrm{NSR} - 2.794 \\ln \\mathrm{KLD}_{\\mathrm{base}}\\right)",
+  "P1 was not, by 0.007, inside an interval from 0.048 to 0.182",
+  "v1 did almost as well as v2 (0.090 against 0.084 in round~4), and better on round~4's MASSIVE arm (0.072 against 0.088; in round~3, 0.073 against 0.063)",
+  "Without the easy 6-bit formats, v2's round-4 error was 0.115, against 0.080 in round~3.",
+  "lists the 23 fine-tunes of rounds 1 to 4",
+  "account for 279 full-test-set evaluations",
+  "reproduces the recorded round-3 values to within 0.2\\%",
+  "Measured on its 2,974 test items, that fine-tune kept 93\\% of its gain at MLX~4-bit and 32\\% at 3-bit.",
+  "had the same prediction and kept 5\\%",
+  "v1 SHA-256 prefix \\texttt{5df7d620}, v2 \\texttt{6fd78627}",
+  "In all 10 pre-registered tests (five fine-tune pairs, each at MLX~3-bit and GGUF~Q3\\_K\\_M), a LoRA trained at learning rate $10^{-4}$ retained more of its gain than the same LoRA at $10^{-5}$, mlx-lm's default, by $+0.06$ to $+0.63$ in $R$.",
+  "In exploratory comparisons over eight settings and five formats, the $10^{-5}$ LoRA kept a smaller share of its own accuracy in 40 of 40 cases, yet remained the more accurate model at Q4\\_K\\_M in all eight settings, while the $10^{-4}$ LoRA was the more accurate one at MLX~3-bit and Q2\\_K in all eight.",
+  "Carrying the $10^{-5}$ OLMo-2 1B update exactly on the 3-bit base recovered 5\\% and 12\\% of the lost gain for two seeds (upper 95\\% bounds 16\\% and 22\\%), while a $10^{-5}$ Qwen3-0.6B LoRA trained on the 4-bit base delivered 96\\% of the bf16 gain at 4 bits, against 84\\% when trained in bf16, fused and quantized (difference $+0.116$, 95\\% interval $[+0.097, +0.135]$); at $10^{-4}$, training on the 4-bit base delivered 78\\% against 94\\%.",
+  "A three-parameter predictor built from the weights and a one-time measurement of the base model met its pre-registered error bar of 0.10 on held-out fine-tunes (mean absolute error 0.059 and 0.084), but a post hoc model of update size and base damage reached 0.049 in both rounds.",
+  "We call a LoRA trained at learning rate $10^{-5}$ gentle and one trained at $10^{-4}$ strong; the gentle setting is mlx-lm's default, and its update was 8.7 to 12.9 times smaller.",
+  "For one fine-tune at Q3\\_K\\_M, llama-server with one slot and with four gave different predictions on 2 of 3,080 items (Section~\\ref{sec:round5}).",
+  "At 8 and 6 bits, $R$ was 1.01 to 1.07 in both engines (H1).",
+  "the most accurate of the three at bf16 (78.5\\%, against 76.6\\% for full fine-tuning and 73.5\\% for the LoRA at $10^{-4}$)",
+  "A second seed moved $R$ at MLX~3-bit by at most 0.061 (0.95 and 0.92 for the LoRA at $10^{-4}$, 0.06 and 0.00 at $10^{-5}$), while bf16 accuracy moved by 8.4 and 3.5 points.",
+  "Figure~\\ref{fig:mechanism} in Appendix~\\ref{app:extra} plots gain retention against NSR for the round-1 Qwen3-0.6B fine-tunes, and Table~\\ref{tab:bands} counts all 89 fine-tune and format pairs from rounds 1 and 2.",
+  "The rounded-away mode is rare: five of 192 pairs.",
+  "Broken outputs were 43\\% of its errors at MLX~3-bit and all of them at Q2\\_K.",
+  "$R$ moved by at most 0.016 and bf16 accuracy by at most 1.5 points",
+  "and 16\\% and 22\\% at the upper ends of the intervals.",
+  "and its final validation loss was nearly the same (0.057 against 0.056)",
+  "against 6\\% for the fuse-then-quantize one (a difference of $+0.890$ [$+0.865$, $+0.916$]), although its final validation loss",
+  "against 94\\% and 95\\% when trained in bf16, fused and quantized: differences of $-0.158$ [$-0.181$, $-0.136$] and $-0.007$ [$-0.032$, $+0.018$].",
+  "scored 62.1\\% with four llama-server slots and with one; the two runs differed on 2 of 3,080 items, and each differed from the round-1 run on 3.",
+  "changed accuracy retention by at most 0.003",
+  "from 3.8\\% to 11.4\\% on OLMo-2 1B (seed 0) and",
+  "The 4B fine-tunes' gains are small (27 points for the gentle LoRA and 21 for the strong)",
+  "At MLX~3-bit and GGUF~Q3\\_K\\_M, the gentle LoRA kept less of its gain than the strong one in 10 of 10 pre-registered tests across three base models and two tasks (F1), and it kept a smaller share of its accuracy at all five formats compared, 40 of 40 (F2).",
+  "In MLX, the loss did not come from rounding the update: the exact update recovered 5\\% and 12\\% of it, with upper 95\\% bounds of 16\\% and 22\\% (F4), while training the gentle LoRA on the quantized base delivered 96\\% of its bf16 gain at 4 bits, against 84\\% (F5).",
+  "In practice, select a fine-tune on the quantized artifact it will ship as: the gentle LoRA was the more accurate model at Q4\\_K\\_M in all eight settings, the strong one at MLX~3-bit and Q2\\_K in all eight and at Q3\\_K\\_M in seven (F3).",
+  "Keeping the adapter unfused does not rescue a gentle LoRA in MLX; training it on the quantized base does, and gave our most accurate 4-bit and 3-bit models, but it cost the strong LoRA 0.158 of $R$ at 4 bits and was not tested for GGUF.",
+  "rounds 1 to 4 in 51.4 hours of wall-clock time from the first sweep (27 September, 12:45) to the last verdicts (29 September, 16:12), and round~5 in 14.5 hours from 3 October, 20:03, to 4 October, 10:33,",
+  "In rounds 1 to 4, a LoRA run of 500 steps took 10.2 to 19.8 minutes on Qwen3-0.6B, 52.3 to 55.8 on 1.7B, 40.5 to 52.8 on OLMo-2 1B and 127.8 to 143.8 on 4B.",
+  "One full-test-set evaluation took 2.3 to 22.7 minutes on the smaller models and 12.0 to 25.2 on 4B, and the round-4 mechanism measurements for two fine-tunes took 4.5 to 8.1 minutes on the 0.6B and 1B models and 29.6 on 4B.",
+  "In round~5, three of the four LoRA runs on a quantized Qwen3-0.6B base took 27.9 to 28.3 minutes; the fourth, retrained after it stalled, took 223.8 minutes of wall-clock time.",
+  "Spearman $\\rho = 1.0$ in seven",
+  "At MLX~2-bit both models score 0\\%.",
+  "W5-H1 needed each upper bound below $+0.08$",
+  "), kept 6\\% at MLX~3-bit, and full fine-tuning at $10^{-5}$ kept 14\\%.",
+  "at other formats $R$ moved by up to 0.042",
+  "Its accuracy at 4 bits, 77.6\\%, was within a point of what the bf16-trained LoRA reached at bf16 (78.5\\%)",
+  "which scores 0\\% on its own, a gentle LoRA trained there reached 67.5\\% and delivered 95\\% of the bf16 gain",
+  "although its final validation loss was higher than in bf16 (0.099 against 0.056)",
+  "rose from 5.1\\% to 12.8\\% on Qwen3-4B,",
+  "from 5.4\\% to 23.2\\% on Qwen3-1.7B, while the strong LoRAs ended at 4.9\\% to 5.5\\%",
+  "produced a valid intent name for 99.3\\% of items at MLX~4-bit and 99.5\\% at Q3\\_K\\_M."
+ ],
+ "values": {
+  "abs.cost_max": {
+   "text": "9.9",
+   "value": 9.902597
+  },
+  "abs.cost_min": {
+   "text": "1.5",
+   "value": 1.493506
+  },
+  "abs.n.Q2K": {
+   "text": "8",
+   "value": 8
+  },
+  "abs.n.Q3KM": {
+   "text": "7",
+   "value": 7
+  },
+  "abs.n.Q4KM": {
+   "text": "0",
+   "value": 0
+  },
+  "abs.n.q3": {
+   "text": "8",
+   "value": 8
+  },
+  "abs.n.q4": {
+   "text": "5",
+   "value": 5
+  },
+  "abs.strong_more.Q2K": {
+   "text": "eight",
+   "value": 8
+  },
+  "abs.strong_more.Q3KM": {
+   "text": "seven",
+   "value": 7
+  },
+  "abs.strong_more.Q4KM": {
+   "text": "zero",
+   "value": 0
+  },
+  "abs.strong_more.q3": {
+   "text": "eight",
+   "value": 8
+  },
+  "abs.strong_more.q4": {
+   "text": "five",
+   "value": 5
+  },
+  "bands.broken.ge90": {
+   "text": "4",
+   "value": 4
+  },
+  "bands.broken.pairs": {
+   "text": "24",
+   "value": 24
+  },
+  "bands.high.ge90": {
+   "text": "4",
+   "value": 4
+  },
+  "bands.high.pairs": {
+   "text": "10",
+   "value": 10
+  },
+  "bands.low.ge90": {
+   "text": "44",
+   "value": 44
+  },
+  "bands.low.pairs": {
+   "text": "44",
+   "value": 44
+  },
+  "bands.mid.ge90": {
+   "text": "3",
+   "value": 3
+  },
+  "bands.mid.pairs": {
+   "text": "7",
+   "value": 7
+  },
+  "bands.n": {
+   "text": "89",
+   "value": 89
+  },
+  "bands.rounded.ge90": {
+   "text": "0",
+   "value": 0
+  },
+  "bands.rounded.pairs": {
+   "text": "4",
+   "value": 4
+  },
+  "boot.reps": {
+   "text": "2,000",
+   "value": 2000
+  },
+  "boot.seed": {
+   "text": "0",
+   "value": 0
+  },
+  "corr.hi": {
+   "text": "-0.97",
+   "value": -0.968776
+  },
+  "corr.lo": {
+   "text": "-0.83",
+   "value": -0.827689
+  },
+  "corr.mlxq3": {
+   "text": "-0.55",
+   "value": -0.554598
+  },
+  "corr.n_four": {
+   "text": "three",
+   "value": 3
+  },
+  "data.b77.epoch_share": {
+   "text": "21",
+   "value": 0.210438
+  },
+  "data.b77.labels": {
+   "text": "77",
+   "value": 77
+  },
+  "data.b77.per_intent": {
+   "text": "40",
+   "value": 40
+  },
+  "data.b77.test": {
+   "text": "3,080",
+   "value": 3080
+  },
+  "data.massive.epoch_share": {
+   "text": "17",
+   "value": 0.173702
+  },
+  "data.massive.test": {
+   "text": "2,974",
+   "value": 2974
+  },
+  "drift.err.olmo.fp": {
+   "text": "3.8",
+   "value": 3.773585
+  },
+  "drift.err.olmo.q": {
+   "text": "11.4",
+   "value": 11.445783
+  },
+  "drift.err.q17.fp": {
+   "text": "5.4",
+   "value": 5.427252
+  },
+  "drift.err.q17.q": {
+   "text": "23.2",
+   "value": 23.170732
+  },
+  "drift.err.q4b.fp": {
+   "text": "5.1",
+   "value": 5.097706
+  },
+  "drift.err.q4b.q": {
+   "text": "12.8",
+   "value": 12.789416
+  },
+  "drift.err.strong_hi": {
+   "text": "5.5",
+   "value": 5.505762
+  },
+  "drift.err.strong_lo": {
+   "text": "4.9",
+   "value": 4.888889
+  },
+  "drift.n_cases": {
+   "text": "40",
+   "value": 40
+  },
+  "drift.n_fell": {
+   "text": "36",
+   "value": 36
+  },
+  "drift.q06g.A_q4": {
+   "text": "88.5",
+   "value": 0.884568
+  },
+  "drift.q06g.dcov_q4": {
+   "text": "19.4",
+   "value": 19.415584
+  },
+  "drift.q17.cov_Q2K": {
+   "text": "10.1",
+   "value": 0.101299
+  },
+  "drift.q17.cov_fp_Q2K": {
+   "text": "36.4",
+   "value": 0.364286
+  },
+  "drift.q17.cov_fp_q3": {
+   "text": "38.1",
+   "value": 0.380519
+  },
+  "drift.q17.cov_q3": {
+   "text": "27.8",
+   "value": 0.277922
+  },
+  "fmt.mlx3": {
+   "text": "3.5",
+   "value": 3.502
+  },
+  "fmt.mlx4": {
+   "text": "4.5",
+   "value": 4.502
+  },
+  "fmt.q3km_hi": {
+   "text": "4.4",
+   "value": 4.406
+  },
+  "fmt.q3km_lo": {
+   "text": "4.2",
+   "value": 4.226
+  },
+  "grid.evals": {
+   "text": "279",
+   "value": 279
+  },
+  "grid.n": {
+   "text": "23",
+   "value": 23
+  },
+  "kld.chunks": {
+   "text": "8",
+   "value": 8
+  },
+  "kld.ctx": {
+   "text": "512",
+   "value": 512
+  },
+  "kld.q06.q3": {
+   "text": "1.21",
+   "value": 1.206734
+  },
+  "kld.q17.q3": {
+   "text": "1.08",
+   "value": 1.075186
+  },
+  "kld.q4b.q3": {
+   "text": "0.64",
+   "value": 0.635689
+  },
+  "lim.q4b.gain_g": {
+   "text": "27",
+   "value": 27.11039
+  },
+  "lim.q4b.gain_s": {
+   "text": "21",
+   "value": 21.071429
+  },
+  "mas.base_acc": {
+   "text": "0",
+   "value": 0.0
+  },
+  "mech.full3e6.R_q3": {
+   "text": "0",
+   "value": 0.0
+  },
+  "mech.full3e6.R_q4": {
+   "text": "27",
+   "value": 0.274309
+  },
+  "mech.full3e6.kept_q3": {
+   "text": "5.5",
+   "value": 0.054874
+  },
+  "mech.full3e6.kept_q4": {
+   "text": "50",
+   "value": 0.498844
+  },
+  "mech.full3e6.nsr_q3": {
+   "text": "2.16",
+   "value": 2.156798
+  },
+  "mech.kept98": {
+   "text": "168",
+   "value": 168
+  },
+  "mech.min_kept_r34": {
+   "text": "74",
+   "value": 0.735532
+  },
+  "mech.n_lt60": {
+   "text": "five",
+   "value": 5
+  },
+  "mech.n_lt60_3e6": {
+   "text": "four",
+   "value": 4
+  },
+  "mech.pairs": {
+   "text": "192",
+   "value": 192
+  },
+  "mech.q2k.full_R": {
+   "text": "89",
+   "value": 0.885591
+  },
+  "mech.q2k.full_nsr": {
+   "text": "5.29",
+   "value": 5.292393
+  },
+  "mech.q2k.lora_R": {
+   "text": "1",
+   "value": 0.007505
+  },
+  "mech.q2k.lora_nsr": {
+   "text": "5.16",
+   "value": 5.155299
+  },
+  "miss.mas.pred": {
+   "text": "98",
+   "value": 0.976607
+  },
+  "miss.mas.s0": {
+   "text": "62",
+   "value": 0.620505
+  },
+  "miss.mas.s1": {
+   "text": "69",
+   "value": 0.685242
+  },
+  "miss.masg.pred": {
+   "text": "41",
+   "value": 0.413548
+  },
+  "miss.masg.s0": {
+   "text": "32",
+   "value": 0.319258
+  },
+  "miss.masg.s1": {
+   "text": "5",
+   "value": 0.052348
+  },
+  "miss.q4b.A_Q2K": {
+   "text": "60",
+   "value": 0.600612
+  },
+  "miss.q4b.R_Q2K": {
+   "text": "1.28",
+   "value": 1.27896
+  },
+  "miss.q4b.R_q3": {
+   "text": "92",
+   "value": 0.924551
+  },
+  "miss.q4b.nsr_q3": {
+   "text": "6.85",
+   "value": 6.852701
+  },
+  "miss.q4b.pred_Q2K": {
+   "text": "5",
+   "value": 0.053523
+  },
+  "miss.q4b.pred_q3": {
+   "text": "48",
+   "value": 0.483313
+  },
+  "nf.base_hi": {
+   "text": "98.5",
+   "value": 0.985065
+  },
+  "nf.base_lo": {
+   "text": "95.9",
+   "value": 0.959416
+  },
+  "nf.ft_hi": {
+   "text": "99.4",
+   "value": 0.994481
+  },
+  "nf.ft_lo": {
+   "text": "97.1",
+   "value": 0.971419
+  },
+  "nf.max_acc_diff": {
+   "text": "0.61",
+   "value": 0.605245
+  },
+  "norms.check_pct": {
+   "text": "0.2",
+   "value": 0.155745
+  },
+  "pat.cells": {
+   "text": "40",
+   "value": 40
+  },
+  "pat.lower": {
+   "text": "40",
+   "value": 40
+  },
+  "pat.min_gap_low": {
+   "text": "4.5",
+   "value": 4.566453
+  },
+  "pat.min_gap_q4": {
+   "text": "3.8",
+   "value": 3.801211
+  },
+  "pat.olmo_q4km_hi": {
+   "text": "0.0000",
+   "value": -5e-06
+  },
+  "pat.q06.A_g_q3": {
+   "text": "0.06",
+   "value": 0.055027
+  },
+  "pat.q06.A_s_q3": {
+   "text": "0.85",
+   "value": 0.851083
+  },
+  "pat.q4b.A_g_q3": {
+   "text": "0.80",
+   "value": 0.802455
+  },
+  "pat.q4b.A_s_q3": {
+   "text": "0.94",
+   "value": 0.937629
+  },
+  "pat.q4b.loss_Q2K": {
+   "text": "40",
+   "value": 0.399388
+  },
+  "pat.q4km_under2": {
+   "text": "six",
+   "value": 6
+  },
+  "pat.q4km_under2_n": {
+   "text": "6",
+   "value": 6
+  },
+  "pb.const.r3": {
+   "text": "0.153",
+   "value": 0.152825
+  },
+  "pb.const.r4": {
+   "text": "0.102",
+   "value": 0.102282
+  },
+  "pb.lofo.norm": {
+   "text": "0.061",
+   "value": 0.06067
+  },
+  "pb.lofo.v2": {
+   "text": "0.071",
+   "value": 0.071338
+  },
+  "pb.norm.r3": {
+   "text": "0.049",
+   "value": 0.049056
+  },
+  "pb.norm.r4": {
+   "text": "0.049",
+   "value": 0.049077
+  },
+  "pb.v2const.r3.d": {
+   "text": "0.094",
+   "value": 0.093772
+  },
+  "pb.v2const.r3.hi": {
+   "text": "0.188",
+   "value": 0.188268
+  },
+  "pb.v2const.r3.lo": {
+   "text": "0.003",
+   "value": 0.003428
+  },
+  "pb.v2const.r4.d": {
+   "text": "0.019",
+   "value": 0.018658
+  },
+  "pb.v2const.r4.hi": {
+   "text": "0.127",
+   "value": 0.127143
+  },
+  "pb.v2const.r4.lo": {
+   "text": "-0.076",
+   "value": -0.076462
+  },
+  "pb.v2norm.r3.d": {
+   "text": "0.010",
+   "value": 0.009997
+  },
+  "pb.v2norm.r3.hi": {
+   "text": "0.041",
+   "value": 0.04088
+  },
+  "pb.v2norm.r3.lo": {
+   "text": "-0.015",
+   "value": -0.015489
+  },
+  "pb.v2norm.r4.d": {
+   "text": "0.035",
+   "value": 0.034547
+  },
+  "pb.v2norm.r4.hi": {
+   "text": "0.070",
+   "value": 0.07045
+  },
+  "pb.v2norm.r4.lo": {
+   "text": "0.006",
+   "value": 0.006211
+  },
+  "pred.fit_n": {
+   "text": "89",
+   "value": 89
+  },
+  "pred.lofo.v1form": {
+   "text": "0.095",
+   "value": 0.09503
+  },
+  "pred.lofo.v2": {
+   "text": "0.071",
+   "value": 0.071338
+  },
+  "pred.mas.r3.v1": {
+   "text": "0.073",
+   "value": 0.07307
+  },
+  "pred.mas.r3.v2": {
+   "text": "0.063",
+   "value": 0.063348
+  },
+  "pred.mas.r4.v1": {
+   "text": "0.072",
+   "value": 0.07229
+  },
+  "pred.mas.r4.v2": {
+   "text": "0.088",
+   "value": 0.087624
+  },
+  "pred.n_forms": {
+   "text": "four",
+   "value": 4
+  },
+  "pred.q4b.agree": {
+   "text": "0.79",
+   "value": 0.785714
+  },
+  "pred.q4b.mae": {
+   "text": "0.115",
+   "value": 0.114676
+  },
+  "pred.q4b.n": {
+   "text": "14",
+   "value": 14
+  },
+  "pred.r3.min_kept": {
+   "text": "74",
+   "value": 0.735532
+  },
+  "pred.r3.n": {
+   "text": "35",
+   "value": 35
+  },
+  "pred.r3.n_ft": {
+   "text": "five",
+   "value": 5
+  },
+  "pred.r4.min_kept": {
+   "text": "98.5",
+   "value": 0.985015
+  },
+  "pred.r4.n": {
+   "text": "42",
+   "value": 42
+  },
+  "pred.r4.n_ft": {
+   "text": "six",
+   "value": 6
+  },
+  "pred.v1.p1_miss": {
+   "text": "0.007",
+   "value": 0.006531
+  },
+  "pred.v1.r3.mae": {
+   "text": "0.071",
+   "value": 0.070711
+  },
+  "pred.v1.r4.mae": {
+   "text": "0.090",
+   "value": 0.089996
+  },
+  "pred.v1.t0": {
+   "text": "8.707",
+   "value": 8.707301
+  },
+  "pred.v1.t1abs": {
+   "text": "5.81",
+   "value": 5.809667
+  },
+  "pred.v1.t2.hi": {
+   "text": "0.182",
+   "value": 0.181969
+  },
+  "pred.v1.t2.lo": {
+   "text": "0.048",
+   "value": 0.048448
+  },
+  "pred.v1.t2abs": {
+   "text": "2.794",
+   "value": 2.793797
+  },
+  "pred.v2.r3.agree": {
+   "text": "0.94",
+   "value": 0.942857
+  },
+  "pred.v2.r3.hi": {
+   "text": "0.090",
+   "value": 0.08991
+  },
+  "pred.v2.r3.lo": {
+   "text": "0.028",
+   "value": 0.027906
+  },
+  "pred.v2.r3.mae": {
+   "text": "0.059",
+   "value": 0.059053
+  },
+  "pred.v2.r3.no6": {
+   "text": "0.080",
+   "value": 0.080423
+  },
+  "pred.v2.r4.agree": {
+   "text": "0.90",
+   "value": 0.904762
+  },
+  "pred.v2.r4.hi": {
+   "text": "0.146",
+   "value": 0.145673
+  },
+  "pred.v2.r4.lo": {
+   "text": "0.031",
+   "value": 0.030593
+  },
+  "pred.v2.r4.mae": {
+   "text": "0.084",
+   "value": 0.083625
+  },
+  "pred.v2.r4.no6": {
+   "text": "0.115",
+   "value": 0.115365
+  },
+  "pred.v2.t0": {
+   "text": "5.612",
+   "value": 5.612325
+  },
+  "pred.v2.t1": {
+   "text": "3.296",
+   "value": 3.295531
+  },
+  "pred.v2.t2abs": {
+   "text": "1.555",
+   "value": 1.554739
+  },
+  "r1.h1.Q6K": {
+   "text": "1.07",
+   "value": 1.072811
+  },
+  "r1.h1.Q8": {
+   "text": "1.01",
+   "value": 1.01106
+  },
+  "r1.h1.max": {
+   "text": "1.07",
+   "value": 1.072811
+  },
+  "r1.h1.min": {
+   "text": "1.01",
+   "value": 1.01106
+  },
+  "r1.h1.q6": {
+   "text": "1.05",
+   "value": 1.045788
+  },
+  "r1.h1.q8": {
+   "text": "1.01",
+   "value": 1.014652
+  },
+  "r1.h3.q3.d": {
+   "text": "-0.038",
+   "value": -0.037546
+  },
+  "r1.h3.q3.hi": {
+   "text": "-0.004",
+   "value": -0.003686
+  },
+  "r1.h3.q3.lo": {
+   "text": "-0.073",
+   "value": -0.072583
+  },
+  "r1.h3.q4.d": {
+   "text": "+0.022",
+   "value": 0.021978
+  },
+  "r1.h3.q4.hi": {
+   "text": "+0.044",
+   "value": 0.044104
+  },
+  "r1.h3.q4.lo": {
+   "text": "-0.002",
+   "value": -0.001793
+  },
+  "r1.h4.gguf": {
+   "text": "-1.2",
+   "value": -1.168831
+  },
+  "r1.h4.gguf_abs": {
+   "text": "1.2",
+   "value": 1.168831
+  },
+  "r1.h4.mlx": {
+   "text": "-4.2",
+   "value": -4.155844
+  },
+  "r1.q06.full.R_Q3KM": {
+   "text": "75",
+   "value": 0.750703
+  },
+  "r1.q06.full.R_q3": {
+   "text": "14",
+   "value": 0.141315
+  },
+  "r1.q06.full.acc": {
+   "text": "76.6",
+   "value": 0.765909
+  },
+  "r1.q06.gentle.R_Q3KM": {
+   "text": "80",
+   "value": 0.796161
+  },
+  "r1.q06.gentle.R_q3": {
+   "text": "6",
+   "value": 0.060786
+  },
+  "r1.q06.gentle.acc": {
+   "text": "78.5",
+   "value": 0.78474
+  },
+  "r1.q06.strong.R_Q3KM": {
+   "text": "101",
+   "value": 1.01133
+  },
+  "r1.q06.strong.R_q3": {
+   "text": "95",
+   "value": 0.946903
+  },
+  "r1.q06.strong.acc": {
+   "text": "73.5",
+   "value": 0.73474
+  },
+  "r1.q06base.acc_q3": {
+   "text": "0",
+   "value": 0.0
+  },
+  "r1.q17.A_Q2K": {
+   "text": "85",
+   "value": 0.85354
+  },
+  "r1.q17.A_Q3KM": {
+   "text": "98",
+   "value": 0.980973
+  },
+  "r1.q17.A_q3": {
+   "text": "93",
+   "value": 0.930088
+  },
+  "r1.q17.acc_q2": {
+   "text": "0",
+   "value": 0
+  },
+  "r1.q17base.acc_bf16": {
+   "text": "37.9",
+   "value": 0.379221
+  },
+  "r1.q17base.acc_q3": {
+   "text": "10.4",
+   "value": 0.103571
+  },
+  "r1.q17base.valid_bf16": {
+   "text": "83.9",
+   "value": 0.839286
+  },
+  "r1.q17base.valid_q3": {
+   "text": "36.3",
+   "value": 0.362662
+  },
+  "r2.full3e5.R_Q2K": {
+   "text": "0.89",
+   "value": 0.885591
+  },
+  "r2.full3e5.R_Q2K_pct": {
+   "text": "89",
+   "value": 0.885591
+  },
+  "r2.full3e5.R_q3": {
+   "text": "0.78",
+   "value": 0.776769
+  },
+  "r2.full3e5.norm": {
+   "text": "18.6",
+   "value": 18.621235
+  },
+  "r2.lora3e5.R_Q2K": {
+   "text": "0.01",
+   "value": 0.007505
+  },
+  "r2.lora3e5.R_Q2K_pct": {
+   "text": "1",
+   "value": 0.007505
+  },
+  "r2.lora3e5.R_q3": {
+   "text": "0.63",
+   "value": 0.627765
+  },
+  "r2.lora3e5.norm": {
+   "text": "25.2",
+   "value": 25.179878
+  },
+  "r2.n_rho1": {
+   "text": "seven",
+   "value": 7
+  },
+  "r2.q17.gentle.A_q3": {
+   "text": "0.32",
+   "value": 0.315391
+  },
+  "r2.q17.gentle.R_q3": {
+   "text": "36",
+   "value": 0.356198
+  },
+  "r2.q17.strong.A_q3": {
+   "text": "0.93",
+   "value": 0.930088
+  },
+  "r2.q17.strong.R_q3": {
+   "text": "163",
+   "value": 1.632784
+  },
+  "r2.rho_lora_q4km": {
+   "text": "0.8",
+   "value": 0.8
+  },
+  "r2.seed.gentle.dR": {
+   "text": "0.06",
+   "value": 0.060786
+  },
+  "r2.seed.gentle.dacc": {
+   "text": "3.5",
+   "value": 3.474026
+  },
+  "r2.seed.gentle_s0": {
+   "text": "0.06",
+   "value": 0.060786
+  },
+  "r2.seed.gentle_s0.acc": {
+   "text": "78.5",
+   "value": 0.78474
+  },
+  "r2.seed.gentle_s1": {
+   "text": "0.00",
+   "value": 0.0
+  },
+  "r2.seed.gentle_s1.acc": {
+   "text": "75.0",
+   "value": 0.75
+  },
+  "r2.seed.max_dR": {
+   "text": "0.061",
+   "value": 0.060786
+  },
+  "r2.seed.strong.dR": {
+   "text": "0.03",
+   "value": 0.026295
+  },
+  "r2.seed.strong.dacc": {
+   "text": "8.4",
+   "value": 8.376623
+  },
+  "r2.seed.strong_s0": {
+   "text": "0.95",
+   "value": 0.946903
+  },
+  "r2.seed.strong_s0.acc": {
+   "text": "73.5",
+   "value": 0.73474
+  },
+  "r2.seed.strong_s1": {
+   "text": "0.92",
+   "value": 0.920608
+  },
+  "r2.seed.strong_s1.acc": {
+   "text": "65.1",
+   "value": 0.650974
+  },
+  "r2.tie": {
+   "text": "0.001",
+   "value": 0.000549
+  },
+  "r5.bf16g.val": {
+   "text": "0.056",
+   "value": 0.056
+  },
+  "r5.bf16s.val": {
+   "text": "0.067",
+   "value": 0.067
+  },
+  "r5.h1.margin": {
+   "text": "+0.08",
+   "value": 0.08
+  },
+  "r5.h1.miss_hi": {
+   "text": "0.19",
+   "value": 0.186593
+  },
+  "r5.h1.miss_lo": {
+   "text": "0.17",
+   "value": 0.173625
+  },
+  "r5.h1.s0.R_fused": {
+   "text": "0.83",
+   "value": 0.826375
+  },
+  "r5.h1.s0.d": {
+   "text": "+0.008",
+   "value": 0.008147
+  },
+  "r5.h1.s0.hi": {
+   "text": "+0.027",
+   "value": 0.02696
+  },
+  "r5.h1.s0.lo": {
+   "text": "-0.010",
+   "value": -0.010194
+  },
+  "r5.h1.s0.share": {
+   "text": "5",
+   "value": 0.046921
+  },
+  "r5.h1.s0.share_hi": {
+   "text": "16",
+   "value": 0.155275
+  },
+  "r5.h1.s1.R_fused": {
+   "text": "0.81",
+   "value": 0.813407
+  },
+  "r5.h1.s1.d": {
+   "text": "+0.023",
+   "value": 0.022511
+  },
+  "r5.h1.s1.hi": {
+   "text": "+0.042",
+   "value": 0.041982
+  },
+  "r5.h1.s1.lo": {
+   "text": "+0.002",
+   "value": 0.002017
+  },
+  "r5.h1.s1.share": {
+   "text": "12",
+   "value": 0.120643
+  },
+  "r5.h1.s1.share_hi": {
+   "text": "22",
+   "value": 0.224991
+  },
+  "r5.h2.R_pct": {
+   "text": "84",
+   "value": 0.840951
+  },
+  "r5.h2.S_pct": {
+   "text": "96",
+   "value": 0.956581
+  },
+  "r5.h2.d": {
+   "text": "+0.116",
+   "value": 0.115631
+  },
+  "r5.h2.hi": {
+   "text": "+0.135",
+   "value": 0.13491
+  },
+  "r5.h2.lo": {
+   "text": "+0.097",
+   "value": 0.096953
+  },
+  "r5.lab.g.A_lab": {
+   "text": "0.793",
+   "value": 0.79346
+  },
+  "r5.lab.g.A_lab_Q2K": {
+   "text": "2",
+   "value": 0.021937
+  },
+  "r5.lab.g.A_unc": {
+   "text": "0.791",
+   "value": 0.791477
+  },
+  "r5.lab.max_change": {
+   "text": "0.003",
+   "value": 0.002667
+  },
+  "r5.lab.s.A_lab": {
+   "text": "0.987",
+   "value": 0.987174
+  },
+  "r5.lab.s.A_unc": {
+   "text": "0.985",
+   "value": 0.984506
+  },
+  "r5.olmo_base.acc_bf16": {
+   "text": "14.5",
+   "value": 0.14513
+  },
+  "r5.olmo_base.acc_q3": {
+   "text": "6.8",
+   "value": 0.067857
+  },
+  "r5.q3base.acc": {
+   "text": "0",
+   "value": 0.0
+  },
+  "r5.q3g.R": {
+   "text": "6",
+   "value": 0.060786
+  },
+  "r5.q3g.S": {
+   "text": "95",
+   "value": 0.95064
+  },
+  "r5.q3g.acc": {
+   "text": "67.5",
+   "value": 0.675325
+  },
+  "r5.q3g.d": {
+   "text": "+0.890",
+   "value": 0.889854
+  },
+  "r5.q3g.hi": {
+   "text": "+0.916",
+   "value": 0.91575
+  },
+  "r5.q3g.lo": {
+   "text": "+0.865",
+   "value": 0.865392
+  },
+  "r5.q3g.val": {
+   "text": "0.099",
+   "value": 0.099
+  },
+  "r5.q3s.R": {
+   "text": "95",
+   "value": 0.946903
+  },
+  "r5.q3s.S": {
+   "text": "94",
+   "value": 0.94002
+  },
+  "r5.q3s.acc": {
+   "text": "62.1",
+   "value": 0.620779
+  },
+  "r5.q3s.d": {
+   "text": "-0.007",
+   "value": -0.006883
+  },
+  "r5.q3s.hi": {
+   "text": "+0.018",
+   "value": 0.017521
+  },
+  "r5.q3s.lo": {
+   "text": "-0.032",
+   "value": -0.031875
+  },
+  "r5.q3s.val": {
+   "text": "0.121",
+   "value": 0.121
+  },
+  "r5.q4g.acc": {
+   "text": "77.6",
+   "value": 0.776299
+  },
+  "r5.q4g.val": {
+   "text": "0.057",
+   "value": 0.057
+  },
+  "r5.q4s.R": {
+   "text": "94",
+   "value": 0.939528
+  },
+  "r5.q4s.S": {
+   "text": "78",
+   "value": 0.781219
+  },
+  "r5.q4s.acc": {
+   "text": "61.3",
+   "value": 0.612662
+  },
+  "r5.q4s.d": {
+   "text": "-0.158",
+   "value": -0.158309
+  },
+  "r5.q4s.d_abs": {
+   "text": "0.158",
+   "value": 0.158309
+  },
+  "r5.q4s.hi": {
+   "text": "-0.136",
+   "value": -0.136472
+  },
+  "r5.q4s.lo": {
+   "text": "-0.181",
+   "value": -0.181335
+  },
+  "r5.q4s.val": {
+   "text": "0.110",
+   "value": 0.11
+  },
+  "r5.r1.fus_q3": {
+   "text": "0.06",
+   "value": 0.060786
+  },
+  "r5.r1.fus_q4": {
+   "text": "0.84",
+   "value": 0.840951
+  },
+  "r5.r1.unf_q3": {
+   "text": "0.02",
+   "value": 0.018282
+  },
+  "r5.r1.unf_q4": {
+   "text": "0.83",
+   "value": 0.826325
+  },
+  "r5.rep.acc": {
+   "text": "62.1",
+   "value": 0.621104
+  },
+  "r5.rep.agree_np": {
+   "text": "99.9",
+   "value": 0.999351
+  },
+  "r5.rep.agree_w1": {
+   "text": "99.9",
+   "value": 0.999026
+  },
+  "r5.rep.diff_np": {
+   "text": "2",
+   "value": 2
+  },
+  "r5.rep.diff_w1": {
+   "text": "3",
+   "value": 3
+  },
+  "r5.rep.n": {
+   "text": "3,080",
+   "value": 3080
+  },
+  "r5.smoke_n": {
+   "text": "20",
+   "value": 20
+  },
+  "r5.unf.maxdiff": {
+   "text": "0.015",
+   "value": 0.014007
+  },
+  "rep.diff_max": {
+   "text": "+0.63",
+   "value": 0.632894
+  },
+  "rep.diff_min": {
+   "text": "+0.06",
+   "value": 0.058032
+  },
+  "rep.drop_max": {
+   "text": "41.8",
+   "value": 41.761937
+  },
+  "rep.drop_min": {
+   "text": "3.6",
+   "value": 3.571429
+  },
+  "rep.n_supported": {
+   "text": "10",
+   "value": 10
+  },
+  "rep.n_tests": {
+   "text": "10",
+   "value": 10
+  },
+  "rep.n_tests_word": {
+   "text": "ten",
+   "value": 10
+  },
+  "rep.q4b.base_term": {
+   "text": "0.155",
+   "value": 0.155139
+  },
+  "rep.q4b.diff": {
+   "text": "0.539",
+   "value": 0.53924
+  },
+  "seed.mas.gR_s0": {
+   "text": "0.32",
+   "value": 0.319258
+  },
+  "seed.mas.gR_s1": {
+   "text": "0.05",
+   "value": 0.052348
+  },
+  "seed.mas.s_dacc": {
+   "text": "7.7",
+   "value": 7.733692
+  },
+  "seed.olmo.dR_hard": {
+   "text": "0.016",
+   "value": 0.015387
+  },
+  "seed.olmo.dR_other": {
+   "text": "0.042",
+   "value": 0.041547
+  },
+  "seed.olmo.dacc": {
+   "text": "1.5",
+   "value": 1.461039
+  },
+  "setup.failed_acc": {
+   "text": "0",
+   "value": 0.0
+  },
+  "setup.failed_val": {
+   "text": "1.95",
+   "value": 1.947
+  },
+  "setup.ratio_max": {
+   "text": "12.9",
+   "value": 12.915353
+  },
+  "setup.ratio_max_int": {
+   "text": "13",
+   "value": 12.915353
+  },
+  "setup.ratio_min": {
+   "text": "8.7",
+   "value": 8.672882
+  },
+  "setup.ratio_min_int": {
+   "text": "9",
+   "value": 8.672882
+  },
+  "setup.val_max": {
+   "text": "0.14",
+   "value": 0.137
+  },
+  "setup.val_min": {
+   "text": "0.05",
+   "value": 0.053
+  },
+  "sha.v1": {
+   "text": "5df7d620",
+   "value": "v1"
+  },
+  "sha.v2": {
+   "text": "6fd78627",
+   "value": "v2"
+  },
+  "strata.q4b.gentle": {
+   "text": "89.6",
+   "value": 0.895671
+  },
+  "strata.q4b.strong": {
+   "text": "99.8",
+   "value": 0.997846
+  },
+  "time.eval.q4b.hi": {
+   "text": "25.2",
+   "value": 25.25
+  },
+  "time.eval.q4b.lo": {
+   "text": "12.0",
+   "value": 12.0
+  },
+  "time.eval.small.hi": {
+   "text": "22.7",
+   "value": 22.7
+  },
+  "time.eval.small.lo": {
+   "text": "2.3",
+   "value": 2.333333
+  },
+  "time.mech.hi": {
+   "text": "8.1",
+   "value": 8.1
+  },
+  "time.mech.lo": {
+   "text": "4.5",
+   "value": 4.5
+  },
+  "time.mech.q4b": {
+   "text": "29.6",
+   "value": 29.6
+  },
+  "time.r14.end": {
+   "text": "29 September, 16:12",
+   "value": 0
+  },
+  "time.r14.hours": {
+   "text": "51.4",
+   "value": 51.448889
+  },
+  "time.r14.start": {
+   "text": "27 September, 12:45",
+   "value": 0
+  },
+  "time.r5.end": {
+   "text": "4 October, 10:33",
+   "value": 0
+  },
+  "time.r5.hours": {
+   "text": "14.5",
+   "value": 14.505556
+  },
+  "time.r5.start": {
+   "text": "3 October, 20:03",
+   "value": 0
+  },
+  "time.r5.train.hi": {
+   "text": "28.3",
+   "value": 28.3
+  },
+  "time.r5.train.lo": {
+   "text": "27.9",
+   "value": 27.866667
+  },
+  "time.r5.train.stalled": {
+   "text": "223.8",
+   "value": 223.816667
+  },
+  "time.train.olmo1.hi": {
+   "text": "52.8",
+   "value": 52.75
+  },
+  "time.train.olmo1.lo": {
+   "text": "40.5",
+   "value": 40.5
+  },
+  "time.train.q06.hi": {
+   "text": "19.8",
+   "value": 19.833333
+  },
+  "time.train.q06.lo": {
+   "text": "10.2",
+   "value": 10.166667
+  },
+  "time.train.q17.hi": {
+   "text": "55.8",
+   "value": 55.816667
+  },
+  "time.train.q17.lo": {
+   "text": "52.3",
+   "value": 52.283333
+  },
+  "time.train.q4b.hi": {
+   "text": "143.8",
+   "value": 143.783333
+  },
+  "time.train.q4b.lo": {
+   "text": "127.8",
+   "value": 127.766667
+  },
+  "tool.mas.R_q4": {
+   "text": "93",
+   "value": 0.930484
+  },
+  "valid.q06g.Q2K": {
+   "text": "0",
+   "value": 0.0
+  },
+  "valid.q06g.Q3KM": {
+   "text": "99.5",
+   "value": 0.994805
+  },
+  "valid.q06g.q3": {
+   "text": "59",
+   "value": 0.589935
+  },
+  "valid.q06g.q3_invalid": {
+   "text": "41",
+   "value": 0.410065
+  },
+  "valid.q06g.q3_invalid_share_of_errors": {
+   "text": "43",
+   "value": 0.428571
+  },
+  "valid.q06g.q4": {
+   "text": "99.3",
+   "value": 0.993182
+  }
+ }
+}

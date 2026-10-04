@@ -29,6 +29,8 @@ EXTRA_GLOBS = [
     "src/ftquant/week5.py",
     "src/ftquant/verdicts_w5.py",
     "src/ftquant/revision.py",
+    "src/ftquant/findings.py",
+    "runs/findings/findings.json",
     "paper/make_tables.py",
     "paper/make_figures.py",
 ]
@@ -110,7 +112,7 @@ Local file paths were replaced by `.` (the project root) or `~` (the home folder
 
 ## Re-scoring from the archived predictions
 
-This needs no model, no GPU and no llama.cpp: only Python 3 with numpy, plus PyYAML for the last command. From this folder:
+This needs no model, no GPU and no llama.cpp: only Python 3 with numpy, plus PyYAML for the last two commands. From this folder:
 
     for w in 1 2 3 4; do tar -xzf records/eval-week$w.tar.gz; done
     export PYTHONPATH=src
@@ -127,8 +129,9 @@ This needs no model, no GPU and no llama.cpp: only Python 3 with numpy, plus PyY
     python3 -m ftquant.week4
     python3 -m ftquant.verdicts_w5
     python3 -m ftquant.revision
+    python3 -m ftquant.findings --check
 
-These overwrite the shipped result files with regenerated ones, which should match them. Without the adapter weights, `ftquant.revision` reads the round-4 update norms from `runs/revision/week4-norms.json` and says so.
+These overwrite the shipped result files with regenerated ones, which should match them. Without the adapter weights, `ftquant.revision` reads the round-4 update norms from `runs/revision/week4-norms.json` and says so. The last command recomputes every number quoted in the paper, from the per-item predictions, the run logs and the files above, and exits with an error unless `runs/findings/findings.json` matches the recomputation byte for byte.
 
 ## Rebuilding the paper's tables and figures
 
@@ -149,13 +152,14 @@ These overwrite the shipped result files with regenerated ones, which should mat
 | Predictor baselines table | `baselines` | `runs/revision/revision.json` |
 | Absolute accuracy table | `absolute` | `runs/revision/revision.json` |
 | Table of every fine-tune | `grid` | `runs/revision/revision.json` |
+| Findings table (Table 1) | `python3 -m ftquant.findings` | the per-item predictions, the run logs and the result files above |
 | Retention against bits per weight | `make_figures.py`, `retention_chart` | `runs/week1/analysis.json`, `runs/bpw/mlx-q06.json`, `runs/week1/mechanism-q06-gguf.json` |
 | Learning-rate figure | `lr_sweep_chart` | `runs/week2/summary.json` |
 | Retention against NSR | `mechanism_chart` | `runs/week1/analysis.json`, `runs/week1/mechanism-q06-mlx.json`, `runs/week1/mechanism-q06-gguf.json` |
 | Accuracy kept in eight settings | `replication_chart` | `runs/revision/revision.json` |
 | Predictor v2 against measurements | `predictor_v2_chart` | `runs/week3/verdicts.json`, `runs/week4/verdicts.json` |
 
-Numbers in the text that are in no table come from `runs/revision/revision.json` and, for round 5, from `runs/week5/verdicts.json`.
+Every number quoted in the text is in `runs/findings/findings.json`: `values` gives each one with the unrounded value behind it, `quoted_in_text` gives each sentence fragment exactly as it appears in the paper, and `findings` gives Table 1 with the values each finding rests on.
 
 ## Re-running the study
 

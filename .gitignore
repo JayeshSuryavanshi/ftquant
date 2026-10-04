@@ -26,6 +26,7 @@ runs/**
 !runs/week*/*/train.log
 !runs/week5/week5.log
 !runs/revision/*.json
+!runs/findings/*.json
 
 # build artifact of paper/make_supplement.py
 paper/supplementary.zip
