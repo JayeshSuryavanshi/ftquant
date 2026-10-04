@@ -1,0 +1,4 @@
+H1 & $R \ge 0.95$ at 8 and 6 bits, every lower bound $\ge 0.90$ & MLX 8-bit $1.01$ [$0.99$, $1.04$]; MLX 6-bit $1.05$ [$1.02$, $1.08$]; Q8\_0 $1.01$ [$0.99$, $1.03$]; Q6\_K $1.07$ [$1.05$, $1.10$] & supported \\
+H2 & $R$ lower at 3 bits than at 4, and $R < 0.5$ at 2 bits & 3 vs 4 bits: MLX $1.63$ vs $1.25$, GGUF $1.75$ vs $1.11$; 2 bits: MLX $0.00$, Q2\_K $1.78$ & not supported \\
+H3 & unfused adapter beats fused at MLX 4 and 3 bits & unfused minus fused: 4-bit $+0.022$ [${-}0.002$, $+0.044$]; 3-bit ${-}0.038$ [${-}0.073$, ${-}0.004$] & inconclusive \\
+H4 & confidence gate drifts at both 4-bit formats (error $+1$ pt or coverage $\pm 3$ pts) & MLX 4-bit coverage ${-}4.2$ pts; Q4\_K\_M coverage ${-}1.2$ pts & not supported \\

@@ -171,7 +171,13 @@ def drift_chart(model_tag: str, cfg_suffix: str, out: Path, dpi: int = 200) -> N
     plt.close(fig)
 
 
-def mechanism_chart(model_tag: str, out: Path, dpi: int = 200) -> None:
+def mechanism_chart(
+    model_tag: str,
+    out: Path,
+    dpi: int = 200,
+    note: str = "Circles: MLX   Diamonds: GGUF   (2-bit excluded: base model breaks)",
+    xlabel: str = "Quantization noise relative to the fine-tune update (log)",
+) -> None:
     fonts()
     data = rows(model_tag)
     mlx_mech = {
@@ -208,9 +214,7 @@ def mechanism_chart(model_tag: str, out: Path, dpi: int = 200) -> None:
         ax.scatter([], [], color=color, marker="o", s=60, label=label)
     ax.set_xscale("log")
     ax.set_ylim(-5, 112)
-    ax.set_xlabel(
-        "Quantization noise relative to the fine-tune update (log)", fontsize=13
-    )
+    ax.set_xlabel(xlabel, fontsize=13)
     ax.set_ylabel("Fine-tune gain retained (%)", fontsize=13)
     leg = ax.legend(loc="lower left", frameon=False, fontsize=11)
     for t in leg.get_texts():
@@ -218,7 +222,7 @@ def mechanism_chart(model_tag: str, out: Path, dpi: int = 200) -> None:
     ax.text(
         0.99,
         1.02,
-        "Circles: MLX   Diamonds: GGUF   (2-bit excluded: base model breaks)",
+        note,
         transform=ax.transAxes,
         ha="right",
         fontsize=10.5,
@@ -450,12 +454,25 @@ REPLICATION_ORDER = [
 
 
 def predictor_v2_chart(
-    out: Path, run: str = "week3", arms: dict | None = None, dpi: int = 200
+    out: Path,
+    run: str = "week3",
+    arms: dict | None = None,
+    dpi: int = 200,
+    figsize: tuple[float, float] = (6.2, 5.6),
+    legend: dict | None = None,
+    xlabel: str = "Predicted before quantizing (%)",
+    ylabel: str = "Measured gain retained (%, capped at 100)",
+    show_legend: bool = True,
 ) -> None:
     fonts()
     arms = arms or PRED_ARMS_W3
+    legend = legend or {
+        "loc": "lower left",
+        "bbox_to_anchor": (0.3, 0.07),
+        "fontsize": 10.5,
+    }
     pts = json.loads((RUNS / run / "verdicts.json").read_text())["points"]
-    fig, ax = plt.subplots(figsize=(6.2, 5.6), dpi=dpi)
+    fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
     fig.patch.set_facecolor(GROUND)
     frame(ax)
     ax.fill_between([0, 100], [-10, 90], [10, 110], color=GRID, alpha=0.5, lw=0)
@@ -475,13 +492,12 @@ def predictor_v2_chart(
         ax.scatter([], [], s=50, color=color, marker=marker, label=label)
     ax.set_xlim(-3, 103)
     ax.set_ylim(-3, 103)
-    ax.set_xlabel("Predicted before quantizing (%)", fontsize=13)
-    ax.set_ylabel("Measured gain retained (%, capped at 100)", fontsize=13)
-    leg = ax.legend(
-        loc="lower left", bbox_to_anchor=(0.3, 0.07), frameon=False, fontsize=10.5
-    )
-    for t in leg.get_texts():
-        t.set_color(INK)
+    ax.set_xlabel(xlabel, fontsize=13)
+    ax.set_ylabel(ylabel, fontsize=13)
+    if show_legend:
+        leg = ax.legend(frameon=False, **legend)
+        for t in leg.get_texts():
+            t.set_color(INK)
     fig.tight_layout()
     fig.savefig(out, facecolor=GROUND, metadata={"Software": None})
     plt.close(fig)

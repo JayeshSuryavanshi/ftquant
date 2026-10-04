@@ -1,0 +1,11 @@
+\multicolumn{5}{l}{\emph{Adapter loaded unfused on the quantized OLMo-2 1B base: $R$ fused / $R$ unfused}} \\
+W5-H1 & $10^{-5}$, seed 0 & MLX 3-bit & $0.826$ / $0.835$ & $+0.008$ [${-}0.010$, $+0.027$] \\
+W5-H1 & $10^{-5}$, seed 1 & MLX 3-bit & $0.813$ / $0.836$ & $+0.023$ [$+0.002$, $+0.042$] \\
+exploratory & $10^{-4}$, seed 0 & MLX 3-bit & $1.092$ / $1.100$ & $+0.008$ [${-}0.006$, $+0.021$] \\
+exploratory & $10^{-4}$, seed 1 & MLX 3-bit & $1.105$ / $1.108$ & $+0.003$ [${-}0.010$, $+0.016$] \\
+\addlinespace
+\multicolumn{5}{l}{\emph{Qwen3-0.6B LoRA trained on the quantized base: $R$ fused / $S$ trained on the base}} \\
+W5-H2 & $10^{-5}$ & MLX 4-bit & $0.841$ / $0.957$ & $+0.116$ [$+0.097$, $+0.135$] \\
+exploratory & $10^{-4}$ & MLX 4-bit & $0.940$ / $0.781$ & ${-}0.158$ [${-}0.181$, ${-}0.136$] \\
+exploratory & $10^{-5}$ & MLX 3-bit & $0.061$ / $0.951$ & $+0.890$ [$+0.865$, $+0.916$] \\
+exploratory & $10^{-4}$ & MLX 3-bit & $0.947$ / $0.940$ & ${-}0.007$ [${-}0.032$, $+0.018$] \\
