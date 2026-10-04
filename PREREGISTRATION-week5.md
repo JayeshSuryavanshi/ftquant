@@ -82,4 +82,6 @@ MLX q4 is the confirmatory format because the Qwen3-0.6B base is intact there (9
 
 ## Deviations
 
-None yet. Any change after hashing is logged here with a timestamp, as in earlier weeks.
+Any change after hashing is logged here with a timestamp, as in earlier weeks.
+
+- **2026-10-04 00:55 PDT: the Arm Q run `q06q3-lora` stalled and was restarted.** After its step-100 checkpoint (23:05) the training process slowed sharply: steps 100 to 200 took 92 minutes instead of about 5, and one validation pass took 17 minutes instead of about 20 seconds, with its memory footprint near 8 GB and the system swapping. It was stopped at 00:55, after its step-200 checkpoint (00:37). Its losses up to then were normal. Its partial outputs were moved to `runs/week5/_stalled-q06q3-lora/`, and the configuration is retrained from scratch with the same settings after Arm C. Only an exploratory run is affected; W5-H1 and W5-H2 were already computable and are unchanged.
