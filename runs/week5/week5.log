@@ -1,0 +1,96 @@
+2026-10-03 20:03:26 week-5 start: arms ['U', 'Q', 'C']
+2026-10-03 20:08:01 eval olmo1-base/mlx-q3: acc 0.0679 valid 0.5185 n=3080 (271s)
+2026-10-03 20:14:32 eval olmo1-lora-lowlr/mlx-q3-unfused: acc 0.6000 valid 0.9396 n=3080 (391s)
+2026-10-03 20:21:00 eval olmo1-lora-lowlr-s1/mlx-q3-unfused: acc 0.6104 valid 0.9295 n=3080 (389s)
+2026-10-03 20:27:35 eval olmo1-lora/mlx-q3-unfused: acc 0.7526 valid 0.9893 n=3080 (395s)
+2026-10-03 20:34:05 eval olmo1-lora-s1/mlx-q3-unfused: acc 0.7633 valid 0.9903 n=3080 (390s)
+2026-10-03 20:38:40 eval olmo1-base/mlx-q4: acc 0.1461 valid 0.5409 n=3080 (270s)
+2026-10-03 20:45:05 eval olmo1-lora-lowlr/mlx-q4-unfused: acc 0.7315 valid 0.9974 n=3080 (385s)
+2026-10-03 20:51:28 eval olmo1-lora-lowlr-s1/mlx-q4-unfused: acc 0.7494 valid 0.9971 n=3080 (383s)
+2026-10-03 20:57:54 eval olmo1-lora/mlx-q4-unfused: acc 0.7526 valid 0.9867 n=3080 (386s)
+2026-10-03 21:04:49 eval olmo1-lora-s1/mlx-q4-unfused: acc 0.7701 valid 0.9929 n=3080 (415s)
+2026-10-03 21:04:49 arm U done
+2026-10-03 21:08:37 eval q06-base/mlx-q4: acc 0.0968 valid 0.6682 n=3080 (224s)
+2026-10-03 21:36:29 trained q06q4-lora-lowlr in 1672s
+2026-10-03 21:42:31 eval q06q4-lora-lowlr/mlx-q4-qlora: acc 0.7763 valid 0.9994 n=3080 (362s)
+2026-10-03 22:10:25 trained q06q4-lora in 1674s
+2026-10-03 22:16:27 eval q06q4-lora/mlx-q4-qlora: acc 0.6127 valid 0.9883 n=3080 (362s)
+2026-10-03 22:24:59 eval q06-base/mlx-q3: acc 0.0000 valid 0.0000 n=3080 (509s)
+2026-10-03 22:53:17 trained q06q3-lora-lowlr in 1698s
+2026-10-03 22:59:29 eval q06q3-lora-lowlr/mlx-q3-qlora: acc 0.6753 valid 0.9971 n=3080 (372s)
+2026-10-04 00:55:48 TRAIN FAILED q06q3-lora
+s/it]
+Calculating loss...: 100%|██████████| 25/25 [00:33<00:00,  1.34s/it]
+
+Calculating loss...:   0%|          | 0/25 [00:00<?, ?it/s]
+Calculating loss...:   4%|▍         | 1/25 [00:01<00:31,  1.31s/it]
+Calculating loss...:   8%|▊         | 2/25 [00:02<00:29,  1.30s/it]
+Calculating loss...:  12%|█▏        | 3/25 [00:03<00:28,  1.30s/it]
+Calculating loss...:  16%|█▌        | 4/25 [00:05<00:28,  1.33s/it]
+Calculating loss...:  20%|██        | 5/25 [00:06<00:26,  1.32s/it]
+Calculating loss...:  24%|██▍       | 6/25 [00:07<00:24,  1.31s/it]
+Calculating loss...:  28%|██▊       | 7/25 [00:09<00:24,  1.34s/it]
+Calculating loss...:  32%|███▏      | 8/25 [00:10<00:22,  1.33s/it]
+Calculating loss...:  36%|███▌      | 9/25 [00:11<00:21,  1.31s/it]
+Calculating loss...:  40%|████      | 10/25 [00:13<00:19,  1.30s/it]
+Calculating loss...:  44%|████▍     | 11/25 [00:14<00:18,  1.30s/it]
+Calculating loss...:  48%|████▊     | 12/25 [00:15<00:16,  1.29s/it]
+Calculating loss...:  52%|█████▏    | 13/25 [00:16<00:15,  1.29s/it]
+Calculating loss...:  56%|█████▌    | 14/25 [00:18<00:14,  1.31s/it]
+Calculating loss...:  60%|██████    | 15/25 [00:19<00:13,  1.31s/it]
+Calculating loss...:  64%|██████▍   | 16/25 [00:20<00:11,  1.30s/it]
+Calculating loss...:  68%|██████▊   | 17/25 [00:22<00:10,  1.30s/it]
+Calculating loss...:  72%|███████▏  | 18/25 [00:23<00:09,  1.30s/it]
+Calculating loss...:  76%|███████▌  | 19/25 [00:24<00:07,  1.29s/it]
+Calculating loss...:  80%|████████  | 20/25 [00:26<00:06,  1.32s/it]
+Calculating loss...:  84%|████████▍ | 21/25 [00:27<00:05,  1.34s/it]
+Calculating loss...:  88%|████████▊ | 22/25 [00:28<00:04,  1.35s/it]
+Calculating loss...:  92%|█████████▏| 23/25 [00:30<00:02,  1.33s/it]
+Calculating loss...:  96%|█████████▌| 24/25 [00:31<00:01,  1.31s/it]
+Calculating loss...: 100%|██████████| 25/25 [00:32<00:00,  1.30s/it]
+Calculating loss...: 100%|██████████| 25/25 [00:32<00:00,  1.31s/it]
+
+Calculating loss...:   0%|          | 0/25 [00:00<?, ?it/s]
+Calculating loss...:   4%|▍         | 1/25 [00:01<00:28,  1.18s/it]
+Calculating loss...:   8%|▊         | 2/25 [00:02<00:27,  1.20s/it]
+Calculating loss...:  12%|█▏        | 3/25 [00:03<00:25,  1.17s/it]
+Calculating loss...:  16%|█▌        | 4/25 [00:04<00:24,  1.15s/it]
+Calculating loss...:  20%|██        | 5/25 [00:05<00:22,  1.15s/it]
+Calculating loss...:  24%|██▍       | 6/25 [00:06<00:21,  1.14s/it]
+Calculating loss...:  28%|██▊       | 7/25 [00:08<00:20,  1.14s/it]
+Calculating loss...:  32%|███▏      | 8/25 [00:09<00:19,  1.14s/it]
+Calculating loss...:  36%|███▌      | 9/25 [00:10<00:18,  1.14s/it]
+Calculating loss...:  40%|████      | 10/25 [00:11<00:17,  1.14s/it]
+Calculating loss...:  44%|████▍     | 11/25 [00:12<00:15,  1.14s/it]
+Calculating loss...:  48%|████▊     | 12/25 [00:13<00:14,  1.14s/it]
+Calculating loss...:  52%|█████▏    | 13/25 [16:37<59:46, 298.84s/it]
+Calculating loss...:  56%|█████▌    | 14/25 [16:38<38:18, 208.94s/it]
+Calculating loss...:  60%|██████    | 15/25 [16:39<24:23, 146.31s/it]
+Calculating loss...:  64%|██████▍   | 16/25 [16:41<15:23, 102.63s/it]
+Calculating loss...:  68%|██████▊   | 17/25 [16:42<09:37, 72.14s/it] 
+Calculating loss...:  72%|███████▏  | 18/25 [16:43<05:55, 50.80s/it]
+Calculating loss...:  76%|███████▌  | 19/25 [16:44<03:35, 35.88s/it]
+Calculating loss...:  80%|████████  | 20/25 [16:45<02:07, 25.48s/it]
+Calculating loss...:  84%|████████▍ | 21/25 [16:47<01:12, 18.20s/it]
+Calculating loss...:  88%|████████▊ | 22/25 [16:48<00:39, 13.08s/it]
+Calculating loss...:  92%|█████████▏| 23/25 [16:49<00:19,  9.52s/it]
+Calculating loss...:  96%|█████████▌| 24/25 [16:50<00:07,  7.01s/it]
+Calculating loss...: 100%|██████████| 25/25 [16:51<00:00,  5.25s/it]
+Calculating loss...: 100%|██████████| 25/25 [16:51<00:00, 40.47s/it]
+/Users/jayeshsuryavanshi/miniconda3/lib/python3.13/multiprocessing/resource_tracker.py:324: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-hu4zjw6b'}
+  warnings.warn(
+
+2026-10-04 00:56:51 week-5 start: arms ['C', 'Q']
+2026-10-04 01:00:13 eval q06-lora-lowlr/gguf-Q3_K_M-np4: acc 0.6211 valid 0.9951 n=3080 (180s)
+2026-10-04 01:38:11 eval q06-lora-lowlr/gguf-Q3_K_M-np1: acc 0.6214 valid 0.9951 n=3080 (2278s)
+2026-10-04 02:50:00 eval q06-lora-lowlr/gguf-bf16-labels: acc 0.7844 valid 1.0000 n=3080 (4309s)
+2026-10-04 03:24:43 eval q06-lora-lowlr/gguf-Q3_K_M-labels: acc 0.6224 valid 1.0000 n=3080 (2083s)
+2026-10-04 05:37:22 eval q06-lora-lowlr/gguf-Q2_K-labels: acc 0.0172 valid 1.0000 n=3080 (7959s)
+2026-10-04 05:41:02 eval q06-lora/gguf-bf16-labels: acc 0.7341 valid 1.0000 n=3080 (200s)
+2026-10-04 06:31:18 eval q06-lora/gguf-Q3_K_M-labels: acc 0.7247 valid 1.0000 n=3080 (3015s)
+2026-10-04 06:34:11 eval q06-lora/gguf-Q2_K-labels: acc 0.6019 valid 1.0000 n=3080 (173s)
+2026-10-04 06:34:11 arm C done
+2026-10-04 10:18:01 trained q06q3-lora in 13429s
+2026-10-04 10:33:43 eval q06q3-lora/mlx-q3-qlora: acc 0.6208 valid 0.9984 n=3080 (943s)
+2026-10-04 10:33:43 arm Q done
+2026-10-04 10:33:46 week-5 complete

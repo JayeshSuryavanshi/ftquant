@@ -89,6 +89,21 @@ A chronological record: what ran and when, what was decided and why, what went w
   - Smaller fixes: a stale footnote in `ftquant check` and the bundled predictor's test record now mention week 4.
   - One reported problem was rejected after checking: week 4 did run 63 new evaluations (7 configurations × 9), not 45.
 
+## 2026-10-03
+
+- Why a week 5: a mock review of the paper draft pointed out that the week-1 unfused evaluations of the gentle Qwen3-0.6B LoRA (exploratory, never reported) lost about as much as the fused model: R 0.83 against 0.84 at MLX q4, and 0.02 against 0.06 at q3. The "rounded away" account cannot explain that, because an unfused update is never rounded. Week 5 tests the alternative on OLMo-2 1B and tests a remedy (training against the quantized base).
+- 19:49: `PREREGISTRATION-week5.md` hashed (`runs/week1/PREREG-week5.sha256`), committed as `ea72821` and pushed at 19:50, before anything ran. It is the first plan with a hosted timestamp from before its runs started.
+- Code for week 5: `src/ftquant/week5.py` (the run), `src/ftquant/verdicts_w5.py` (the pre-registered verdicts, written before any week-5 result existed), and a `--labels-only` option in `eval_gguf.py` that restricts outputs to the 77 intent names with a GBNF grammar.
+- 19:53 to 20:03: a 20-item plumbing smoke test (`python -m ftquant.week5 --smoke`, outputs in `runs/smoke5/`, 10 training steps per QLoRA run). It checked that the OLMo adapters load over the quantized base, that mlx-lm trains LoRA on an MLX-quantized base, the GGUF rebuild, the single-slot server and the label grammar. Its accuracies were seen, but they cover 20 items of a single intent, are not used anywhere, and nothing in the plan changed after them.
+- 20:03: full week-5 run started (`python -m ftquant.week5`, log `runs/week5/week5.log`).
+- Also written: `src/ftquant/revision.py`, a reanalysis of weeks 1 to 4 for the paper revision, with no new runs. It covers absolute accuracy and accuracy-retention intervals for all eight LoRA pairs, update norms for every fine-tune (week 4 computed from the adapters; the method reproduces the recorded week-3 norm to within 0.2%), constant and update-norm baselines for the predictor, and the numbers the paper had typed by hand (the band table, 168 of 192, the Spearman values, the drift counts). Output: `runs/revision/revision.json`.
+
+## 2026-10-04
+
+- Week 5, Arm U (done 21:04): both base checks reproduced the week-3 evaluations exactly (6.79% at MLX q3, 14.61% at q4), so the week-3 base files stay the reference. Unfused and fused models agreed closely everywhere. **W5-H1 supported**: R(unfused) minus R(fused) at MLX q3 was +0.008 [-0.010, +0.027] for seed 0 and +0.023 [+0.002, +0.042] for seed 1, both upper bounds well under the +0.08 margin, against 0.17 to 0.19 of lost gain. The strong LoRAs and the 4-bit runs (exploratory) were within 0.014.
+- Arm Q: the gentle LoRA trained on the 4-bit base reached 77.6% (S = 0.957) against 69.4% for the fuse-then-quantize LoRA (R = 0.841). **W5-H2 supported**: +0.116 [+0.097, +0.135]; final validation loss 0.057 against 0.056 for the bf16-trained one. Exploratory: the strong LoRA trained on the 4-bit base did worse (61.3% against 71.7% fused), and it also trained worse there (final validation loss 0.110 against 0.067), so at learning rate 1e-4 training on the quantized base hurt. On the 3-bit base, which scores 0%, the gentle LoRA trained there reached 67.5% against 4.3% for fuse-then-quantize.
+- 23:05 to 00:55: the last Arm Q run (`q06q3-lora`, strong LoRA on the 3-bit base) stalled. After its step-100 checkpoint, steps 100 to 200 took 92 minutes instead of about 5 and one validation pass took 17 minutes, with the process near 8 GB and the system swapping (sampled: the main thread waiting on GPU completion and on GPU residency commits). Its losses were normal (validation 0.266 at step 200). It was stopped at 00:55, its files moved to `runs/week5/_stalled-q06q3-lora/`, and the deviation logged in `PREREGISTRATION-week5.md` (re-hashed 00:56). 00:56: restarted with `python -m ftquant.week5 --arms C Q`, so Arm C runs first and the stalled configuration is retrained from scratch afterwards.
+
 ## Compute used
 
 Everything ran on one Apple M1 Pro laptop (16 GB). Typical wall times:

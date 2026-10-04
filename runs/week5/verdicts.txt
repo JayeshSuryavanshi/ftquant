@@ -1,0 +1,5 @@
+W5-H1 supported
+W5-H2 supported
+  olmo1-lora-lowlr mlx-q3 R(unfused)-R(fused) +0.008 [-0.010, +0.027] supported
+  olmo1-lora-lowlr-s1 mlx-q3 R(unfused)-R(fused) +0.023 [+0.002, +0.042] supported
+  q06q4-lora-lowlr S-R +0.116 [+0.097, +0.135]

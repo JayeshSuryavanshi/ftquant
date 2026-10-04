@@ -24,3 +24,8 @@ runs/**
 !runs/week*/verdicts.txt
 !runs/week*/*/train.yaml
 !runs/week*/*/train.log
+!runs/week5/week5.log
+!runs/revision/*.json
+
+# build artifact of paper/make_supplement.py
+paper/supplementary.zip
