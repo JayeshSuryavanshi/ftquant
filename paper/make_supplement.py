@@ -1,3 +1,4 @@
+import gzip
 import hashlib
 import io
 import os
@@ -43,18 +44,6 @@ PREDICTION_LEAK = re.compile(
 REPLACEMENTS = [
     (str(ROOT), "."),
     (str(Path.home()), "~"),
-    (
-        "a background job of an interactive terminal session",
-        "a background job of an interactive terminal session",
-    ),
-    (
-        "(its session log was last written then)",
-        "(its session log was last written then)",
-    ),
-    (
-        "detached from any terminal session",
-        "detached from any terminal session",
-    ),
     (
         "- Pushed to the private GitHub repo (85c147d, then 6ab599e with the week-3 results).",
         "- Committed the results to version control, first through week 2 and then with the week-3 results.",
@@ -244,7 +233,8 @@ def repack(data: bytes, links: list[tuple[str, str]]) -> bytes:
     out = io.BytesIO()
     with (
         tarfile.open(fileobj=io.BytesIO(data), mode="r:gz") as src,
-        tarfile.open(fileobj=out, mode="w:gz", format=tarfile.USTAR_FORMAT) as dst,
+        gzip.GzipFile(fileobj=out, mode="wb", mtime=0) as gz,
+        tarfile.open(fileobj=gz, mode="w", format=tarfile.USTAR_FORMAT) as dst,
     ):
         for m in src.getmembers():
             if Path(m.name).name.startswith("._"):
