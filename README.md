@@ -91,7 +91,7 @@ When the base model itself breaks (for Qwen3 0.6B and 1.7B: MLX 3-bit and 2-bit 
 
 ## The study behind it
 
-Four pre-registrations (`PREREGISTRATION*.md`, hashed before the runs they cover) and four results files (`RESULTS-week1.md` to `RESULTS-week4.md`), including the criteria that were not met. `NOTEBOOK.md` logs every run, decision and incident as it happened.
+Five pre-registrations (`PREREGISTRATION*.md`, hashed before the runs they cover), four results files (`RESULTS-week1.md` to `RESULTS-week4.md`) and round 5's verdicts (`runs/week5/verdicts.txt`), including the criteria that were not met. `NOTEBOOK.md` logs every run, decision and incident as it happened.
 
 - Qwen3 0.6B, 1.7B and 4B and OLMo-2 1B, fine-tuned on banking77 (intent classification) and MASSIVE (slot annotation), with LoRA and full fine-tuning, across learning rates from 3e-6 to 3e-4 and two seeds.
 - Quantized to MLX 8, 6, 4, 3 and 2 bits and GGUF Q8_0 through Q2_K.
