@@ -21,29 +21,32 @@ def free_port() -> int:
 
 
 def start_server(
-    gguf: str, port: int, parallel: int, ctx_per_slot: int = 640
+    gguf: str,
+    port: int,
+    parallel: int,
+    ctx_per_slot: int = 640,
+    cache_ram: int | None = None,
 ) -> subprocess.Popen:
-    proc = subprocess.Popen(
-        [
-            "llama-server",
-            "-m",
-            gguf,
-            "--port",
-            str(port),
-            "--host",
-            "127.0.0.1",
-            "-np",
-            str(parallel),
-            "-c",
-            str(parallel * ctx_per_slot),
-            "-ngl",
-            "99",
-            "--no-warmup",
-            "--log-disable",
-        ],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-    )
+    cmd = [
+        "llama-server",
+        "-m",
+        gguf,
+        "--port",
+        str(port),
+        "--host",
+        "127.0.0.1",
+        "-np",
+        str(parallel),
+        "-c",
+        str(parallel * ctx_per_slot),
+        "-ngl",
+        "99",
+        "--no-warmup",
+        "--log-disable",
+    ]
+    if cache_ram is not None:
+        cmd += ["--cache-ram", str(cache_ram)]
+    proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     url = f"http://127.0.0.1:{port}/health"
     for _ in range(600):
         try:
@@ -92,13 +95,14 @@ def evaluate(
     parallel: int = 4,
     max_tokens: int = 16,
     labels_only: bool = False,
+    cache_ram: int | None = None,
 ) -> list[dict]:
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_id)
     label_set = labels()
     grammar = label_grammar(label_set) if labels_only else None
     examples = read_split(split)[:limit] if limit else read_split(split)
     port = free_port()
-    proc = start_server(gguf, port, parallel)
+    proc = start_server(gguf, port, parallel, cache_ram=cache_ram)
     try:
         prompts = [item_tokens(tokenizer, e.text, label_set) for e in examples]
         with ThreadPoolExecutor(parallel) as pool:
@@ -133,6 +137,7 @@ def main() -> None:
     ap.add_argument("--limit", type=int)
     ap.add_argument("--parallel", type=int, default=4)
     ap.add_argument("--labels-only", action="store_true")
+    ap.add_argument("--cache-ram", type=int)
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     t0 = time.time()
@@ -143,6 +148,7 @@ def main() -> None:
         args.limit,
         args.parallel,
         labels_only=args.labels_only,
+        cache_ram=args.cache_ram,
     )
     dt = time.time() - t0
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
