@@ -176,7 +176,8 @@ def setup() -> None:
     }
     at_most(
         "nf.max_acc_diff",
-        100 * max(abs(v["acc_mlx"] - v["acc_gguf"]) for v in tuned.values()), 2,
+        100 * max(abs(v["acc_mlx"] - v["acc_gguf"]) for v in tuned.values()),
+        2,
     )
     bases = [
         v["agreement"]
@@ -851,6 +852,23 @@ def drift() -> None:
     num("drift.err.strong_hi", max(strong_end), 1)
 
 
+def embedding() -> None:
+    e = load("revision/embedding/summary.json")
+    d_acc, d_kld = [], []
+    for v in e["formats"].values():
+        a = {}
+        for r in ("untied", "tied"):
+            rows = [
+                json.loads(line) for line in open(RUNS.parent / v[r]["predictions"])
+            ]
+            a[r] = 100 * sum(x["correct"] for x in rows) / len(rows)
+        d_acc.append(abs(a["tied"] - a["untied"]))
+        d_kld.append(100 * (v["untied"]["kld"] - v["tied"]["kld"]) / v["untied"]["kld"])
+    num("emb.max_dacc", max(d_acc), 1)
+    num("emb.kld_lo", min(d_kld), 0)
+    num("emb.kld_hi", max(d_kld), 0)
+
+
 def limits_and_appendix() -> None:
     for k, cfg in (("g", "q4b-lora-lowlr"), ("s", "q4b-lora")):
         num(
@@ -1037,11 +1055,11 @@ ANCHORS: list[str] = [
     r"Measured on its {{data.massive.test}} test items, that fine-tune kept {{tool.mas.R_q4}}\% of its gain at MLX~4-bit and {{miss.masg.s0}}\% at 3-bit.",
     r"had the same prediction and kept {{miss.masg.s1}}\%",
     r"v1 SHA-256 prefix \texttt{{{sha.v1}}}, v2 \texttt{{{sha.v2}}}",
-    r"In all {{rep.n_tests}} pre-registered tests (five fine-tune pairs, each at MLX~3-bit and GGUF~Q3\_K\_M), a LoRA trained at learning rate $10^{-4}$ retained more of its gain than the same LoRA at $10^{-5}$, mlx-lm's default, by ${{rep.diff_min}}$ to ${{rep.diff_max}}$ in $R$.",
+    r"In all {{rep.n_tests}} pre-registered tests (five fine-tune pairs, each at MLX~3-bit and GGUF~Q3\_K\_M), a LoRA trained at learning rate $10^{-4}$ retained more of its gain than the same LoRA at $10^{-5}$, mlx-lm's default learning rate, by ${{rep.diff_min}}$ to ${{rep.diff_max}}$ in $R$.",
     r"In exploratory comparisons over eight settings and five formats, the $10^{-5}$ LoRA kept a smaller share of its own accuracy in {{pat.lower}} of {{pat.cells}} cases, yet remained the more accurate model at Q4\_K\_M in all eight settings, while the $10^{-4}$ LoRA was the more accurate one at MLX~3-bit and Q2\_K in all {{abs.strong_more.q3}}.",
     r"Carrying the $10^{-5}$ OLMo-2 1B update exactly on the 3-bit base recovered {{r5.h1.s0.share}}\% and {{r5.h1.s1.share}}\% of the lost gain for two seeds (upper 95\% bounds {{r5.h1.s0.share_hi}}\% and {{r5.h1.s1.share_hi}}\%), while a $10^{-5}$ Qwen3-0.6B LoRA trained on the 4-bit base delivered {{r5.h2.S_pct}}\% of the bf16 gain at 4 bits, against {{r5.h2.R_pct}}\% when trained in bf16, fused and quantized (difference ${{r5.h2.d}}$, 95\% interval $[{{r5.h2.lo}}, {{r5.h2.hi}}]$); at $10^{-4}$, training on the 4-bit base delivered {{r5.q4s.S}}\% against {{r5.q4s.R}}\%.",
     r"A three-parameter predictor built from the weights and a one-time measurement of the base model met its pre-registered error bar of 0.10 on held-out fine-tunes (mean absolute error {{pred.v2.r3.mae}} and {{pred.v2.r4.mae}}), but a post hoc model of update size and base damage reached {{pb.norm.r3}} in both rounds.",
-    r"We call a LoRA trained at learning rate $10^{-5}$ gentle and one trained at $10^{-4}$ strong; the gentle setting is mlx-lm's default, and its update was {{setup.ratio_min}} to {{setup.ratio_max}} times smaller.",
+    r"We call a LoRA trained at learning rate $10^{-5}$ gentle and one trained at $10^{-4}$ strong; the gentle learning rate is mlx-lm's default, and its update was {{setup.ratio_min}} to {{setup.ratio_max}} times smaller.",
     r"For one fine-tune at Q3\_K\_M, llama-server with one slot and with four gave different predictions on {{r5.rep.diff_np}} of {{r5.rep.n}} items (Section~\ref{sec:round5}).",
     r"At 8 and 6 bits, $R$ was {{r1.h1.min}} to {{r1.h1.max}} in both engines (H1).",
     r"the most accurate of the three at bf16 ({{r1.q06.gentle.acc}}\%, against {{r1.q06.full.acc}}\% for full fine-tuning and {{r1.q06.strong.acc}}\% for the LoRA at $10^{-4}$)",
@@ -1077,6 +1095,7 @@ ANCHORS: list[str] = [
     r"rose from {{drift.err.q4b.fp}}\% to {{drift.err.q4b.q}}\% on Qwen3-4B,",
     r"from {{drift.err.q17.fp}}\% to {{drift.err.q17.q}}\% on Qwen3-1.7B, while the strong LoRAs ended at {{drift.err.strong_lo}}\% to {{drift.err.strong_hi}}\%",
     r"produced a valid intent name for {{valid.q06g.q4}}\% of items at MLX~4-bit and {{valid.q06g.Q3KM}}\% at Q3\_K\_M.",
+    r"For Qwen3-0.6B and Qwen3-1.7B, whose checkpoints store a separate copy of their tied output head, the base GGUF files quantized the input embedding at each file's base type, while every fused fine-tune shares one embedding that llama-quantize keeps at Q6\_K. Rebuilding the Qwen3-0.6B base with a shared embedding changed its accuracy by at most {{emb.max_dacc}} points and lowered its base damage by {{emb.kld_lo}} to {{emb.kld_hi}}\% at Q4\_K\_M, Q3\_K\_M and Q2\_K; the Qwen3-1.7B base was not rebuilt.",
 ]
 
 
@@ -1260,6 +1279,7 @@ def compute() -> None:
         predictor,
         drift,
         limits_and_appendix,
+        embedding,
         timeline,
     ):
         step()

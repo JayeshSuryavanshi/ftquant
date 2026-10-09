@@ -1,0 +1,61 @@
+{
+ "model": "Qwen/Qwen3-0.6B",
+ "revision": "c1899de2",
+ "kld_chunks": 8,
+ "kld_ctx": 512,
+ "llama_cpp_build": 11146,
+ "note": "untied = converted from the checkpoint as stored (separate lm_head copy); tied = lm_head copy removed, as in the fused fine-tunes",
+ "formats": {
+  "Q4_K_M": {
+   "untied": {
+    "kld": 0.103895,
+    "embedding_types": {
+     "output.weight": "Q6_K",
+     "token_embd.weight": "Q4_K"
+    },
+    "predictions": "runs/revision/embedding/untied-Q4_K_M.jsonl"
+   },
+   "tied": {
+    "kld": 0.102009,
+    "embedding_types": {
+     "token_embd.weight": "Q6_K"
+    },
+    "predictions": "runs/revision/embedding/tied-Q4_K_M.jsonl"
+   }
+  },
+  "Q3_K_M": {
+   "untied": {
+    "kld": 0.441442,
+    "embedding_types": {
+     "output.weight": "Q6_K",
+     "token_embd.weight": "Q3_K"
+    },
+    "predictions": "runs/revision/embedding/untied-Q3_K_M.jsonl"
+   },
+   "tied": {
+    "kld": 0.420986,
+    "embedding_types": {
+     "token_embd.weight": "Q6_K"
+    },
+    "predictions": "runs/revision/embedding/tied-Q3_K_M.jsonl"
+   }
+  },
+  "Q2_K": {
+   "untied": {
+    "kld": 2.765845,
+    "embedding_types": {
+     "output.weight": "Q6_K",
+     "token_embd.weight": "Q2_K"
+    },
+    "predictions": "runs/revision/embedding/untied-Q2_K.jsonl"
+   },
+   "tied": {
+    "kld": 2.554509,
+    "embedding_types": {
+     "token_embd.weight": "Q6_K"
+    },
+    "predictions": "runs/revision/embedding/tied-Q2_K.jsonl"
+   }
+  }
+ }
+}

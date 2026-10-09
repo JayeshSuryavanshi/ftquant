@@ -33,17 +33,20 @@ EXTRA_GLOBS = [
     "runs/findings/findings.json",
     "paper/make_tables.py",
     "paper/make_figures.py",
+    "records/prereg-originals/*.md",
+    "runs/revision/embedding/*",
+    "src/ftquant/embedding_check.py",
 ]
 STORED = {".gz", ".png", ".pdf"}
-LEAK = re.compile(
-    r"jayesh|suryavanshi|gmail|/users/|github-updates|ebay", re.I
-)
+LEAK = re.compile(r"jayesh|suryavanshi|gmail|/users/|github-updates|ebay", re.I)
 # Prediction files contain the public test sets, whose utterances mention "jayesh", "gmail" and
 # "eBay"; for them only path and surname leaks are checked.
-PREDICTION_LEAK = re.compile(
-    r"suryavanshi|/users/|github-updates", re.I
-)
+PREDICTION_LEAK = re.compile(r"suryavanshi|/users/|github-updates", re.I)
 REPLACEMENTS = [
+    (
+        "committed as `ea72821` (now `70b23e4`, see 2026-10-07)",
+        "committed as `70b23e4` (rewritten from an earlier ID, see 2026-10-07)",
+    ),
     (str(ROOT), "."),
     (str(Path.home()), "~"),
     (
@@ -53,6 +56,10 @@ REPLACEMENTS = [
     (
         "and the correction is in git history (10c24c4).",
         "and the correction is recorded in `runs/week1/PREREG-week4.sha256` (the 05:16:29 amendment).",
+    ),
+    (
+        "- Before the repository went public, its history was rewritten to change the wording of two notebook lines (13:42 and 14:06 on 2026-09-29) and of the supplement builder's leak check. The 12 commits from 2026-09-29 14:09 onward got new IDs; their authors, dates and messages, and every other file, are unchanged. The round-5 plan commit `ea72821`, pushed at 19:50 on 2026-10-03, is now `70b23e4` with the same `PREREGISTRATION-week5.md`; GitHub's push log keeps the original ID.",
+        "- The version history was rewritten to change the wording of two notebook lines (13:42 and 14:06 on 2026-09-29) and of the supplement builder's leak check. Commit dates and messages and every other file are unchanged, including the plans and their hash logs.",
     ),
 ]
 MUST_STAY_IDENTICAL = [
@@ -69,7 +76,19 @@ MUST_STAY_IDENTICAL = [
     "runs/predictor/predictor-v1.json",
     "runs/predictor/predictor-v1.sha256",
     "runs/predictor/predictor-v2.json",
+    "records/prereg-originals/PREREGISTRATION.md",
+    "records/prereg-originals/PREREGISTRATION-week2.md",
+    "records/prereg-originals/PREREGISTRATION-week3.md",
+    "records/prereg-originals/PREREGISTRATION-week4.md",
+    "records/prereg-originals/PREREGISTRATION-week5.md",
 ]
+PLAN_LOGS = {
+    "PREREGISTRATION.md": "runs/week1/PREREG.sha256",
+    "PREREGISTRATION-week2.md": "runs/week1/PREREG-week2.sha256",
+    "PREREGISTRATION-week3.md": "runs/week1/PREREG-week3.sha256",
+    "PREREGISTRATION-week4.md": "runs/week1/PREREG-week4.sha256",
+    "PREREGISTRATION-week5.md": "runs/week1/PREREG-week5.sha256",
+}
 
 README = """# Supplementary material
 
@@ -81,6 +100,7 @@ This is an anonymized copy of the project files behind the submission. Round n i
 
 - `PREREGISTRATION.md` and `PREREGISTRATION-week2.md` to `-week5.md`: the five pre-registrations, with their logged deviations.
 - `runs/week1/PREREG*.sha256`: the hash logs of the five plans. Each line is the SHA-256 of one version of a plan and the time it was recorded; later lines are amendments that log a deviation.
+- `records/prereg-originals/`: each plan as it was first hashed, before any deviation was logged. In every plan, the text before the deviation section is byte-identical to this first version.
 - `runs/predictor/`: the frozen predictors (`predictor-v1.json`, `predictor-v2.json`), v1's hash log (`predictor-v1.sha256`), and the round-2 predictor tests (`eval-T1.json` to `eval-T3.json`, `verdicts.json`).
 - `records/eval-weekN.tar.gz`: the per-item predictions of every full-test-set evaluation of rounds 1 to 4, 279 files in all. Unpacked, they give `runs/weekN/<config>/eval/<format>.jsonl`, one line per test item (text, gold, prediction, correct, valid, sequence log-probability, confidence). The week-4 archive also restores `runs/week4/olmo1-base` and `runs/week4/mas06-base`, links to the week-3 base evaluations that round 4 reuses. Round 5's per-item predictions are already unpacked in `runs/week5/<config>/eval/`.
 - `runs/weekN/<config>/train.yaml` and `train.log`: the configuration and log of every training run, including the out-of-memory attempt in `runs/week4/_failed-oom-q4b-lora-lowlr/`, round 5's four LoRAs trained on a quantized base, and the stalled first attempt at one of them in `runs/week5/_stalled-q06q3-lora/`. The two Qwen3-4B configurations show `iters: 1000` because mlx-lm counts micro-batches; with 2-step accumulation that is 500 optimizer steps.
@@ -102,13 +122,14 @@ This is an anonymized copy of the project files behind the submission. Round n i
 ## Checking the pre-registrations
 
     shasum -a 256 PREREGISTRATION.md PREREGISTRATION-week2.md PREREGISTRATION-week3.md PREREGISTRATION-week4.md PREREGISTRATION-week5.md
+    shasum -a 256 records/prereg-originals/*.md
     shasum -a 256 runs/predictor/predictor-v1.json runs/predictor/predictor-v2.json
 
-Each plan's hash equals the last line of its log in `runs/week1/`. Predictor v1's hash and freeze time are logged in `runs/predictor/predictor-v1.sha256`; v2's full hash is quoted in `PREREGISTRATION-week3.md` and `PREREGISTRATION-week4.md`. Both match the prefixes in the paper (v1 `5df7d620`, v2 `6fd78627`).
+Each plan's hash equals the last line of its log in `runs/week1/`, and each file in `records/prereg-originals/` equals the first line; the builder checks both. Predictor v1's hash and freeze time are logged in `runs/predictor/predictor-v1.sha256`; v2's full hash is quoted in `PREREGISTRATION-week3.md` and `PREREGISTRATION-week4.md`. Both match the prefixes in the paper (v1 `5df7d620`, v2 `6fd78627`).
 
 ## What was anonymized
 
-Local file paths were replaced by `.` (the project root) or `~` (the home folder). Version-control commit identifiers were replaced by `[commit]`, and two notebook sentences that pointed to the private version history now point to the hash logs instead. Two notebook sentences that named the local tooling in use were generalized. The per-item archives were re-packed with anonymous file owners and without macOS metadata files. No result, number or timestamp was changed. The plans, their hash logs and the predictor files are byte-identical to the originals, so their hashes verify.
+Local file paths were replaced by `.` (the project root) or `~` (the home folder). Version-control commit identifiers were replaced by `[commit]`, and two notebook sentences that pointed to the private version history now point to the hash logs instead. One notebook entry about rewriting the version history was shortened to leave out where the history is hosted. Two notebook sentences that named the local tooling in use were generalized. The per-item archives were re-packed with anonymous file owners and without macOS metadata files. No result, number or timestamp was changed. The plans, their hash logs and the predictor files are byte-identical to the originals, so their hashes verify.
 
 ## Re-scoring from the archived predictions
 
@@ -267,7 +288,25 @@ def repack(data: bytes, links: list[tuple[str, str]]) -> bytes:
     return out.getvalue()
 
 
+def check_plan_hashes() -> None:
+    for plan, log in PLAN_LOGS.items():
+        logged = [
+            line.split()[0]
+            for line in (ROOT / log).read_text().splitlines()
+            if line.strip()
+        ]
+        first = hashlib.sha256(
+            (ROOT / "records/prereg-originals" / plan).read_bytes()
+        ).hexdigest()
+        last = hashlib.sha256((ROOT / plan).read_bytes()).hexdigest()
+        assert (
+            first == logged[0]
+        ), f"{plan}: first-hashed version does not match its log"
+        assert last == logged[-1], f"{plan}: current version does not match its log"
+
+
 def main() -> None:
+    check_plan_hashes()
     commits = commit_ids()
     for keep in ("5df7d620", "6fd78627", "7fe450e1"):
         assert not any(c.startswith(keep) for c in commits)

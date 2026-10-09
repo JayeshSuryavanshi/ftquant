@@ -266,11 +266,11 @@
   "Measured on its 2,974 test items, that fine-tune kept 93\\% of its gain at MLX~4-bit and 32\\% at 3-bit.",
   "had the same prediction and kept 5\\%",
   "v1 SHA-256 prefix \\texttt{5df7d620}, v2 \\texttt{6fd78627}",
-  "In all 10 pre-registered tests (five fine-tune pairs, each at MLX~3-bit and GGUF~Q3\\_K\\_M), a LoRA trained at learning rate $10^{-4}$ retained more of its gain than the same LoRA at $10^{-5}$, mlx-lm's default, by $+0.06$ to $+0.63$ in $R$.",
+  "In all 10 pre-registered tests (five fine-tune pairs, each at MLX~3-bit and GGUF~Q3\\_K\\_M), a LoRA trained at learning rate $10^{-4}$ retained more of its gain than the same LoRA at $10^{-5}$, mlx-lm's default learning rate, by $+0.06$ to $+0.63$ in $R$.",
   "In exploratory comparisons over eight settings and five formats, the $10^{-5}$ LoRA kept a smaller share of its own accuracy in 40 of 40 cases, yet remained the more accurate model at Q4\\_K\\_M in all eight settings, while the $10^{-4}$ LoRA was the more accurate one at MLX~3-bit and Q2\\_K in all eight.",
   "Carrying the $10^{-5}$ OLMo-2 1B update exactly on the 3-bit base recovered 5\\% and 12\\% of the lost gain for two seeds (upper 95\\% bounds 16\\% and 22\\%), while a $10^{-5}$ Qwen3-0.6B LoRA trained on the 4-bit base delivered 96\\% of the bf16 gain at 4 bits, against 84\\% when trained in bf16, fused and quantized (difference $+0.116$, 95\\% interval $[+0.097, +0.135]$); at $10^{-4}$, training on the 4-bit base delivered 78\\% against 94\\%.",
   "A three-parameter predictor built from the weights and a one-time measurement of the base model met its pre-registered error bar of 0.10 on held-out fine-tunes (mean absolute error 0.059 and 0.084), but a post hoc model of update size and base damage reached 0.049 in both rounds.",
-  "We call a LoRA trained at learning rate $10^{-5}$ gentle and one trained at $10^{-4}$ strong; the gentle setting is mlx-lm's default, and its update was 8.7 to 12.9 times smaller.",
+  "We call a LoRA trained at learning rate $10^{-5}$ gentle and one trained at $10^{-4}$ strong; the gentle learning rate is mlx-lm's default, and its update was 8.7 to 12.9 times smaller.",
   "For one fine-tune at Q3\\_K\\_M, llama-server with one slot and with four gave different predictions on 2 of 3,080 items (Section~\\ref{sec:round5}).",
   "At 8 and 6 bits, $R$ was 1.01 to 1.07 in both engines (H1).",
   "the most accurate of the three at bf16 (78.5\\%, against 76.6\\% for full fine-tuning and 73.5\\% for the LoRA at $10^{-4}$)",
@@ -305,7 +305,8 @@
   "although its final validation loss was higher than in bf16 (0.099 against 0.056)",
   "rose from 5.1\\% to 12.8\\% on Qwen3-4B,",
   "from 5.4\\% to 23.2\\% on Qwen3-1.7B, while the strong LoRAs ended at 4.9\\% to 5.5\\%",
-  "produced a valid intent name for 99.3\\% of items at MLX~4-bit and 99.5\\% at Q3\\_K\\_M."
+  "produced a valid intent name for 99.3\\% of items at MLX~4-bit and 99.5\\% at Q3\\_K\\_M.",
+  "For Qwen3-0.6B and Qwen3-1.7B, whose checkpoints store a separate copy of their tied output head, the base GGUF files quantized the input embedding at each file's base type, while every fused fine-tune shares one embedding that llama-quantize keeps at Q6\\_K. Rebuilding the Qwen3-0.6B base with a shared embedding changed its accuracy by at most 0.3 points and lowered its base damage by 2 to 8\\% at Q4\\_K\\_M, Q3\\_K\\_M and Q2\\_K; the Qwen3-1.7B base was not rebuilt."
  ],
  "values": {
   "abs.cost_max": {
@@ -511,6 +512,18 @@
   "drift.q17.cov_q3": {
    "text": "27.8",
    "value": 0.277922
+  },
+  "emb.kld_hi": {
+   "text": "8",
+   "value": 7.64092
+  },
+  "emb.kld_lo": {
+   "text": "2",
+   "value": 1.815294
+  },
+  "emb.max_dacc": {
+   "text": "0.3",
+   "value": 0.292208
   },
   "fmt.mlx3": {
    "text": "3.5",
