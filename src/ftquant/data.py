@@ -16,8 +16,12 @@ class Example:
 
 
 def read_split(name: str) -> list[Example]:
+    if name == "valid":
+        return stratified_holdout(read_split("train"), 0.05, 0)[1]
     with open(RAW / f"{name}.csv", newline="") as f:
-        return [Example(r["text"].strip(), r["category"].strip()) for r in csv.DictReader(f)]
+        return [
+            Example(r["text"].strip(), r["category"].strip()) for r in csv.DictReader(f)
+        ]
 
 
 def labels() -> list[str]:
@@ -27,7 +31,9 @@ def labels() -> list[str]:
 def instruction(label_set: list[str]) -> str:
     return (
         "Classify the customer's banking message into exactly one intent. "
-        "Answer with the intent name only.\n\nIntents: " + ", ".join(label_set) + "\n\nMessage: "
+        "Answer with the intent name only.\n\nIntents: "
+        + ", ".join(label_set)
+        + "\n\nMessage: "
     )
 
 
@@ -35,7 +41,9 @@ def prompt(message: str, label_set: list[str]) -> str:
     return instruction(label_set) + message
 
 
-def stratified_holdout(examples: list[Example], frac: float, seed: int) -> tuple[list[Example], list[Example]]:
+def stratified_holdout(
+    examples: list[Example], frac: float, seed: int
+) -> tuple[list[Example], list[Example]]:
     by_label: dict[str, list[Example]] = defaultdict(list)
     for e in examples:
         by_label[e.label].append(e)
@@ -56,7 +64,10 @@ def stratified_holdout(examples: list[Example], frac: float, seed: int) -> tuple
 def write_jsonl(examples: list[Example], path: Path, label_set: list[str]) -> None:
     with open(path, "w") as f:
         for e in examples:
-            f.write(json.dumps({"prompt": prompt(e.text, label_set), "completion": e.label}) + "\n")
+            f.write(
+                json.dumps({"prompt": prompt(e.text, label_set), "completion": e.label})
+                + "\n"
+            )
 
 
 def build(seed: int = 0, valid_frac: float = 0.05) -> dict[str, int]:
@@ -67,7 +78,12 @@ def build(seed: int = 0, valid_frac: float = 0.05) -> dict[str, int]:
     write_jsonl(train, SPLITS / "train.jsonl", label_set)
     write_jsonl(valid, SPLITS / "valid.jsonl", label_set)
     write_jsonl(test, SPLITS / "test.jsonl", label_set)
-    return {"train": len(train), "valid": len(valid), "test": len(test), "labels": len(label_set)}
+    return {
+        "train": len(train),
+        "valid": len(valid),
+        "test": len(test),
+        "labels": len(label_set),
+    }
 
 
 if __name__ == "__main__":

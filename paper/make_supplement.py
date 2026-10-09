@@ -11,7 +11,18 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = Path(__file__).resolve().parent / "supplementary.zip"
 TOP = "supplementary"
-EXCLUDE = ("paper/", "records/eval-week5.tar.gz")
+EXCLUDE = (
+    "paper/",
+    "records/eval-week5.tar.gz",
+    "PREREGISTRATION-week6.md",
+    "runs/week1/PREREG-week6.sha256",
+    "runs/week6/",
+    "runs/smoke6/",
+    "src/ftquant/week6.py",
+    "src/ftquant/verdicts_w6.py",
+    "src/ftquant/lora_gguf.py",
+    "src/ftquant/rebuild.py",
+)
 EXTRA_GLOBS = [
     "runs/smoke*/sweep.log",
     "runs/smoke*/week5.log",

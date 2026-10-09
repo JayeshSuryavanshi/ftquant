@@ -26,6 +26,8 @@ def start_server(
     parallel: int,
     ctx_per_slot: int = 640,
     cache_ram: int | None = None,
+    lora: str | None = None,
+    lora_scale: float = 1.0,
 ) -> subprocess.Popen:
     cmd = [
         "llama-server",
@@ -46,6 +48,12 @@ def start_server(
     ]
     if cache_ram is not None:
         cmd += ["--cache-ram", str(cache_ram)]
+    if lora is not None:
+        cmd += (
+            ["--lora", lora]
+            if lora_scale == 1.0
+            else ["--lora-scaled", f"{lora}:{lora_scale}"]
+        )
     proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     url = f"http://127.0.0.1:{port}/health"
     for _ in range(600):
@@ -96,13 +104,17 @@ def evaluate(
     max_tokens: int = 16,
     labels_only: bool = False,
     cache_ram: int | None = None,
+    lora: str | None = None,
+    lora_scale: float = 1.0,
 ) -> list[dict]:
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_id)
     label_set = labels()
     grammar = label_grammar(label_set) if labels_only else None
     examples = read_split(split)[:limit] if limit else read_split(split)
     port = free_port()
-    proc = start_server(gguf, port, parallel, cache_ram=cache_ram)
+    proc = start_server(
+        gguf, port, parallel, cache_ram=cache_ram, lora=lora, lora_scale=lora_scale
+    )
     try:
         prompts = [item_tokens(tokenizer, e.text, label_set) for e in examples]
         with ThreadPoolExecutor(parallel) as pool:
@@ -138,6 +150,8 @@ def main() -> None:
     ap.add_argument("--parallel", type=int, default=4)
     ap.add_argument("--labels-only", action="store_true")
     ap.add_argument("--cache-ram", type=int)
+    ap.add_argument("--lora")
+    ap.add_argument("--lora-scale", type=float, default=1.0)
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     t0 = time.time()
@@ -149,6 +163,8 @@ def main() -> None:
         args.parallel,
         labels_only=args.labels_only,
         cache_ram=args.cache_ram,
+        lora=args.lora,
+        lora_scale=args.lora_scale,
     )
     dt = time.time() - t0
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
