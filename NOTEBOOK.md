@@ -119,6 +119,23 @@ A chronological record: what ran and when, what was decided and why, what went w
 - 18:45 to 19:14: an independent review of the week-6 runner and analysis code found problems that were fixed before hashing: a partly trained adapter could be taken as finished after a crash (completion is now marked explicitly), a smoke run's work files could be reused by the real run, a failed G3 run would have made W6-H2 untestable as well, the restart-once rule did not count attempts across restarts, and the scale-0 adapter check tests only loading (llama.cpp does not apply a scale-0 adapter), so it now has a tolerance and is described as a load-only check. A first smoke run on the earlier code was stopped; its log's accuracies were not examined except three exploratory Q2_K lines seen in passing.
 - 19:13 to 19:43: second smoke run on the final code (20 validation items per evaluation, 10 training steps): every phase completed with 61 evaluations, every adapter check (a) and rebuild check passed, the restart rule set aside both 10-step strong G3 runs as not learned and marked them not testable (expected at 10 steps), and the analysis code ran on the outputs. Its accuracies were not examined.
 
+- 19:44: week 6 started (`python -m ftquant.week6`, detached under caffeinate). Phase G finished at 20:25: adapter check (a) passed for the week-1 gentle adapter, the rebuilt Q3_K_M training model passed its acceptance test, and the gentle LoRA trained against it finished in 19 minutes (final validation loss 0.069). Phase D finished at 21:49: both LoRAs with mlx-lm's defaults trained on their first attempt (37 and 28 minutes) and their saved configurations showed the defaults. Phase I finished at 22:45.
+- 23:10: the run stopped at the 10 GB free-disk rule, after the strong LoRA trained against the dequantized Q3_K_M weights finished (21 minutes, validation loss 0.119). Free disk had fallen from about 15 GB to under 7 GB within minutes, more than the run's files account for; the cause was not found.
+
+## 2026-10-09
+
+- 17:48: resumed after `uv cache prune --force` (the cache was in use by other running processes; it removed 10.8 GiB of files but freed about 1 GB, since APFS clones share those blocks with installed environments) and after deleting the cached Qwen3-4B weights (8.05 GB; not used in week 6). Finished steps were skipped. The two LoRAs trained against the dequantized Q2_K weights took 19 minutes each (validation loss 0.087 and 0.101).
+- 19:39: stopped again at the disk rule, before the exploratory OLMo-2 1B Q2_K step.
+
+## 2026-10-10
+
+- 11:16 to 11:41: resumed after deleting the run's finished Qwen3-0.6B work files and completed (63 evaluations). Both stops are logged as an amendment to the week-6 plan. Verdicts (`runs/week6/verdicts.txt`):
+  - **W6-H1 supported.** At Q3_K_M the gentle LoRA trained against the shipped weights and served as a llama.cpp adapter delivered 0.986 of its bf16 gain (75.7%), against R = 0.795 fused and quantized (62.1%); S − (1 + R)/2 = +0.089 [+0.071, +0.108].
+  - **W6-H2 supported.** The week-1 gentle adapter applied at load time delivered 0.733 (57.7%), less than fused; S − (1 + R)/2 = −0.164 [−0.183, −0.146].
+  - **W6-H3 supported.** With mlx-lm's defaults (1,000 steps, last 16 layers, no prompt masking), both LoRAs learned (gains 66.6 and 73.1 points at MLX bf16; the 1e-4 LoRA was the more accurate at bf16, 80.7% against 74.2%), and R(1e-4) − R(1e-5) was +0.479 [+0.449, +0.509] at Q3_K_M and +0.259 [+0.231, +0.286] at MLX 4-bit.
+  - **W6-H4 inconclusive.** A WikiText-2 importance matrix narrowed the Q3_K_M gap from 0.215 to 0.146 on Qwen3-0.6B (supported: +0.038 [+0.019, +0.057]) and from 0.059 to 0.034 on OLMo-2 1B (inconclusive: +0.005 [−0.011, +0.021]).
+  - Check (b) passed. Exploratory: at Q2_K, where the base scores 0%, the gentle LoRA trained against the shipped weights delivered 0.947 of its gain, against 0 fused or at load time; for the strong LoRA, training against the shipped weights did worse at Q3_K_M (0.895 against 1.010) and better at Q2_K (1.024 against 0.868).
+
 ## Compute used
 
 Everything ran on one Apple M1 Pro laptop (16 GB). Typical wall times:

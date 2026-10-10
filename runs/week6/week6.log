@@ -1,0 +1,94 @@
+2026-10-08 19:44:13 week-6 start: phases ['G', 'D', 'I', 'X']; work in /Users/jayeshsuryavanshi/github-updates/ftquant/runs/week6/work
+2026-10-08 19:46:52 eval q06-base/gguf-bf16: acc 0.0740 valid 0.9373 n=3080 (149s)
+2026-10-08 19:49:45 eval q06-lora-lowlr/gguf-bf16: acc 0.7847 valid 0.9974 n=3080 (160s)
+2026-10-08 19:52:29 eval q06-base/gguf-Q3_K_M: acc 0.0562 valid 0.8536 n=3080 (160s)
+2026-10-08 19:55:14 eval q06-lora-lowlr/gguf-Q3_K_M: acc 0.6211 valid 0.9951 n=3080 (162s)
+2026-10-08 19:55:20 adapter check (a) q06-lora-lowlr: passed=True modules=196 max_rel_diff=3.4e-16
+2026-10-08 19:55:48 eval q06-base/gguf-bf16-valid: acc 0.0721 valid 0.9579 n=499 (28s)
+2026-10-08 19:56:18 eval q06-lora-lowlr/gguf-bf16-valid: acc 0.7776 valid 1.0000 n=499 (30s)
+2026-10-08 19:56:55 eval q06-lora-lowlr/gguf-bf16-lora-valid: acc 0.7776 valid 1.0000 n=499 (37s)
+2026-10-08 19:57:21 eval q06-base/gguf-Q8_0-valid: acc 0.0681 valid 0.9719 n=499 (25s)
+2026-10-08 19:57:49 eval q06-lora-lowlr/gguf-Q8_0-valid: acc 0.7776 valid 1.0000 n=499 (27s)
+2026-10-08 19:58:22 eval q06-lora-lowlr/gguf-Q8_0-lora-valid: acc 0.7836 valid 1.0000 n=499 (34s)
+2026-10-08 19:58:50 eval q06-base/gguf-bf16-lora0-valid: acc 0.0741 valid 0.9619 n=499 (28s)
+2026-10-08 20:02:13 eval q06-lora-lowlr/gguf-Q3_K_M-lora: acc 0.5773 valid 0.9964 n=3080 (203s)
+2026-10-08 20:02:29 rebuild check Q3_K_M: passed=True tensors=310
+2026-10-08 20:21:29 trained q06dq3-lora-lowlr in 1140s (attempt 1, final validation loss 0.069)
+2026-10-08 20:21:38 adapter check (a) q06dq3-lora-lowlr: passed=True modules=196 max_rel_diff=3.7e-16
+2026-10-08 20:25:06 eval q06dq3-lora-lowlr/gguf-Q3_K_M-lora: acc 0.7571 valid 0.9977 n=3080 (208s)
+2026-10-08 20:25:06 phase G done
+2026-10-08 21:02:07 trained q06-def-lowlr in 2221s (attempt 1, final validation loss 0.088)
+2026-10-08 21:03:37 eval q06-def-lowlr/mlx-bf16: acc 0.7416 valid 0.9977 n=3080 (84s)
+2026-10-08 21:05:05 eval q06-def-lowlr/mlx-q4: acc 0.5315 valid 0.9844 n=3080 (84s)
+2026-10-08 21:07:56 eval q06-def-lowlr/gguf-bf16: acc 0.7422 valid 0.9984 n=3080 (158s)
+2026-10-08 21:10:40 eval q06-def-lowlr/gguf-Q3_K_M: acc 0.3114 valid 0.7659 n=3080 (161s)
+2026-10-08 21:38:40 trained q06-def in 1680s (attempt 1, final validation loss 0.084)
+2026-10-08 21:40:06 eval q06-def/mlx-bf16: acc 0.8068 valid 0.9935 n=3080 (81s)
+2026-10-08 21:41:35 eval q06-def/mlx-q4: acc 0.7630 valid 0.9701 n=3080 (83s)
+2026-10-08 21:44:28 eval q06-def/gguf-bf16: acc 0.8029 valid 0.9935 n=3080 (157s)
+2026-10-08 21:47:10 eval q06-def/gguf-Q3_K_M: acc 0.6834 valid 0.9708 n=3080 (158s)
+2026-10-08 21:48:18 eval q06-base/mlx-bf16: acc 0.0756 valid 0.9354 n=3080 (68s)
+2026-10-08 21:49:40 eval q06-base/mlx-q4: acc 0.0987 valid 0.6692 n=3080 (78s)
+2026-10-08 21:49:40 phase D done
+2026-10-08 21:53:29 eval q06-base/gguf-Q3_K_M-im: acc 0.0506 valid 0.4864 n=3080 (167s)
+2026-10-08 21:57:06 eval q06-lora-lowlr/gguf-Q3_K_M-im: acc 0.6825 valid 0.9912 n=3080 (158s)
+2026-10-08 21:59:55 eval q06-lora/gguf-bf16: acc 0.7331 valid 0.9890 n=3080 (157s)
+2026-10-08 22:02:39 eval q06-lora/gguf-Q3_K_M: acc 0.7221 valid 0.9867 n=3080 (160s)
+2026-10-08 22:06:19 eval q06-lora/gguf-Q3_K_M-im: acc 0.7328 valid 0.9906 n=3080 (159s)
+2026-10-08 22:10:15 eval olmo1-base/gguf-bf16: acc 0.1464 valid 0.4815 n=3080 (218s)
+2026-10-08 22:14:06 eval olmo1-base/gguf-Q3_K_M: acc 0.0981 valid 0.6201 n=3080 (223s)
+2026-10-08 22:19:21 eval olmo1-base/gguf-Q3_K_M-im: acc 0.1143 valid 0.5023 n=3080 (223s)
+2026-10-08 22:23:27 eval olmo1-lora-lowlr/gguf-bf16: acc 0.7815 valid 0.9990 n=3080 (220s)
+2026-10-08 22:27:19 eval olmo1-lora-lowlr/gguf-Q3_K_M: acc 0.7451 valid 0.9977 n=3080 (225s)
+2026-10-08 22:32:37 eval olmo1-lora-lowlr/gguf-Q3_K_M-im: acc 0.7620 valid 0.9964 n=3080 (226s)
+2026-10-08 22:36:44 eval olmo1-lora/gguf-bf16: acc 0.7662 valid 0.9899 n=3080 (223s)
+2026-10-08 22:40:35 eval olmo1-lora/gguf-Q3_K_M: acc 0.7659 valid 0.9893 n=3080 (224s)
+2026-10-08 22:45:53 eval olmo1-lora/gguf-Q3_K_M-im: acc 0.7675 valid 0.9870 n=3080 (227s)
+2026-10-08 22:45:54 phase I done
+2026-10-08 22:46:00 adapter check (a) q06-lora: passed=True modules=196 max_rel_diff=3.8e-16
+2026-10-08 22:49:19 eval q06-lora/gguf-Q3_K_M-lora: acc 0.7221 valid 0.9880 n=3080 (200s)
+2026-10-08 22:49:34 rebuild check Q3_K_M: passed=True tensors=310
+2026-10-08 23:10:34 trained q06dq3-lora in 1260s (attempt 1, final validation loss 0.119)
+2026-10-08 23:10:34 STOP: 10.0 GB free on the disk holding /Users/jayeshsuryavanshi/github-updates/ftquant, below the 10 GB rule
+2026-10-09 17:48:37 week-6 start: phases ['G', 'D', 'I', 'X']; work in /Users/jayeshsuryavanshi/github-updates/ftquant/runs/week6/work
+2026-10-09 17:48:37 phase G done
+2026-10-09 17:48:37 phase D done
+2026-10-09 17:48:37 phase I done
+2026-10-09 17:48:43 adapter check (a) q06dq3-lora: passed=True modules=196 max_rel_diff=3.6e-16
+2026-10-09 17:52:16 eval q06dq3-lora/gguf-Q3_K_M-lora: acc 0.6461 valid 0.9756 n=3080 (213s)
+2026-10-09 17:57:29 eval q06-base/gguf-Q2_K: acc 0.0000 valid 0.0000 n=3080 (308s)
+2026-10-09 18:02:34 eval q06-base/gguf-Q2_K-im: acc 0.0000 valid 0.0000 n=3080 (298s)
+2026-10-09 18:07:55 eval q06-lora-lowlr/gguf-Q2_K: acc 0.0000 valid 0.0000 n=3080 (300s)
+2026-10-09 18:11:22 eval q06-lora-lowlr/gguf-Q2_K-im: acc 0.2481 valid 0.5679 n=3080 (200s)
+2026-10-09 18:14:37 eval q06-lora/gguf-Q2_K: acc 0.5721 valid 0.9094 n=3080 (175s)
+2026-10-09 18:17:36 eval q06-lora/gguf-Q2_K-im: acc 0.6601 valid 0.9558 n=3080 (172s)
+2026-10-09 18:25:22 eval q06-lora-lowlr/gguf-Q2_K-lora: acc 0.0000 valid 0.0000 n=3080 (466s)
+2026-10-09 18:28:57 eval q06-lora/gguf-Q2_K-lora: acc 0.5552 valid 0.8799 n=3080 (215s)
+2026-10-09 18:29:13 rebuild check Q2_K: passed=True tensors=310
+2026-10-09 18:48:13 trained q06dq2-lora-lowlr in 1140s (attempt 1, final validation loss 0.087)
+2026-10-09 18:48:20 adapter check (a) q06dq2-lora-lowlr: passed=True modules=196 max_rel_diff=3.1e-16
+2026-10-09 18:51:58 eval q06dq2-lora-lowlr/gguf-Q2_K-lora: acc 0.6734 valid 0.9919 n=3080 (217s)
+2026-10-09 19:10:58 trained q06dq2-lora in 1140s (attempt 1, final validation loss 0.101)
+2026-10-09 19:11:05 adapter check (a) q06dq2-lora: passed=True modules=196 max_rel_diff=3.7e-16
+2026-10-09 19:14:40 eval q06dq2-lora/gguf-Q2_K-lora: acc 0.6750 valid 0.9773 n=3080 (215s)
+2026-10-09 19:16:51 eval q06-def-lowlr/mlx-q3: acc 0.0000 valid 0.0000 n=3080 (123s)
+2026-10-09 19:19:51 eval q06-def-lowlr/gguf-Q4_K_M: acc 0.6688 valid 0.9779 n=3080 (164s)
+2026-10-09 19:24:30 eval q06-def-lowlr/gguf-Q2_K: acc 0.0000 valid 0.0000 n=3080 (275s)
+2026-10-09 19:26:43 eval q06-def/mlx-q3: acc 0.0029 valid 0.0062 n=3080 (125s)
+2026-10-09 19:29:39 eval q06-def/gguf-Q4_K_M: acc 0.7821 valid 0.9932 n=3080 (160s)
+2026-10-09 19:33:38 eval q06-def/gguf-Q2_K: acc 0.0000 valid 0.0000 n=3080 (235s)
+2026-10-09 19:35:49 eval q06-base/mlx-q3: acc 0.0000 valid 0.0000 n=3080 (126s)
+2026-10-09 19:38:37 eval q06-base/gguf-Q4_K_M: acc 0.1013 valid 0.6682 n=3080 (162s)
+2026-10-09 19:39:03 STOP: 9.9 GB free on the disk holding /Users/jayeshsuryavanshi/github-updates/ftquant, below the 10 GB rule
+2026-10-10 11:16:09 week-6 start: phases ['G', 'D', 'I', 'X']; work in /Users/jayeshsuryavanshi/github-updates/ftquant/runs/week6/work
+2026-10-10 11:16:09 phase G done
+2026-10-10 11:16:09 phase D done
+2026-10-10 11:16:10 phase I done
+2026-10-10 11:20:21 eval olmo1-base/gguf-Q2_K: acc 0.0591 valid 0.2039 n=3080 (217s)
+2026-10-10 11:25:33 eval olmo1-base/gguf-Q2_K-im: acc 0.0591 valid 0.3851 n=3080 (294s)
+2026-10-10 11:29:55 eval olmo1-lora-lowlr/gguf-Q2_K: acc 0.4276 valid 0.8244 n=3080 (223s)
+2026-10-10 11:33:46 eval olmo1-lora-lowlr/gguf-Q2_K-im: acc 0.5500 valid 0.9552 n=3080 (215s)
+2026-10-10 11:37:48 eval olmo1-lora/gguf-Q2_K: acc 0.7266 valid 0.9698 n=3080 (204s)
+2026-10-10 11:41:28 eval olmo1-lora/gguf-Q2_K-im: acc 0.7536 valid 0.9867 n=3080 (204s)
+2026-10-10 11:41:29 phase X done
+2026-10-10 11:41:35 week-6 complete

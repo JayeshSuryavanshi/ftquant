@@ -1,0 +1,8 @@
+{
+ "olmo1-base/imatrix-c128.gguf": "f8789dd2bba9b48e6d4378cb1723992c3d7779fbb97d640ee6f8f9b24912d165",
+ "olmo1-lora-lowlr/imatrix-c128.gguf": "a1a9e82a83401cef7b247f06de175ebe01ddd4ec21ca094d494fe6ada3765b9b",
+ "olmo1-lora/imatrix-c128.gguf": "dd828f45df228cd0f81182394e2829283c9eb4f35d141f08f34670e9dff38079",
+ "q06-base/imatrix-c128.gguf": "86ae38cc03dd2151980b05ae0ba4beee4f3702848afc1e3d266e23531c75d5d0",
+ "q06-lora-lowlr/imatrix-c128.gguf": "f7884f8cf0fcaece4fed9be48568ba6bd0bd52100566619b4cfc75820feef5a1",
+ "q06-lora/imatrix-c128.gguf": "9cc2555481a41791b4c198de0299fbb79b73dd1be37c32bba1d724c18d6938cc"
+}

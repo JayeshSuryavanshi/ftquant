@@ -103,4 +103,6 @@ The matrix covers the transformer blocks' matrices, not the embedding or output 
 
 ## Deviations
 
-None yet. Any change after hashing is logged here with a timestamp, as in earlier weeks.
+Any change after hashing is logged here with a timestamp, as in earlier weeks.
+
+- **2026-10-08 23:10 and 2026-10-09 19:39 PDT: the run stopped twice at the 10 GB free-disk rule.** Both stops came after the confirmatory phases (G, D and I) had finished. On 2026-10-08 free disk fell from about 15 GB to under 7 GB within minutes, more than the run's own files account for; the cause was not found. The run resumed on 2026-10-09 at 17:48, after the uv package cache was pruned and a cached model not used in week 6 (Qwen3-4B) was deleted, and on 2026-10-10 at 11:16, after the run's own finished Qwen3-0.6B work files were deleted. Each resume skipped finished steps, so no training or evaluation was repeated or changed, and no base file was rebuilt.

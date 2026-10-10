@@ -1,0 +1,11 @@
+W6-H1 supported 
+W6-H2 supported 
+W6-H3 supported 
+W6-H4 inconclusive 
+check (b) passed: True
+  gentle Q3_K_M R_G1 +0.795 [+0.771, +0.819]
+  gentle Q3_K_M S_G2 +0.733 [+0.709, +0.757]
+  gentle Q3_K_M S_G3 +0.986 [+0.965, +1.009]
+  gentle Q3_K_M S_G3_minus_halfway +0.089 [+0.071, +0.108]
+  gentle Q3_K_M S_G2_minus_halfway -0.164 [-0.183, -0.146]
+  gentle Q3_K_M S_G3_minus_S_G2 +0.253 [+0.229, +0.279]

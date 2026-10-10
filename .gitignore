@@ -25,6 +25,8 @@ runs/**
 !runs/week*/*/train.yaml
 !runs/week*/*/train.log
 !runs/week5/week5.log
+!runs/week6/week6.log
+!runs/week6/*/*.json
 !runs/revision/*.json
 !runs/revision/embedding/*.json
 !runs/findings/*.json

@@ -1,0 +1,9 @@
+{
+ "gguf-Q2_K-im.gguf": "423f42fe80cdac32ec460df32cec35fa762c4ccb6c9880ed72e3cad6154567dc",
+ "gguf-Q2_K.gguf": "ce4576def79ee4e50800e78e43fdc514c805eaf73456f8ebf943d8e3588a4319",
+ "gguf-Q3_K_M-im.gguf": "2fd6e22723eb565bfd92995d80b5790ea17136b0abcca9b8720c5b2ae63a715a",
+ "gguf-Q3_K_M.gguf": "6e46ea74e2740947917bcda72bbd4820e04307f263a91372a19ab5c947f7c7e3",
+ "gguf-Q4_K_M.gguf": "2fdb5a41d7792defa5ce51b2806f48d9ab71c9e7b6e04823a826b0e80e969ad6",
+ "gguf-Q8_0.gguf": "c4f5ec96f3742b31f4f9e51a85373105ef4e5a67399698a3eba38345ada3cd0d",
+ "gguf-bf16.gguf": "4ee49f4b167cc3ab8954d03f61cf37446554934dfbe650566b17153cc91e1378"
+}

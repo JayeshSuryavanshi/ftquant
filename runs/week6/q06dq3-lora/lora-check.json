@@ -1,0 +1,9 @@
+{
+ "modules": 196,
+ "alpha": 160.0,
+ "rank": 8,
+ "mlx_scale": 20.0,
+ "max_relative_difference": 3.5865235871159563e-16,
+ "unmatched_tensors": [],
+ "passed": true
+}
