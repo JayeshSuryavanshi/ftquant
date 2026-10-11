@@ -43,13 +43,16 @@
  ],
  "findings": [
   {
-   "evidence": "Pre-registered, supported (W3-H1, W4-H1, W4-H2); section sec:replication",
+   "evidence": "Pre-registered, supported (W3-H1, W4-H1, W4-H2; with mlx-lm's defaults, W6-H3); section sec:replication, section sec:round6",
    "finding": "At MLX 3-bit and Q3_K_M, the gentle LoRA keeps less of its gain than the strong one",
    "id": "F1",
-   "result": "5 pairs on 3 base models and 2 tasks: R_{strong} - R_{gentle} from +0.06 to +0.63, interval above 0 in 10 of 10 tests, also at the 99.5% level",
+   "result": "5 pairs on 3 base models and 2 tasks: R_{strong} - R_{gentle} from +0.06 to +0.63, interval above 0 in 10 of 10 tests, also at the 99.5% level; with mlx-lm's other defaults +0.479 [+0.449, +0.509] at Q3_K_M, but at MLX 3-bit both lost almost all of their gain (exploratory)",
    "section": "sec:replication",
    "status": "pre-registered",
    "values": {
+    "r6.h3.q3": "+0.479",
+    "r6.h3.q3.hi": "+0.509",
+    "r6.h3.q3.lo": "+0.449",
     "rep.diff_max": "+0.63",
     "rep.diff_min": "+0.06",
     "rep.n_supported": "10",
@@ -89,10 +92,10 @@
    }
   },
   {
-   "evidence": "Pre-registered, supported (W5-H1, bound +0.08); section sec:round5",
-   "finding": "In MLX, keeping a gentle update exact does not restore its gain",
+   "evidence": "Pre-registered, supported (W5-H1, bound +0.08; W6-H2); below fused post hoc; section sec:round5, section sec:round6",
+   "finding": "Keeping a gentle update exact does not restore its gain",
    "id": "F4",
-   "result": "Unfused minus fused R, OLMo-2 1B at MLX 3-bit, 2 seeds: +0.008 [-0.010, +0.027] and +0.023 [+0.002, +0.042]: 5% and 12% of the lost gain, upper bounds 16% and 22%",
+   "result": "MLX, OLMo-2 1B at 3-bit, 2 seeds: unfused minus fused R +0.008 [-0.010, +0.027] and +0.023 [+0.002, +0.042], upper bounds 16% and 22% of the lost gain; GGUF, Qwen3-0.6B at Q3_K_M: adapter at load time 0.733 against fused 0.795, 0.164 [0.146, 0.183] short of halfway to 1",
    "section": "sec:round5",
    "status": "pre-registered",
    "values": {
@@ -100,35 +103,32 @@
     "r5.h1.s0.d": "+0.008",
     "r5.h1.s0.hi": "+0.027",
     "r5.h1.s0.lo": "-0.010",
-    "r5.h1.s0.share": "5",
     "r5.h1.s0.share_hi": "16",
     "r5.h1.s1.d": "+0.023",
     "r5.h1.s1.hi": "+0.042",
     "r5.h1.s1.lo": "+0.002",
-    "r5.h1.s1.share": "12",
-    "r5.h1.s1.share_hi": "22"
+    "r5.h1.s1.share_hi": "22",
+    "r6.g1.R": "0.795",
+    "r6.g2.S": "0.733",
+    "r6.h2": "0.164",
+    "r6.h2.hi": "0.183",
+    "r6.h2.lo": "0.146"
    }
   },
   {
-   "evidence": "Pre-registered at 4-bit for the gentle LoRA, supported (W5-H2); rest exploratory; section sec:round5",
-   "finding": "In MLX, training a gentle LoRA on the quantized base recovers its gain",
+   "evidence": "Pre-registered for the gentle LoRA, supported (W5-H2, W6-H1); strong LoRA exploratory; section sec:round5, section sec:round6",
+   "finding": "Training a gentle LoRA against the shipped weights recovers its gain",
    "id": "F5",
-   "result": "Gain delivered minus fused R, Qwen3-0.6B, 1 seed: +0.116 [+0.097, +0.135] at 4-bit and +0.890 [+0.865, +0.916] at 3-bit; for the strong LoRA, -0.158 [-0.181, -0.136] and -0.007 [-0.032, +0.018]",
+   "result": "Qwen3-0.6B, 1 seed, share of the bf16 gain: 96% against 84% fused at MLX 4-bit, 99% against 79% at Q3_K_M; the strong LoRA lost 0.158 and 0.115 of R there",
    "section": "sec:round5",
    "status": "pre-registered",
    "values": {
-    "r5.h2.d": "+0.116",
-    "r5.h2.hi": "+0.135",
-    "r5.h2.lo": "+0.097",
-    "r5.q3g.d": "+0.890",
-    "r5.q3g.hi": "+0.916",
-    "r5.q3g.lo": "+0.865",
-    "r5.q3s.d": "-0.007",
-    "r5.q3s.hi": "+0.018",
-    "r5.q3s.lo": "-0.032",
-    "r5.q4s.d": "-0.158",
-    "r5.q4s.hi": "-0.136",
-    "r5.q4s.lo": "-0.181"
+    "r5.h2.R_pct": "84",
+    "r5.h2.S_pct": "96",
+    "r5.q4s.d_abs": "0.158",
+    "r6.g1.R_pct": "79",
+    "r6.g3.S_pct": "99",
+    "r6.q3.strong.cost": "0.115"
    }
   },
   {
@@ -164,7 +164,21 @@
    }
   },
   {
-   "evidence": "Controls; section sec:setup, section sec:round5",
+   "evidence": "Pre-registered (W6-H4), inconclusive: supported for Qwen3-0.6B only; section sec:round6",
+   "finding": "An importance matrix narrows the gap without closing it",
+   "id": "F8",
+   "result": "Gap R_{strong} - R_{gentle} at Q3_K_M without and with a WikiText-2 matrix: 0.215 and 0.146 on Qwen3-0.6B, 0.059 and 0.034 on OLMo-2 1B",
+   "section": "sec:round6",
+   "status": "pre-registered",
+   "values": {
+    "r6.i.olmo.dim": "0.034",
+    "r6.i.olmo.dno": "0.059",
+    "r6.i.q06.dim": "0.146",
+    "r6.i.q06.dno": "0.215"
+   }
+  },
+  {
+   "evidence": "Controls; section sec:setup, Appendix \\ref{app:extra}",
    "finding": "Measurement repeatability",
    "id": "C",
    "result": "MLX and GGUF agree on 97.1% to 99.4% of the bf16 predictions of each fine-tune that learned its task; one and four llama-server slots differ on 2 of 3,080 items; decoding restricted to valid labels changes A by at most 0.003",
@@ -180,12 +194,22 @@
   }
  ],
  "quoted_in_text": [
-  "delivered 96\\% of the bf16 gain at 4 bits, against 84\\% when trained in bf16, fused and quantized",
+  "Keeping the $10^{-5}$ update exact on the quantized base recovered 5\\% and 12\\% of the lost gain in MLX (OLMo-2 1B, 3-bit, two seeds; upper 95\\% bounds 16\\% and 22\\%) and, post hoc, did worse than fusing in GGUF (Qwen3-0.6B, Q3\\_K\\_M), while training a $10^{-5}$ Qwen3-0.6B LoRA against the weights that ship delivered 96\\% of the bf16 gain at MLX~4-bit and 99\\% at Q3\\_K\\_M, against 84\\% and 79\\% when it was trained in bf16, fused and quantized.",
+  "At $10^{-4}$ the same step cost 0.158 and 0.115 of $R$ (exploratory).",
+  "the gentle learning rate is mlx-lm's default, and in rounds 1 to 4 its update was 8.7 to 12.9 times smaller.",
+  "in every pair of rounds 1 to 4, the strong LoRA's update was 8.7 to 12.9 times larger than the gentle one's",
+  "Round~6 carried round~5's remedy to GGUF and tested two of our setup's choices, under a plan pushed to a hosted repository after plumbing checks and smoke runs on validation items and before any of its models was trained (results: Table~\\ref{tab:round6} in Appendix~\\ref{app:extra}). llama.cpp can apply a LoRA at load time on top of a quantized model, so a GGUF adapter can be trained against the weights its file ships: we dequantized every tensor of the Qwen3-0.6B base's Q3\\_K\\_M file, trained the gentle LoRA in bf16 on those values with the round-1 settings, converted it to a GGUF adapter and served it on the same file (Appendix~\\ref{app:extra}). The converted adapter passed the plan's checks on validation items. All comparisons in the round use round-6 evaluations.",
+  "At Q3\\_K\\_M the gentle LoRA trained against the shipped weights delivered 0.986 [0.965, 1.009] of the bf16 gain, against $R = 0.795$ [0.771, 0.819] fused and quantized. The bf16-trained adapter applied at load time, its update stored in float32 and never quantized, delivered 0.733 [0.709, 0.757], less than the fused model (a paired difference of $-0.062$ [$-0.082$, $-0.042$], post hoc); training against the shipped weights beat it by $+0.253$ [$+0.229$, $+0.279$], the plan's pre-specified contrast. As the plan predicted, training against the shipped weights recovered more than half of the fused model's loss, exceeding halfway by $+0.089$ [$+0.071$, $+0.108$] (W6-H1 supported), and the load-time adapter recovered less, falling short by 0.164 [0.146, 0.183] (W6-H2 supported). At Q2\\_K, where the base scores 0\\%, training against the shipped weights helped both LoRAs; at Q3\\_K\\_M it cost the strong LoRA 0.115 of $R$, as at MLX~4-bit (exploratory; Appendix~\\ref{app:extra}).",
+  "Trained with mlx-lm's other defaults (1,000 steps, LoRA on the last 16 of 28 layers, no prompt masking), a gentle and a strong Qwen3-0.6B LoRA both learned the task, gaining 66.6 and 73.1 points at MLX bf16, and unlike in our eight settings the LoRA at $10^{-4}$ was the more accurate one at bf16 (80.7\\% against 74.2\\%). It again kept more of its gain, by $+0.479$ [$+0.449$, $+0.509$] in $R$ at Q3\\_K\\_M and $+0.259$ [$+0.231$, $+0.286$] at MLX~4-bit (W6-H3 supported); at Q3\\_K\\_M the default gentle LoRA kept 0.38 of its gain, against 0.795 for ours. Where the base breaks, neither default LoRA held on: both kept at most 0.4\\% of their gain at MLX~3-bit and none at Q2\\_K, where our strong LoRA kept 0.868 (exploratory).",
+  "An importance matrix computed on WikiText-2 narrowed the gap on both models without closing it. At Q3\\_K\\_M it raised the gentle Qwen3-0.6B LoRA's $R$ from 0.795 to 0.889 and narrowed its gap to the strong LoRA from 0.215 to 0.146, by less than half. On OLMo-2 1B, whose LoRAs both kept their full gain at Q3\\_K\\_M ($R$ of 1.02 and 1.08), the gap fell from 0.059 to 0.034 because the strong LoRA's $R$ fell; whether by less than half was inconclusive there, and so was W6-H4, which needed both models.",
+  "At MLX~3-bit and GGUF~Q3\\_K\\_M, the gentle LoRA kept less of its gain than the strong one in 10 of 10 pre-registered tests across three base models and two tasks, and also at Q3\\_K\\_M and MLX~4-bit with mlx-lm's other defaults (F1); it kept a smaller share of its accuracy at all five formats compared, 40 of 40 (F2). The loss did not come from rounding the update: keeping it exact recovered 5\\% and 12\\% of the loss in MLX and, post hoc, did worse than fusing in GGUF (F4), while training the gentle LoRA against the weights that ship delivered 96\\% of the bf16 gain at MLX~4-bit and 99\\% at Q3\\_K\\_M, against 84\\% and 79\\% (F5). The weight measurements describe these losses but have not been shown to predict them better than the size of the update (F6). In practice, select a fine-tune on the quantized artifact it will ship as (F3), and if a gentle LoRA must ship at a format where it loses its gain, train it against those weights: on the quantized base in MLX, or on the dequantized file, served as an adapter, in llama.cpp. We tested this on Qwen3-0.6B with one task and one seed per LoRA, and the same step cost the strong LoRA 0.158 of $R$ at MLX~4-bit and 0.115 at Q3\\_K\\_M. An importance matrix narrowed the gap without closing it (F8).",
+  "Round~6 rebuilt each training model for an adapter trained against the shipped weights from the base GGUF file: gguf-py dequantized every tensor, including the shared embedding, and the values were rounded to bf16; all 310 tensors of the rebuilt model matched that dequantization before training. The LoRA was trained with the round-1 settings, rewritten in PEFT form (lora\\_alpha 160, so that llama.cpp's $\\alpha/r$ equals mlx-lm's scale of 20) and converted with llama.cpp's \\texttt{convert\\_lora\\_to\\_gguf.py} in float32; for all 196 adapted modules, the update read back from the file matched mlx-lm's to within $10^{-15}$, relative. llama-server applied the adapter at scale~1 on the file it was trained against. On the 499 validation items, the load-time adapter gave the same predictions as its fused model at bf16 and 99.0\\% of them on an 8-bit base, and loaded at scale~0 it agreed with the base model on 99.4\\%. Round-6 evaluations decoded MLX models in batches of 32 and ran llama-server with four slots and without its host-memory prompt cache, settings that can change predictions near ties, so round-6 numbers are compared only with each other. Every Qwen3-0.6B GGUF file in the round, base included, was built around one shared embedding, as the fused fine-tunes are (Appendix~\\ref{app:repro}); OLMo-2 1B does not tie its embeddings.",
+  "In round~6's exploratory arms (Table~\\ref{tab:round6}), at Q2\\_K, where the base scores 0\\%, the gentle LoRA kept none of its gain fused or at load time and 0.947 when trained against the shipped weights. Trained against the shipped weights, the strong LoRA did worse at Q3\\_K\\_M, where it already keeps its gain, 0.895 against 1.010 ($-0.115$ [$-0.137$, $-0.094$]), as at MLX~4-bit in round~5, and better at Q2\\_K, 1.024 against 0.868 ($+0.156$ [$+0.131$, $+0.182$]), whereas at MLX~3-bit in round~5 it made no difference. With mlx-lm's defaults, both LoRAs kept at most 0.4\\% of their gain at MLX~3-bit and none at Q2\\_K; at Q4\\_K\\_M they kept 0.85 and 0.93, and the strong LoRA was the more accurate (78.2\\% against 66.9\\%), unlike in our eight settings. Their update norms were 14.3 and 66.6, a ratio of 4.7 against 8.7 to 12.9 in rounds 1 to 4; the default gentle update was larger than our gentle LoRA's (9.5, Table~\\ref{tab:grid}) yet kept less of its gain at Q3\\_K\\_M (0.38 against 0.795). On OLMo-2 1B the importance matrix left the gentle LoRA's $R$ at Q3\\_K\\_M almost unchanged (1.019 and 1.020) and lowered the strong one's from 1.078 to 1.054. At Q2\\_K the matrix lifted the gentle Qwen3-0.6B LoRA from 0 to 0.35 of its gain, against 1.00 for the strong one.",
+  "Round~6 ran for 5.7 hours between 8 October, 19:44, and 10 October, 11:41, in three sessions separated by two stops at the free-disk rule.",
   "evaluation uses all 3,080 test items, 40 per intent",
   "all 77 intent names",
   "2,974 test utterances",
   "Base Qwen3-0.6B scores 0\\% on this task zero-shot",
-  "the strong LoRA's update was 8.7 to 12.9 times larger than the gentle one's",
   "(21\\% of banking77, 17\\% of MASSIVE)",
   "(final validation loss 1.95, against 0.05 to 0.14 for every other run, and 0\\% test accuracy)",
   "Q3\\_K\\_M, at 4.2 to 4.4 bits per weight, is closer in size to MLX~4-bit (4.5) than to MLX~3-bit (3.5)",
@@ -266,12 +290,10 @@
   "Measured on its 2,974 test items, that fine-tune kept 93\\% of its gain at MLX~4-bit and 32\\% at 3-bit.",
   "had the same prediction and kept 5\\%",
   "v1 SHA-256 prefix \\texttt{5df7d620}, v2 \\texttt{6fd78627}",
-  "In all 10 pre-registered tests (five fine-tune pairs, each at MLX~3-bit and GGUF~Q3\\_K\\_M), a LoRA trained at learning rate $10^{-4}$ retained more of its gain than the same LoRA at $10^{-5}$, mlx-lm's default learning rate, by $+0.06$ to $+0.63$ in $R$.",
+  "In all 10 pre-registered tests (five fine-tune pairs, each at MLX~3-bit and GGUF~Q3\\_K\\_M), a LoRA trained at learning rate $10^{-4}$ retained more of its gain than the same LoRA at $10^{-5}$, mlx-lm's default learning rate, by $+0.06$ to $+0.63$ in $R$; with mlx-lm's other defaults, the gap at Q3\\_K\\_M was $+0.48$, but at MLX~3-bit both LoRAs lost almost all of their gain.",
   "In exploratory comparisons over eight settings and five formats, the $10^{-5}$ LoRA kept a smaller share of its own accuracy in 40 of 40 cases, yet remained the more accurate model at Q4\\_K\\_M in all eight settings, while the $10^{-4}$ LoRA was the more accurate one at MLX~3-bit and Q2\\_K in all eight.",
-  "Carrying the $10^{-5}$ OLMo-2 1B update exactly on the 3-bit base recovered 5\\% and 12\\% of the lost gain for two seeds (upper 95\\% bounds 16\\% and 22\\%), while a $10^{-5}$ Qwen3-0.6B LoRA trained on the 4-bit base delivered 96\\% of the bf16 gain at 4 bits, against 84\\% when trained in bf16, fused and quantized (difference $+0.116$, 95\\% interval $[+0.097, +0.135]$); at $10^{-4}$, training on the 4-bit base delivered 78\\% against 94\\%.",
   "A three-parameter predictor built from the weights and a one-time measurement of the base model met its pre-registered error bar of 0.10 on held-out fine-tunes (mean absolute error 0.059 and 0.084), but a post hoc model of update size and base damage reached 0.049 in both rounds.",
-  "We call a LoRA trained at learning rate $10^{-5}$ gentle and one trained at $10^{-4}$ strong; the gentle learning rate is mlx-lm's default, and its update was 8.7 to 12.9 times smaller.",
-  "For one fine-tune at Q3\\_K\\_M, llama-server with one slot and with four gave different predictions on 2 of 3,080 items (Section~\\ref{sec:round5}).",
+  "For one fine-tune at Q3\\_K\\_M, llama-server with one slot and with four gave different predictions on 2 of 3,080 items (Appendix~\\ref{app:extra}).",
   "At 8 and 6 bits, $R$ was 1.01 to 1.07 in both engines (H1).",
   "the most accurate of the three at bf16 (78.5\\%, against 76.6\\% for full fine-tuning and 73.5\\% for the LoRA at $10^{-4}$)",
   "A second seed moved $R$ at MLX~3-bit by at most 0.061 (0.95 and 0.92 for the LoRA at $10^{-4}$, 0.06 and 0.00 at $10^{-5}$), while bf16 accuracy moved by 8.4 and 3.5 points.",
@@ -287,10 +309,6 @@
   "changed accuracy retention by at most 0.003",
   "from 3.8\\% to 11.4\\% on OLMo-2 1B (seed 0) and",
   "The 4B fine-tunes' gains are small (27 points for the gentle LoRA and 21 for the strong)",
-  "At MLX~3-bit and GGUF~Q3\\_K\\_M, the gentle LoRA kept less of its gain than the strong one in 10 of 10 pre-registered tests across three base models and two tasks (F1), and it kept a smaller share of its accuracy at all five formats compared, 40 of 40 (F2).",
-  "In MLX, the loss did not come from rounding the update: the exact update recovered 5\\% and 12\\% of it, with upper 95\\% bounds of 16\\% and 22\\% (F4), while training the gentle LoRA on the quantized base delivered 96\\% of its bf16 gain at 4 bits, against 84\\% (F5).",
-  "In practice, select a fine-tune on the quantized artifact it will ship as: the gentle LoRA was the more accurate model at Q4\\_K\\_M in all eight settings, the strong one at MLX~3-bit and Q2\\_K in all eight and at Q3\\_K\\_M in seven (F3).",
-  "Keeping the adapter unfused does not rescue a gentle LoRA in MLX; training it on the quantized base does, and gave our most accurate 4-bit and 3-bit models, but it cost the strong LoRA 0.158 of $R$ at 4 bits and was not tested for GGUF.",
   "rounds 1 to 4 in 51.4 hours of wall-clock time from the first sweep (27 September, 12:45) to the last verdicts (29 September, 16:12), and round~5 in 14.5 hours from 3 October, 20:03, to 4 October, 10:33,",
   "In rounds 1 to 4, a LoRA run of 500 steps took 10.2 to 19.8 minutes on Qwen3-0.6B, 52.3 to 55.8 on 1.7B, 40.5 to 52.8 on OLMo-2 1B and 127.8 to 143.8 on 4B.",
   "One full-test-set evaluation took 2.3 to 22.7 minutes on the smaller models and 12.0 to 25.2 on 4B, and the round-4 mechanism measurements for two fine-tunes took 4.5 to 8.1 minutes on the 0.6B and 1B models and 29.6 on 4B.",
@@ -1493,6 +1511,310 @@
    "text": "0.015",
    "value": 0.014007
   },
+  "r6.cb.load0.agree": {
+   "text": "99.4",
+   "value": 0.993988
+  },
+  "r6.cb.q8.agree": {
+   "text": "99.0",
+   "value": 0.98998
+  },
+  "r6.contrast": {
+   "text": "+0.253",
+   "value": 0.253084
+  },
+  "r6.contrast.hi": {
+   "text": "+0.279",
+   "value": 0.279453
+  },
+  "r6.contrast.lo": {
+   "text": "+0.229",
+   "value": 0.22901
+  },
+  "r6.d.R.gentle.q3": {
+   "text": "0.38",
+   "value": 0.381924
+  },
+  "r6.d.R.gentle.q4km": {
+   "text": "0.85",
+   "value": 0.849368
+  },
+  "r6.d.R.strong.q4km": {
+   "text": "0.93",
+   "value": 0.934076
+  },
+  "r6.d.acc.gentle": {
+   "text": "74.2",
+   "value": 0.741558
+  },
+  "r6.d.acc.gentle.q4km": {
+   "text": "66.9",
+   "value": 0.668831
+  },
+  "r6.d.acc.strong": {
+   "text": "80.7",
+   "value": 0.806818
+  },
+  "r6.d.acc.strong.q4km": {
+   "text": "78.2",
+   "value": 0.782143
+  },
+  "r6.d.gain.gentle": {
+   "text": "66.6",
+   "value": 66.590909
+  },
+  "r6.d.gain.strong": {
+   "text": "73.1",
+   "value": 73.116883
+  },
+  "r6.d.mlx3.max": {
+   "text": "0.4",
+   "value": 0.003996
+  },
+  "r6.d.norm.gentle": {
+   "text": "14.3",
+   "value": 14.271437
+  },
+  "r6.d.norm.ratio": {
+   "text": "4.7",
+   "value": 4.668109
+  },
+  "r6.d.norm.strong": {
+   "text": "66.6",
+   "value": 66.62062
+  },
+  "r6.g1.R": {
+   "text": "0.795",
+   "value": 0.794884
+  },
+  "r6.g1.R.hi": {
+   "text": "0.819",
+   "value": 0.818549
+  },
+  "r6.g1.R.lo": {
+   "text": "0.771",
+   "value": 0.771152
+  },
+  "r6.g1.R_pct": {
+   "text": "79",
+   "value": 0.794884
+  },
+  "r6.g2.S": {
+   "text": "0.733",
+   "value": 0.733212
+  },
+  "r6.g2.S.hi": {
+   "text": "0.757",
+   "value": 0.757023
+  },
+  "r6.g2.S.lo": {
+   "text": "0.709",
+   "value": 0.708762
+  },
+  "r6.g2_g1": {
+   "text": "-0.062",
+   "value": -0.061672
+  },
+  "r6.g2_g1.hi": {
+   "text": "-0.042",
+   "value": -0.04182
+  },
+  "r6.g2_g1.lo": {
+   "text": "-0.082",
+   "value": -0.081502
+  },
+  "r6.g3.S": {
+   "text": "0.986",
+   "value": 0.986295
+  },
+  "r6.g3.S.hi": {
+   "text": "1.009",
+   "value": 1.008814
+  },
+  "r6.g3.S.lo": {
+   "text": "0.965",
+   "value": 0.964911
+  },
+  "r6.g3.S_pct": {
+   "text": "99",
+   "value": 0.986295
+  },
+  "r6.h1": {
+   "text": "+0.089",
+   "value": 0.088853
+  },
+  "r6.h1.hi": {
+   "text": "+0.108",
+   "value": 0.108426
+  },
+  "r6.h1.lo": {
+   "text": "+0.071",
+   "value": 0.070612
+  },
+  "r6.h2": {
+   "text": "0.164",
+   "value": 0.16423
+  },
+  "r6.h2.hi": {
+   "text": "0.183",
+   "value": 0.183288
+  },
+  "r6.h2.lo": {
+   "text": "0.146",
+   "value": 0.146267
+  },
+  "r6.h3.q3": {
+   "text": "+0.479",
+   "value": 0.478655
+  },
+  "r6.h3.q3.hi": {
+   "text": "+0.509",
+   "value": 0.508962
+  },
+  "r6.h3.q3.lo": {
+   "text": "+0.449",
+   "value": 0.448825
+  },
+  "r6.h3.q3.short": {
+   "text": "+0.48",
+   "value": 0.478655
+  },
+  "r6.h3.q4": {
+   "text": "+0.259",
+   "value": 0.258599
+  },
+  "r6.h3.q4.hi": {
+   "text": "+0.286",
+   "value": 0.286091
+  },
+  "r6.h3.q4.lo": {
+   "text": "+0.231",
+   "value": 0.230776
+  },
+  "r6.i.olmo.dim": {
+   "text": "0.034",
+   "value": 0.034016
+  },
+  "r6.i.olmo.dno": {
+   "text": "0.059",
+   "value": 0.058611
+  },
+  "r6.i.olmo.gentle_im": {
+   "text": "1.020",
+   "value": 1.019939
+  },
+  "r6.i.olmo.gentle_im2": {
+   "text": "1.02",
+   "value": 1.019939
+  },
+  "r6.i.olmo.gentle_no": {
+   "text": "1.019",
+   "value": 1.018916
+  },
+  "r6.i.olmo.gentle_no2": {
+   "text": "1.02",
+   "value": 1.018916
+  },
+  "r6.i.olmo.strong_im": {
+   "text": "1.054",
+   "value": 1.053955
+  },
+  "r6.i.olmo.strong_im2": {
+   "text": "1.05",
+   "value": 1.053955
+  },
+  "r6.i.olmo.strong_no": {
+   "text": "1.078",
+   "value": 1.077528
+  },
+  "r6.i.olmo.strong_no2": {
+   "text": "1.08",
+   "value": 1.077528
+  },
+  "r6.i.q06.dim": {
+   "text": "0.146",
+   "value": 0.145985
+  },
+  "r6.i.q06.dno": {
+   "text": "0.215",
+   "value": 0.215461
+  },
+  "r6.i.q06.gentle_im": {
+   "text": "0.889",
+   "value": 0.88899
+  },
+  "r6.i.q06.gentle_no": {
+   "text": "0.795",
+   "value": 0.794884
+  },
+  "r6.i2.q06.gentle_im": {
+   "text": "0.35",
+   "value": 0.349018
+  },
+  "r6.i2.q06.gentle_no": {
+   "text": "0",
+   "value": 0.0
+  },
+  "r6.i2.q06.strong_im": {
+   "text": "1.00",
+   "value": 1.001478
+  },
+  "r6.q2.base_acc": {
+   "text": "0",
+   "value": 0.0
+  },
+  "r6.q2.gentle.S3": {
+   "text": "0.947",
+   "value": 0.947465
+  },
+  "r6.q2.strong.R": {
+   "text": "0.868",
+   "value": 0.86798
+  },
+  "r6.q2.strong.S3": {
+   "text": "1.024",
+   "value": 1.024138
+  },
+  "r6.q2.strong.sr": {
+   "text": "+0.156",
+   "value": 0.156158
+  },
+  "r6.q2.strong.sr.hi": {
+   "text": "+0.182",
+   "value": 0.182394
+  },
+  "r6.q2.strong.sr.lo": {
+   "text": "+0.131",
+   "value": 0.130859
+  },
+  "r6.q3.strong.R": {
+   "text": "1.010",
+   "value": 1.010345
+  },
+  "r6.q3.strong.S3": {
+   "text": "0.895",
+   "value": 0.895074
+  },
+  "r6.q3.strong.cost": {
+   "text": "0.115",
+   "value": 0.115271
+  },
+  "r6.q3.strong.sr": {
+   "text": "-0.115",
+   "value": -0.115271
+  },
+  "r6.q3.strong.sr.hi": {
+   "text": "-0.094",
+   "value": -0.094055
+  },
+  "r6.q3.strong.sr.lo": {
+   "text": "-0.137",
+   "value": -0.137153
+  },
+  "r6.r1.norm.gentle": {
+   "text": "9.5",
+   "value": 9.469081
+  },
   "rep.diff_max": {
    "text": "+0.63",
    "value": 0.632894
@@ -1664,6 +1986,18 @@
   "time.r5.train.stalled": {
    "text": "223.8",
    "value": 223.816667
+  },
+  "time.r6.end": {
+   "text": "10 October, 11:41",
+   "value": "2026-10-10T11:41:35"
+  },
+  "time.r6.hours": {
+   "text": "5.7",
+   "value": 5.703611
+  },
+  "time.r6.start": {
+   "text": "8 October, 19:44",
+   "value": "2026-10-08T19:44:13"
   },
   "time.train.olmo1.hi": {
    "text": "52.8",

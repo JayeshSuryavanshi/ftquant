@@ -1,0 +1,7 @@
+{
+ "source": "ftquant.verdicts_w6.update_norm on the adapter weights, which are not included; used when verdicts.json is regenerated without them",
+ "norms": {
+  "q06-def-lowlr": 14.27143731618752,
+  "q06-def": 66.6206198307925
+ }
+}

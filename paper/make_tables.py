@@ -39,8 +39,8 @@ def bases() -> None:
             "Qwen3-0.6B",
             "banking77",
             "week1/q06-base",
-            "1, 2, 5",
-            "LoRA $3\\times10^{-6}$ to $3\\times10^{-4}$, full $3\\times10^{-6}$ to $3\\times10^{-5}$; LoRA on a quantized base (round 5)",
+            "1, 2, 5, 6",
+            "LoRA $3\\times10^{-6}$ to $3\\times10^{-4}$, full $3\\times10^{-6}$ to $3\\times10^{-5}$; LoRA on a quantized base (round 5); LoRA against dequantized GGUF weights, and with mlx-lm's defaults (round 6)",
         ),
         (
             "Qwen3-1.7B",
@@ -53,7 +53,7 @@ def bases() -> None:
             "OLMo-2 1B",
             "banking77",
             "week3/olmo1-base",
-            "3, 4, 5",
+            "3, 4, 5, 6",
             "LoRA $10^{-5}$ and $10^{-4}$",
         ),
         (
@@ -399,7 +399,9 @@ def round5() -> None:
         return
     v = json.loads(path.read_text())
     unfused, qlora = v["exploratory"]["unfused"], v["exploratory"]["qlora"]
-    rows = ["\\multicolumn{5}{l}{\\emph{Adapter loaded unfused on the quantized OLMo-2 1B base: $R$ fused / $R$ unfused}} \\\\"]
+    rows = [
+        "\\multicolumn{5}{l}{\\emph{Adapter loaded unfused on the quantized OLMo-2 1B base: $R$ fused / $R$ unfused}} \\\\"
+    ]
     for cfg, label in (
         ("olmo1-lora-lowlr", "$10^{-5}$, seed 0"),
         ("olmo1-lora-lowlr-s1", "$10^{-5}$, seed 1"),
@@ -416,7 +418,9 @@ def round5() -> None:
                 f"{num(d, 3, True)} {ci(lo, hi, 3, True)} \\\\"
             )
     rows.append("\\addlinespace")
-    rows.append("\\multicolumn{5}{l}{\\emph{Qwen3-0.6B LoRA trained on the quantized base: $R$ fused / $S$ trained on the base}} \\\\")
+    rows.append(
+        "\\multicolumn{5}{l}{\\emph{Qwen3-0.6B LoRA trained on the quantized base: $R$ fused / $S$ trained on the base}} \\\\"
+    )
     for bits in (4, 3):
         for suffix, label in (("lora-lowlr", "$10^{-5}$"), ("lora", "$10^{-4}$")):
             r = qlora[f"q06q{bits}-{suffix}"]
@@ -428,6 +432,82 @@ def round5() -> None:
                 f"{num(d, 3, True)} {ci(lo, hi, 3, True)} \\\\"
             )
     write("round5.tex", rows)
+
+
+def round6() -> None:
+    path = RUNS / "week6" / "verdicts.json"
+    if not path.exists():
+        return
+    import ftquant.posthoc_w6 as ph
+
+    ph.use(RUNS / "week6")
+    v = json.loads(path.read_text())
+    g, d, i3, i2 = (
+        v["exploratory"][k] for k in ("arm_g", "arm_d", "arm_i_q3", "arm_i_q2")
+    )
+    rows = [
+        "\\multicolumn{6}{l}{\\emph{Qwen3-0.6B LoRA shipped as GGUF; values are $S$ / $R$ of the bf16-trained LoRA, fused and quantized}} \\\\"
+    ]
+    lr_label = {"lora-lowlr": "$10^{-5}$", "lora": "$10^{-4}$"}
+    treatments = (
+        ("G3", "trained on the shipped weights"),
+        ("G2", "adapter at load time"),
+    )
+    r = g["lora-lowlr Q3_K_M"]
+    for (arm, treatment), test in zip(treatments, ("W6-H1", "W6-H2"), strict=True):
+        p_, lo, hi = r[f"S_{arm}_minus_halfway"]["ci"]
+        rows.append(
+            f"{test} & $10^{{-5}}$ & Q3\\_K\\_M & {treatment} & "
+            f"{num(r[f'S_{arm}']['ci'][0])} / {num(r['R_G1']['ci'][0])} & {num(p_, 3, True)} {ci(lo, hi, 3, True)} \\\\"
+        )
+    p_, lo, hi = r["S_G3_minus_S_G2"]["ci"]
+    rows.append(
+        "contrast & $10^{-5}$ & Q3\\_K\\_M & trained minus load time & "
+        f"{num(r['S_G3']['ci'][0])} / {num(r['S_G2']['ci'][0])} & {num(p_, 3, True)} {ci(lo, hi, 3, True)} \\\\"
+    )
+    for fmt, fname in (("Q3_K_M", "Q3\\_K\\_M"), ("Q2_K", "Q2\\_K")):
+        for lr in ("lora-lowlr", "lora"):
+            if (fmt, lr) == ("Q3_K_M", "lora-lowlr"):
+                continue
+            r = g[f"{lr} {fmt}"]
+            for arm, treatment in treatments:
+                p_, lo, hi = ph.s_minus_r(arm, lr, fmt)["ci"]
+                rows.append(
+                    f"exploratory & {lr_label[lr]} & {fname} & {treatment} & "
+                    f"{num(r[f'S_{arm}']['ci'][0])} / {num(r['R_G1']['ci'][0])} & {num(p_, 3, True)} {ci(lo, hi, 3, True)} \\\\"
+                )
+    rows.append("\\addlinespace")
+    rows.append(
+        "\\multicolumn{6}{l}{\\emph{Qwen3-0.6B LoRAs trained with mlx-lm's defaults; values are $R(10^{-4})$ / $R(10^{-5})$, the statistic their difference}} \\\\"
+    )
+    for q, fname, test in (
+        ("gguf-Q3_K_M", "Q3\\_K\\_M", "W6-H3"),
+        ("mlx-q4", "MLX 4-bit", "W6-H3"),
+        ("mlx-q3", "MLX 3-bit", "exploratory"),
+        ("gguf-Q4_K_M", "Q4\\_K\\_M", "exploratory"),
+        ("gguf-Q2_K", "Q2\\_K", "exploratory"),
+    ):
+        if test == "W6-H3":
+            p_, lo, hi = v["W6-H3"]["tests"][q]["R_strong_minus_R_gentle"]
+        else:
+            p_, lo, hi = ph.d_gap(q)["ci"]
+        rows.append(
+            f"{test} & both & {fname} & mlx-lm defaults & {num(d['q06-def'][q]['R'])} / {num(d['q06-def-lowlr'][q]['R'])} & "
+            f"{num(p_, 3, True)} {ci(lo, hi, 3, True)} \\\\"
+        )
+    rows.append("\\addlinespace")
+    rows.append(
+        "\\multicolumn{6}{l}{\\emph{Gap $R(10^{-4}) - R(10^{-5})$ without / with an importance matrix; the statistic is the second gap minus half the first}} \\\\"
+    )
+    for src, fname, confirmatory in ((i3, "Q3\\_K\\_M", True), (i2, "Q2\\_K", False)):
+        for prefix, model in (("q06", "Qwen3-0.6B"), ("olmo1", "OLMo-2 1B")):
+            r = src[prefix]
+            p_, lo, hi = r["delta_im_minus_half_delta_no"]["ci"]
+            rows.append(
+                f"{'W6-H4' if confirmatory else 'exploratory'} & both & {fname} & {model} & "
+                f"{num(r['delta_no']['ci'][0])} / {num(r['delta_im']['ci'][0])} & {num(p_, 3, True)} {ci(lo, hi, 3, True)} \\\\"
+            )
+    write("round6.tex", rows)
 
 
 def main() -> None:
@@ -444,6 +524,7 @@ def main() -> None:
     baselines()
     grid()
     round5()
+    round6()
     for p in sorted(OUT.glob("*.tex")):
         print(f"--- {p.name}")
         print(p.read_text())

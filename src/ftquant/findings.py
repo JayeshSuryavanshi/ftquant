@@ -901,6 +901,161 @@ def when(d: datetime) -> str:
     return f"{d.day} {d:%B}, {d:%H:%M}"
 
 
+def round6() -> None:
+    w6 = load("week6/verdicts.json")
+    for h, want in (
+        ("W6-H1", "supported"),
+        ("W6-H2", "supported"),
+        ("W6-H3", "supported"),
+        ("W6-H4", "inconclusive"),
+    ):
+        expect(w6[h]["verdict"] == want, f"{h} verdict {w6[h]['verdict']}")
+    expect(w6["check_b"]["passed"], "round-6 check (b) did not pass")
+    g = w6["exploratory"]["arm_g"]
+    r = g["lora-lowlr Q3_K_M"]
+    for key, src in (("r6.g3.S", "S_G3"), ("r6.g1.R", "R_G1"), ("r6.g2.S", "S_G2")):
+        point, lo, hi = r[src]["ci"]
+        num(key, point, 3)
+        num(f"{key}.lo", lo, 3)
+        num(f"{key}.hi", hi, 3)
+    pct("r6.g3.S_pct", r["S_G3"]["ci"][0])
+    pct("r6.g1.R_pct", r["R_G1"]["ci"][0])
+    point, lo, hi = r["S_G3_minus_halfway"]["ci"]
+    sgn("r6.h1", point, 3)
+    sgn("r6.h1.lo", lo, 3)
+    sgn("r6.h1.hi", hi, 3)
+    point, lo, hi = r["S_G2_minus_halfway"]["ci"]
+    expect(hi < 0, "W6-H2 upper bound is not below 0")
+    num("r6.h2", -point, 3)
+    num("r6.h2.lo", -hi, 3)
+    num("r6.h2.hi", -lo, 3)
+    q2g, q3s, q2s = g["lora-lowlr Q2_K"], g["lora Q3_K_M"], g["lora Q2_K"]
+    expect(
+        q2g["R_G1"]["ci"][0] == 0 and q2g["S_G2"]["ci"][0] == 0,
+        "gentle Q2_K fused or load-time kept some gain",
+    )
+    pct("r6.q2.base_acc", q2g["acc"]["base"])
+    num("r6.q2.gentle.S3", q2g["S_G3"]["ci"][0], 3)
+    num("r6.q3.strong.S3", q3s["S_G3"]["ci"][0], 3)
+    num("r6.q3.strong.R", q3s["R_G1"]["ci"][0], 3)
+    num("r6.q3.strong.cost", q3s["R_G1"]["ci"][0] - q3s["S_G3"]["ci"][0], 3)
+    num("r6.q2.strong.S3", q2s["S_G3"]["ci"][0], 3)
+    num("r6.q2.strong.R", q2s["R_G1"]["ci"][0], 3)
+    h3 = w6["W6-H3"]
+    num("r6.d.gain.gentle", 100 * h3["gains"]["q06-def-lowlr mlx"], 1)
+    num("r6.d.gain.strong", 100 * h3["gains"]["q06-def mlx"], 1)
+    ev = w6["exploratory"]["evaluations"]
+    pct("r6.d.acc.gentle", ev["q06-def-lowlr/mlx-bf16"]["acc"], 1)
+    pct("r6.d.acc.strong", ev["q06-def/mlx-bf16"]["acc"], 1)
+    for k, q in (("q3", "gguf-Q3_K_M"), ("q4", "mlx-q4")):
+        point, lo, hi = h3["tests"][q]["R_strong_minus_R_gentle"]
+        sgn(f"r6.h3.{k}", point, 3)
+        sgn(f"r6.h3.{k}.lo", lo, 3)
+        sgn(f"r6.h3.{k}.hi", hi, 3)
+    sgn("r6.h3.q3.short", h3["tests"]["gguf-Q3_K_M"]["R_strong_minus_R_gentle"][0], 2)
+    d = w6["exploratory"]["arm_d"]
+    num("r6.d.R.gentle.q3", d["q06-def-lowlr"]["gguf-Q3_K_M"]["R"], 2)
+    i3, i2 = w6["exploratory"]["arm_i_q3"], w6["exploratory"]["arm_i_q2"]
+    num("r6.i.q06.gentle_no", i3["q06"]["R"]["gentle_no"], 3)
+    num("r6.i.q06.gentle_im", i3["q06"]["R"]["gentle_im"], 3)
+    num("r6.i.q06.dno", i3["q06"]["delta_no"]["ci"][0], 3)
+    num("r6.i.q06.dim", i3["q06"]["delta_im"]["ci"][0], 3)
+    num("r6.i.olmo.dno", i3["olmo1"]["delta_no"]["ci"][0], 3)
+    num("r6.i.olmo.dim", i3["olmo1"]["delta_im"]["ci"][0], 3)
+    expect(
+        i2["q06"]["R"]["gentle_no"] == 0,
+        "gentle Qwen3-0.6B kept some gain at Q2_K without a matrix",
+    )
+    num("r6.i2.q06.gentle_no", i2["q06"]["R"]["gentle_no"], 0)
+    num("r6.i2.q06.gentle_im", i2["q06"]["R"]["gentle_im"], 2)
+    num("r6.i2.q06.strong_im", i2["q06"]["R"]["strong_im"], 2)
+    stamps = re.findall(
+        r"^(\d{4}-\d\d-\d\d \d\d:\d\d:\d\d) (week-6 start|STOP|week-6 complete)",
+        (RUNS / "week6" / "week6.log").read_text(),
+        re.M,
+    )
+    total, start = 0.0, None
+    for ts, what in stamps:
+        when = datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
+        if what == "week-6 start":
+            start = when
+        elif start is not None:
+            total += (when - start).total_seconds()
+            start = None
+    num("time.r6.hours", total / 3600, 1)
+    first = stamp(next(ts for ts, what in stamps if what == "week-6 start"))
+    done = stamp(next(ts for ts, what in stamps if what == "week-6 complete"))
+    put(
+        "time.r6.start",
+        first.isoformat(),
+        f"{first.day} {first:%B}, {first:%H:%M}",
+    )
+    put("time.r6.end", done.isoformat(), f"{done.day} {done:%B}, {done:%H:%M}")
+    point, lo, hi = r["S_G3_minus_S_G2"]["ci"]
+    sgn("r6.contrast", point, 3)
+    sgn("r6.contrast.lo", lo, 3)
+    sgn("r6.contrast.hi", hi, 3)
+    cb = w6["check_b"]
+    expect(
+        cb["bf16"]["agreement"] == 1.0,
+        "load-time adapter and fused model differ at bf16",
+    )
+    pct("r6.cb.q8.agree", cb["Q8_0"]["agreement"], 1)
+    pct("r6.cb.load0.agree", cb["load_only"]["agreement_with_base"], 1)
+    checks = list(w6["adapter_checks"].values())
+    expect(
+        all(c["passed"] and c["modules"] == 196 for c in checks)
+        and max(c["max_relative_difference"] for c in checks) < 1e-15,
+        "an adapter check (a) failed or exceeded 1e-15",
+    )
+    expect(
+        all(c["passed"] and c["tensors"] == 310 for c in w6["rebuild_checks"].values()),
+        "a rebuild check failed",
+    )
+    import ftquant.posthoc_w6 as ph
+
+    ph.use(RUNS / "week6")
+    for key, arm, lr, fmt in (
+        ("r6.g2_g1", "G2", "lora-lowlr", "Q3_K_M"),
+        ("r6.q3.strong.sr", "G3", "lora", "Q3_K_M"),
+        ("r6.q2.strong.sr", "G3", "lora", "Q2_K"),
+    ):
+        b = ph.s_minus_r(arm, lr, fmt)
+        expect(
+            b["nan_resamples"] == 0 and (b["ci"][1] > 0 or b["ci"][2] < 0),
+            f"{key}: interval includes zero",
+        )
+        sgn(key, b["ci"][0], 3)
+        sgn(f"{key}.lo", b["ci"][1], 3)
+        sgn(f"{key}.hi", b["ci"][2], 3)
+    for k in ("q06-def-lowlr", "q06-def"):
+        expect(d[k]["gguf-Q2_K"]["acc"] == 0, f"{k} scored above 0 at Q2_K")
+    pct(
+        "r6.d.mlx3.max",
+        max(d[k]["mlx-q3"]["R"] for k in ("q06-def-lowlr", "q06-def")),
+        1,
+    )
+    norm6 = load("week6/update-norms.json")["norms"]
+    for k in norm6:
+        if d[k]["update_norm"] is not None:
+            expect(
+                d[k]["update_norm"] == norm6[k],
+                f"{k}: update norm differs from its cache",
+            )
+    for k, name in (("q06-def-lowlr", "gentle"), ("q06-def", "strong")):
+        num(f"r6.d.R.{name}.q4km", d[k]["gguf-Q4_K_M"]["R"], 2)
+        pct(f"r6.d.acc.{name}.q4km", d[k]["gguf-Q4_K_M"]["acc"], 1)
+        num(f"r6.d.norm.{name}", norm6[k], 1)
+    num("r6.d.norm.ratio", norm6["q06-def"] / norm6["q06-def-lowlr"], 1)
+    norms = load("revision/revision.json")["update_norms"]["norms"]
+    num("r6.r1.norm.gentle", norms["q06-lora-lowlr"], 1)
+    olmo = i3["olmo1"]["R"]
+    for k in ("gentle_no", "strong_no", "gentle_im", "strong_im"):
+        num(f"r6.i.olmo.{k}", olmo[k], 3)
+        num(f"r6.i.olmo.{k}2", olmo[k], 2)
+    expect(min(olmo.values()) > 1, "an OLMo-2 1B LoRA lost gain at Q3_K_M")
+
+
 def timeline() -> None:
     sweeps = [
         (RUNS / f"week{w}" / "sweep.log").read_text().splitlines() for w in (1, 2, 3, 4)
@@ -969,12 +1124,22 @@ def timeline() -> None:
 
 
 ANCHORS: list[str] = [
-    r"delivered {{r5.h2.S_pct}}\% of the bf16 gain at 4 bits, against {{r5.h2.R_pct}}\% when trained in bf16, fused and quantized",
+    r"Keeping the $10^{-5}$ update exact on the quantized base recovered {{r5.h1.s0.share}}\% and {{r5.h1.s1.share}}\% of the lost gain in MLX (OLMo-2 1B, 3-bit, two seeds; upper 95\% bounds {{r5.h1.s0.share_hi}}\% and {{r5.h1.s1.share_hi}}\%) and, post hoc, did worse than fusing in GGUF (Qwen3-0.6B, Q3\_K\_M), while training a $10^{-5}$ Qwen3-0.6B LoRA against the weights that ship delivered {{r5.h2.S_pct}}\% of the bf16 gain at MLX~4-bit and {{r6.g3.S_pct}}\% at Q3\_K\_M, against {{r5.h2.R_pct}}\% and {{r6.g1.R_pct}}\% when it was trained in bf16, fused and quantized.",
+    r"At $10^{-4}$ the same step cost {{r5.q4s.d_abs}} and {{r6.q3.strong.cost}} of $R$ (exploratory).",
+    r"the gentle learning rate is mlx-lm's default, and in rounds 1 to 4 its update was {{setup.ratio_min}} to {{setup.ratio_max}} times smaller.",
+    r"in every pair of rounds 1 to 4, the strong LoRA's update was {{setup.ratio_min}} to {{setup.ratio_max}} times larger than the gentle one's",
+    r"Round~6 carried round~5's remedy to GGUF and tested two of our setup's choices, under a plan pushed to a hosted repository after plumbing checks and smoke runs on validation items and before any of its models was trained (results: Table~\ref{tab:round6} in Appendix~\ref{app:extra}). llama.cpp can apply a LoRA at load time on top of a quantized model, so a GGUF adapter can be trained against the weights its file ships: we dequantized every tensor of the Qwen3-0.6B base's Q3\_K\_M file, trained the gentle LoRA in bf16 on those values with the round-1 settings, converted it to a GGUF adapter and served it on the same file (Appendix~\ref{app:extra}). The converted adapter passed the plan's checks on validation items. All comparisons in the round use round-6 evaluations.",
+    r"At Q3\_K\_M the gentle LoRA trained against the shipped weights delivered {{r6.g3.S}} [{{r6.g3.S.lo}}, {{r6.g3.S.hi}}] of the bf16 gain, against $R = {{r6.g1.R}}$ [{{r6.g1.R.lo}}, {{r6.g1.R.hi}}] fused and quantized. The bf16-trained adapter applied at load time, its update stored in float32 and never quantized, delivered {{r6.g2.S}} [{{r6.g2.S.lo}}, {{r6.g2.S.hi}}], less than the fused model (a paired difference of ${{r6.g2_g1}}$ [${{r6.g2_g1.lo}}$, ${{r6.g2_g1.hi}}$], post hoc); training against the shipped weights beat it by ${{r6.contrast}}$ [${{r6.contrast.lo}}$, ${{r6.contrast.hi}}$], the plan's pre-specified contrast. As the plan predicted, training against the shipped weights recovered more than half of the fused model's loss, exceeding halfway by ${{r6.h1}}$ [${{r6.h1.lo}}$, ${{r6.h1.hi}}$] (W6-H1 supported), and the load-time adapter recovered less, falling short by {{r6.h2}} [{{r6.h2.lo}}, {{r6.h2.hi}}] (W6-H2 supported). At Q2\_K, where the base scores {{r6.q2.base_acc}}\%, training against the shipped weights helped both LoRAs; at Q3\_K\_M it cost the strong LoRA {{r6.q3.strong.cost}} of $R$, as at MLX~4-bit (exploratory; Appendix~\ref{app:extra}).",
+    r"Trained with mlx-lm's other defaults (1,000 steps, LoRA on the last 16 of 28 layers, no prompt masking), a gentle and a strong Qwen3-0.6B LoRA both learned the task, gaining {{r6.d.gain.gentle}} and {{r6.d.gain.strong}} points at MLX bf16, and unlike in our eight settings the LoRA at $10^{-4}$ was the more accurate one at bf16 ({{r6.d.acc.strong}}\% against {{r6.d.acc.gentle}}\%). It again kept more of its gain, by ${{r6.h3.q3}}$ [${{r6.h3.q3.lo}}$, ${{r6.h3.q3.hi}}$] in $R$ at Q3\_K\_M and ${{r6.h3.q4}}$ [${{r6.h3.q4.lo}}$, ${{r6.h3.q4.hi}}$] at MLX~4-bit (W6-H3 supported); at Q3\_K\_M the default gentle LoRA kept {{r6.d.R.gentle.q3}} of its gain, against {{r6.g1.R}} for ours. Where the base breaks, neither default LoRA held on: both kept at most {{r6.d.mlx3.max}}\% of their gain at MLX~3-bit and none at Q2\_K, where our strong LoRA kept {{r6.q2.strong.R}} (exploratory).",
+    r"An importance matrix computed on WikiText-2 narrowed the gap on both models without closing it. At Q3\_K\_M it raised the gentle Qwen3-0.6B LoRA's $R$ from {{r6.i.q06.gentle_no}} to {{r6.i.q06.gentle_im}} and narrowed its gap to the strong LoRA from {{r6.i.q06.dno}} to {{r6.i.q06.dim}}, by less than half. On OLMo-2 1B, whose LoRAs both kept their full gain at Q3\_K\_M ($R$ of {{r6.i.olmo.gentle_no2}} and {{r6.i.olmo.strong_no2}}), the gap fell from {{r6.i.olmo.dno}} to {{r6.i.olmo.dim}} because the strong LoRA's $R$ fell; whether by less than half was inconclusive there, and so was W6-H4, which needed both models.",
+    r"At MLX~3-bit and GGUF~Q3\_K\_M, the gentle LoRA kept less of its gain than the strong one in {{rep.n_supported}} of {{rep.n_tests}} pre-registered tests across three base models and two tasks, and also at Q3\_K\_M and MLX~4-bit with mlx-lm's other defaults (F1); it kept a smaller share of its accuracy at all five formats compared, {{pat.lower}} of {{pat.cells}} (F2). The loss did not come from rounding the update: keeping it exact recovered {{r5.h1.s0.share}}\% and {{r5.h1.s1.share}}\% of the loss in MLX and, post hoc, did worse than fusing in GGUF (F4), while training the gentle LoRA against the weights that ship delivered {{r5.h2.S_pct}}\% of the bf16 gain at MLX~4-bit and {{r6.g3.S_pct}}\% at Q3\_K\_M, against {{r5.h2.R_pct}}\% and {{r6.g1.R_pct}}\% (F5). The weight measurements describe these losses but have not been shown to predict them better than the size of the update (F6). In practice, select a fine-tune on the quantized artifact it will ship as (F3), and if a gentle LoRA must ship at a format where it loses its gain, train it against those weights: on the quantized base in MLX, or on the dequantized file, served as an adapter, in llama.cpp. We tested this on Qwen3-0.6B with one task and one seed per LoRA, and the same step cost the strong LoRA {{r5.q4s.d_abs}} of $R$ at MLX~4-bit and {{r6.q3.strong.cost}} at Q3\_K\_M. An importance matrix narrowed the gap without closing it (F8).",
+    r"Round~6 rebuilt each training model for an adapter trained against the shipped weights from the base GGUF file: gguf-py dequantized every tensor, including the shared embedding, and the values were rounded to bf16; all 310 tensors of the rebuilt model matched that dequantization before training. The LoRA was trained with the round-1 settings, rewritten in PEFT form (lora\_alpha 160, so that llama.cpp's $\alpha/r$ equals mlx-lm's scale of 20) and converted with llama.cpp's \texttt{convert\_lora\_to\_gguf.py} in float32; for all 196 adapted modules, the update read back from the file matched mlx-lm's to within $10^{-15}$, relative. llama-server applied the adapter at scale~1 on the file it was trained against. On the 499 validation items, the load-time adapter gave the same predictions as its fused model at bf16 and {{r6.cb.q8.agree}}\% of them on an 8-bit base, and loaded at scale~0 it agreed with the base model on {{r6.cb.load0.agree}}\%. Round-6 evaluations decoded MLX models in batches of 32 and ran llama-server with four slots and without its host-memory prompt cache, settings that can change predictions near ties, so round-6 numbers are compared only with each other. Every Qwen3-0.6B GGUF file in the round, base included, was built around one shared embedding, as the fused fine-tunes are (Appendix~\ref{app:repro}); OLMo-2 1B does not tie its embeddings.",
+    r"In round~6's exploratory arms (Table~\ref{tab:round6}), at Q2\_K, where the base scores {{r6.q2.base_acc}}\%, the gentle LoRA kept none of its gain fused or at load time and {{r6.q2.gentle.S3}} when trained against the shipped weights. Trained against the shipped weights, the strong LoRA did worse at Q3\_K\_M, where it already keeps its gain, {{r6.q3.strong.S3}} against {{r6.q3.strong.R}} (${{r6.q3.strong.sr}}$ [${{r6.q3.strong.sr.lo}}$, ${{r6.q3.strong.sr.hi}}$]), as at MLX~4-bit in round~5, and better at Q2\_K, {{r6.q2.strong.S3}} against {{r6.q2.strong.R}} (${{r6.q2.strong.sr}}$ [${{r6.q2.strong.sr.lo}}$, ${{r6.q2.strong.sr.hi}}$]), whereas at MLX~3-bit in round~5 it made no difference. With mlx-lm's defaults, both LoRAs kept at most {{r6.d.mlx3.max}}\% of their gain at MLX~3-bit and none at Q2\_K; at Q4\_K\_M they kept {{r6.d.R.gentle.q4km}} and {{r6.d.R.strong.q4km}}, and the strong LoRA was the more accurate ({{r6.d.acc.strong.q4km}}\% against {{r6.d.acc.gentle.q4km}}\%), unlike in our eight settings. Their update norms were {{r6.d.norm.gentle}} and {{r6.d.norm.strong}}, a ratio of {{r6.d.norm.ratio}} against {{setup.ratio_min}} to {{setup.ratio_max}} in rounds 1 to 4; the default gentle update was larger than our gentle LoRA's ({{r6.r1.norm.gentle}}, Table~\ref{tab:grid}) yet kept less of its gain at Q3\_K\_M ({{r6.d.R.gentle.q3}} against {{r6.g1.R}}). On OLMo-2 1B the importance matrix left the gentle LoRA's $R$ at Q3\_K\_M almost unchanged ({{r6.i.olmo.gentle_no}} and {{r6.i.olmo.gentle_im}}) and lowered the strong one's from {{r6.i.olmo.strong_no}} to {{r6.i.olmo.strong_im}}. At Q2\_K the matrix lifted the gentle Qwen3-0.6B LoRA from 0 to {{r6.i2.q06.gentle_im}} of its gain, against {{r6.i2.q06.strong_im}} for the strong one.",
+    r"Round~6 ran for {{time.r6.hours}} hours between {{time.r6.start}}, and {{time.r6.end}}, in three sessions separated by two stops at the free-disk rule.",
     r"evaluation uses all {{data.b77.test}} test items, {{data.b77.per_intent}} per intent",
     r"all {{data.b77.labels}} intent names",
     r"{{data.massive.test}} test utterances",
     r"Base Qwen3-0.6B scores {{mas.base_acc}}\% on this task zero-shot",
-    r"the strong LoRA's update was {{setup.ratio_min}} to {{setup.ratio_max}} times larger than the gentle one's",
     r"({{data.b77.epoch_share}}\% of banking77, {{data.massive.epoch_share}}\% of MASSIVE)",
     r"(final validation loss {{setup.failed_val}}, against {{setup.val_min}} to {{setup.val_max}} for every other run, and {{setup.failed_acc}}\% test accuracy)",
     r"Q3\_K\_M, at {{fmt.q3km_lo}} to {{fmt.q3km_hi}} bits per weight, is closer in size to MLX~4-bit ({{fmt.mlx4}}) than to MLX~3-bit ({{fmt.mlx3}})",
@@ -1055,12 +1220,10 @@ ANCHORS: list[str] = [
     r"Measured on its {{data.massive.test}} test items, that fine-tune kept {{tool.mas.R_q4}}\% of its gain at MLX~4-bit and {{miss.masg.s0}}\% at 3-bit.",
     r"had the same prediction and kept {{miss.masg.s1}}\%",
     r"v1 SHA-256 prefix \texttt{{{sha.v1}}}, v2 \texttt{{{sha.v2}}}",
-    r"In all {{rep.n_tests}} pre-registered tests (five fine-tune pairs, each at MLX~3-bit and GGUF~Q3\_K\_M), a LoRA trained at learning rate $10^{-4}$ retained more of its gain than the same LoRA at $10^{-5}$, mlx-lm's default learning rate, by ${{rep.diff_min}}$ to ${{rep.diff_max}}$ in $R$.",
+    r"In all {{rep.n_tests}} pre-registered tests (five fine-tune pairs, each at MLX~3-bit and GGUF~Q3\_K\_M), a LoRA trained at learning rate $10^{-4}$ retained more of its gain than the same LoRA at $10^{-5}$, mlx-lm's default learning rate, by ${{rep.diff_min}}$ to ${{rep.diff_max}}$ in $R$; with mlx-lm's other defaults, the gap at Q3\_K\_M was ${{r6.h3.q3.short}}$, but at MLX~3-bit both LoRAs lost almost all of their gain.",
     r"In exploratory comparisons over eight settings and five formats, the $10^{-5}$ LoRA kept a smaller share of its own accuracy in {{pat.lower}} of {{pat.cells}} cases, yet remained the more accurate model at Q4\_K\_M in all eight settings, while the $10^{-4}$ LoRA was the more accurate one at MLX~3-bit and Q2\_K in all {{abs.strong_more.q3}}.",
-    r"Carrying the $10^{-5}$ OLMo-2 1B update exactly on the 3-bit base recovered {{r5.h1.s0.share}}\% and {{r5.h1.s1.share}}\% of the lost gain for two seeds (upper 95\% bounds {{r5.h1.s0.share_hi}}\% and {{r5.h1.s1.share_hi}}\%), while a $10^{-5}$ Qwen3-0.6B LoRA trained on the 4-bit base delivered {{r5.h2.S_pct}}\% of the bf16 gain at 4 bits, against {{r5.h2.R_pct}}\% when trained in bf16, fused and quantized (difference ${{r5.h2.d}}$, 95\% interval $[{{r5.h2.lo}}, {{r5.h2.hi}}]$); at $10^{-4}$, training on the 4-bit base delivered {{r5.q4s.S}}\% against {{r5.q4s.R}}\%.",
     r"A three-parameter predictor built from the weights and a one-time measurement of the base model met its pre-registered error bar of 0.10 on held-out fine-tunes (mean absolute error {{pred.v2.r3.mae}} and {{pred.v2.r4.mae}}), but a post hoc model of update size and base damage reached {{pb.norm.r3}} in both rounds.",
-    r"We call a LoRA trained at learning rate $10^{-5}$ gentle and one trained at $10^{-4}$ strong; the gentle learning rate is mlx-lm's default, and its update was {{setup.ratio_min}} to {{setup.ratio_max}} times smaller.",
-    r"For one fine-tune at Q3\_K\_M, llama-server with one slot and with four gave different predictions on {{r5.rep.diff_np}} of {{r5.rep.n}} items (Section~\ref{sec:round5}).",
+    r"For one fine-tune at Q3\_K\_M, llama-server with one slot and with four gave different predictions on {{r5.rep.diff_np}} of {{r5.rep.n}} items (Appendix~\ref{app:extra}).",
     r"At 8 and 6 bits, $R$ was {{r1.h1.min}} to {{r1.h1.max}} in both engines (H1).",
     r"the most accurate of the three at bf16 ({{r1.q06.gentle.acc}}\%, against {{r1.q06.full.acc}}\% for full fine-tuning and {{r1.q06.strong.acc}}\% for the LoRA at $10^{-4}$)",
     r"A second seed moved $R$ at MLX~3-bit by at most {{r2.seed.max_dR}} ({{r2.seed.strong_s0}} and {{r2.seed.strong_s1}} for the LoRA at $10^{-4}$, {{r2.seed.gentle_s0}} and {{r2.seed.gentle_s1}} at $10^{-5}$), while bf16 accuracy moved by {{r2.seed.strong.dacc}} and {{r2.seed.gentle.dacc}} points.",
@@ -1076,10 +1239,6 @@ ANCHORS: list[str] = [
     r"changed accuracy retention by at most {{r5.lab.max_change}}",
     r"from {{drift.err.olmo.fp}}\% to {{drift.err.olmo.q}}\% on OLMo-2 1B (seed 0) and",
     r"The 4B fine-tunes' gains are small ({{lim.q4b.gain_g}} points for the gentle LoRA and {{lim.q4b.gain_s}} for the strong)",
-    r"At MLX~3-bit and GGUF~Q3\_K\_M, the gentle LoRA kept less of its gain than the strong one in {{rep.n_supported}} of {{rep.n_tests}} pre-registered tests across three base models and two tasks (F1), and it kept a smaller share of its accuracy at all five formats compared, {{pat.lower}} of {{pat.cells}} (F2).",
-    r"In MLX, the loss did not come from rounding the update: the exact update recovered {{r5.h1.s0.share}}\% and {{r5.h1.s1.share}}\% of it, with upper 95\% bounds of {{r5.h1.s0.share_hi}}\% and {{r5.h1.s1.share_hi}}\% (F4), while training the gentle LoRA on the quantized base delivered {{r5.h2.S_pct}}\% of its bf16 gain at 4 bits, against {{r5.h2.R_pct}}\% (F5).",
-    r"In practice, select a fine-tune on the quantized artifact it will ship as: the gentle LoRA was the more accurate model at Q4\_K\_M in all eight settings, the strong one at MLX~3-bit and Q2\_K in all {{abs.strong_more.q3}} and at Q3\_K\_M in {{abs.strong_more.Q3KM}} (F3).",
-    r"Keeping the adapter unfused does not rescue a gentle LoRA in MLX; training it on the quantized base does, and gave our most accurate 4-bit and 3-bit models, but it cost the strong LoRA {{r5.q4s.d_abs}} of $R$ at 4 bits and was not tested for GGUF.",
     r"rounds 1 to 4 in {{time.r14.hours}} hours of wall-clock time from the first sweep ({{time.r14.start}}) to the last verdicts ({{time.r14.end}}), and round~5 in {{time.r5.hours}} hours from {{time.r5.start}}, to {{time.r5.end}},",
     r"In rounds 1 to 4, a LoRA run of 500 steps took {{time.train.q06.lo}} to {{time.train.q06.hi}} minutes on Qwen3-0.6B, {{time.train.q17.lo}} to {{time.train.q17.hi}} on 1.7B, {{time.train.olmo1.lo}} to {{time.train.olmo1.hi}} on OLMo-2 1B and {{time.train.q4b.lo}} to {{time.train.q4b.hi}} on 4B.",
     r"One full-test-set evaluation took {{time.eval.small.lo}} to {{time.eval.small.hi}} minutes on the smaller models and {{time.eval.q4b.lo}} to {{time.eval.q4b.hi}} on 4B, and the round-4 mechanism measurements for two fine-tunes took {{time.mech.lo}} to {{time.mech.hi}} minutes on the 0.6B and 1B models and {{time.mech.q4b}} on 4B.",
@@ -1105,8 +1264,8 @@ FINDINGS: list[dict[str, str]] = [
         "section": "sec:replication",
         "status": "pre-registered",
         "finding": r"At MLX~3-bit and Q3\_K\_M, the gentle LoRA keeps less of its gain than the strong one",
-        "result": r"5 pairs on 3 base models and 2 tasks: $R_{\mathrm{strong}} - R_{\mathrm{gentle}}$ from ${{rep.diff_min}}$ to ${{rep.diff_max}}$, interval above 0 in {{rep.n_supported}} of {{rep.n_tests}} tests, also at the 99.5\% level",
-        "evidence": r"Pre-registered, supported (W3-H1, W4-H1, W4-H2); \S\ref{sec:replication}",
+        "result": r"5 pairs on 3 base models and 2 tasks: $R_{\mathrm{strong}} - R_{\mathrm{gentle}}$ from ${{rep.diff_min}}$ to ${{rep.diff_max}}$, interval above 0 in {{rep.n_supported}} of {{rep.n_tests}} tests, also at the 99.5\% level; with mlx-lm's other defaults ${{r6.h3.q3}}$ [${{r6.h3.q3.lo}}$, ${{r6.h3.q3.hi}}$] at Q3\_K\_M, but at MLX~3-bit both lost almost all of their gain (exploratory)",
+        "evidence": r"Pre-registered, supported (W3-H1, W4-H1, W4-H2; with mlx-lm's defaults, W6-H3); \S\ref{sec:replication}, \S\ref{sec:round6}",
     },
     {
         "id": "F2",
@@ -1128,17 +1287,17 @@ FINDINGS: list[dict[str, str]] = [
         "id": "F4",
         "section": "sec:round5",
         "status": "pre-registered",
-        "finding": r"In MLX, keeping a gentle update exact does not restore its gain",
-        "result": r"Unfused minus fused $R$, OLMo-2 1B at MLX~3-bit, 2 seeds: ${{r5.h1.s0.d}}$ [${{r5.h1.s0.lo}}$, ${{r5.h1.s0.hi}}$] and ${{r5.h1.s1.d}}$ [${{r5.h1.s1.lo}}$, ${{r5.h1.s1.hi}}$]: {{r5.h1.s0.share}}\% and {{r5.h1.s1.share}}\% of the lost gain, upper bounds {{r5.h1.s0.share_hi}}\% and {{r5.h1.s1.share_hi}}\%",
-        "evidence": r"Pre-registered, supported (W5-H1, bound ${{r5.h1.margin}}$); \S\ref{sec:round5}",
+        "finding": r"Keeping a gentle update exact does not restore its gain",
+        "result": r"MLX, OLMo-2 1B at 3-bit, 2 seeds: unfused minus fused $R$ ${{r5.h1.s0.d}}$ [${{r5.h1.s0.lo}}$, ${{r5.h1.s0.hi}}$] and ${{r5.h1.s1.d}}$ [${{r5.h1.s1.lo}}$, ${{r5.h1.s1.hi}}$], upper bounds {{r5.h1.s0.share_hi}}\% and {{r5.h1.s1.share_hi}}\% of the lost gain; GGUF, Qwen3-0.6B at Q3\_K\_M: adapter at load time {{r6.g2.S}} against fused {{r6.g1.R}}, {{r6.h2}} [{{r6.h2.lo}}, {{r6.h2.hi}}] short of halfway to 1",
+        "evidence": r"Pre-registered, supported (W5-H1, bound ${{r5.h1.margin}}$; W6-H2); below fused post hoc; \S\ref{sec:round5}, \S\ref{sec:round6}",
     },
     {
         "id": "F5",
         "section": "sec:round5",
         "status": "pre-registered",
-        "finding": r"In MLX, training a gentle LoRA on the quantized base recovers its gain",
-        "result": r"Gain delivered minus fused $R$, Qwen3-0.6B, 1 seed: ${{r5.h2.d}}$ [${{r5.h2.lo}}$, ${{r5.h2.hi}}$] at 4-bit and ${{r5.q3g.d}}$ [${{r5.q3g.lo}}$, ${{r5.q3g.hi}}$] at 3-bit; for the strong LoRA, ${{r5.q4s.d}}$ [${{r5.q4s.lo}}$, ${{r5.q4s.hi}}$] and ${{r5.q3s.d}}$ [${{r5.q3s.lo}}$, ${{r5.q3s.hi}}$]",
-        "evidence": r"Pre-registered at 4-bit for the gentle LoRA, supported (W5-H2); rest exploratory; \S\ref{sec:round5}",
+        "finding": r"Training a gentle LoRA against the shipped weights recovers its gain",
+        "result": r"Qwen3-0.6B, 1 seed, share of the bf16 gain: {{r5.h2.S_pct}}\% against {{r5.h2.R_pct}}\% fused at MLX~4-bit, {{r6.g3.S_pct}}\% against {{r6.g1.R_pct}}\% at Q3\_K\_M; the strong LoRA lost {{r5.q4s.d_abs}} and {{r6.q3.strong.cost}} of $R$ there",
+        "evidence": r"Pre-registered for the gentle LoRA, supported (W5-H2, W6-H1); strong LoRA exploratory; \S\ref{sec:round5}, \S\ref{sec:round6}",
     },
     {
         "id": "F6",
@@ -1157,12 +1316,20 @@ FINDINGS: list[dict[str, str]] = [
         "evidence": r"Exploratory; pre-registered H4 not supported; \S\ref{sec:drift}",
     },
     {
+        "id": "F8",
+        "section": "sec:round6",
+        "status": "pre-registered",
+        "finding": r"An importance matrix narrows the gap without closing it",
+        "result": r"Gap $R_{\mathrm{strong}} - R_{\mathrm{gentle}}$ at Q3\_K\_M without and with a WikiText-2 matrix: {{r6.i.q06.dno}} and {{r6.i.q06.dim}} on Qwen3-0.6B, {{r6.i.olmo.dno}} and {{r6.i.olmo.dim}} on OLMo-2 1B",
+        "evidence": r"Pre-registered (W6-H4), inconclusive: supported for Qwen3-0.6B only; \S\ref{sec:round6}",
+    },
+    {
         "id": "C",
         "section": "sec:setup",
         "status": "control",
         "finding": r"Measurement repeatability",
         "result": r"MLX and GGUF agree on {{nf.ft_lo}}\% to {{nf.ft_hi}}\% of the bf16 predictions of each fine-tune that learned its task; one and four llama-server slots differ on {{r5.rep.diff_np}} of {{r5.rep.n}} items; decoding restricted to valid labels changes $A$ by at most {{r5.lab.max_change}}",
-        "evidence": r"Controls; \S\ref{sec:setup}, \S\ref{sec:round5}",
+        "evidence": r"Controls; \S\ref{sec:setup}, Appendix~\ref{app:extra}",
     },
 ]
 
@@ -1276,6 +1443,7 @@ def compute() -> None:
         pattern,
         seeds,
         round5,
+        round6,
         predictor,
         drift,
         limits_and_appendix,

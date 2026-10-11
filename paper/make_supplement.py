@@ -11,18 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = Path(__file__).resolve().parent / "supplementary.zip"
 TOP = "supplementary"
-EXCLUDE = (
-    "paper/",
-    "records/eval-week5.tar.gz",
-    "PREREGISTRATION-week6.md",
-    "runs/week1/PREREG-week6.sha256",
-    "runs/week6/",
-    "runs/smoke6/",
-    "src/ftquant/week6.py",
-    "src/ftquant/verdicts_w6.py",
-    "src/ftquant/lora_gguf.py",
-    "src/ftquant/rebuild.py",
-)
+EXCLUDE = ("paper/", "records/eval-week5.tar.gz")
 EXTRA_GLOBS = [
     "runs/smoke*/sweep.log",
     "runs/smoke*/week5.log",
@@ -46,6 +35,9 @@ EXTRA_GLOBS = [
     "paper/make_figures.py",
     "records/prereg-originals/*.md",
     "runs/revision/embedding/*",
+    "runs/week6/*/eval/*.jsonl",
+    "runs/smoke6/week6.log",
+    "runs/week6/*/adapter/adapter_config.json",
     "src/ftquant/embedding_check.py",
 ]
 STORED = {".gz", ".png", ".pdf"}
@@ -92,6 +84,10 @@ MUST_STAY_IDENTICAL = [
     "records/prereg-originals/PREREGISTRATION-week3.md",
     "records/prereg-originals/PREREGISTRATION-week4.md",
     "records/prereg-originals/PREREGISTRATION-week5.md",
+    "PREREGISTRATION-week6.md",
+    "runs/week1/PREREG-week6.sha256",
+    "records/prereg-originals/PREREGISTRATION-week6.md",
+    "src/ftquant/verdicts_w6.py",
 ]
 PLAN_LOGS = {
     "PREREGISTRATION.md": "runs/week1/PREREG.sha256",
@@ -99,24 +95,27 @@ PLAN_LOGS = {
     "PREREGISTRATION-week3.md": "runs/week1/PREREG-week3.sha256",
     "PREREGISTRATION-week4.md": "runs/week1/PREREG-week4.sha256",
     "PREREGISTRATION-week5.md": "runs/week1/PREREG-week5.sha256",
+    "PREREGISTRATION-week6.md": "runs/week1/PREREG-week6.sha256",
 }
 
 README = """# Supplementary material
 
 Start here. `README.md` describes the `check` tool itself.
 
-This is an anonymized copy of the project files behind the submission. Round n in the paper is "week n" here, with three exceptions: the hash logs of all five plans are in `runs/week1/`, round 1's plan is `PREREGISTRATION.md`, and the round-1 and round-2 retention analysis is `runs/analysis-all.json`.
+This is an anonymized copy of the project files behind the submission. Round n in the paper is "week n" here, with three exceptions: the hash logs of all six plans are in `runs/week1/`, round 1's plan is `PREREGISTRATION.md`, and the round-1 and round-2 retention analysis is `runs/analysis-all.json`.
 
 ## Contents
 
-- `PREREGISTRATION.md` and `PREREGISTRATION-week2.md` to `-week5.md`: the five pre-registrations, with their logged deviations.
-- `runs/week1/PREREG*.sha256`: the hash logs of the five plans. Each line is the SHA-256 of one version of a plan and the time it was recorded; later lines are amendments that log a deviation.
+- `PREREGISTRATION.md` and `PREREGISTRATION-week2.md` to `-week6.md`: the six pre-registrations, with their logged deviations.
+- `runs/week1/PREREG*.sha256`: the hash logs of the six plans. Each line is the SHA-256 of one version of a plan and the time it was recorded; later lines are amendments that log a deviation. Week 6's log also hashes its analysis code, `src/ftquant/verdicts_w6.py`, recorded with the plan after the smoke runs in `runs/smoke6/` (on which the code was tried) and before any week-6 model was trained.
 - `records/prereg-originals/`: each plan as it was first hashed, before any deviation was logged. In every plan, the text before the deviation section is byte-identical to this first version.
 - `runs/predictor/`: the frozen predictors (`predictor-v1.json`, `predictor-v2.json`), v1's hash log (`predictor-v1.sha256`), and the round-2 predictor tests (`eval-T1.json` to `eval-T3.json`, `verdicts.json`).
 - `records/eval-weekN.tar.gz`: the per-item predictions of every full-test-set evaluation of rounds 1 to 4, 279 files in all. Unpacked, they give `runs/weekN/<config>/eval/<format>.jsonl`, one line per test item (text, gold, prediction, correct, valid, sequence log-probability, confidence). The week-4 archive also restores `runs/week4/olmo1-base` and `runs/week4/mas06-base`, links to the week-3 base evaluations that round 4 reuses. Round 5's per-item predictions are already unpacked in `runs/week5/<config>/eval/`.
 - `runs/weekN/<config>/train.yaml` and `train.log`: the configuration and log of every training run, including the out-of-memory attempt in `runs/week4/_failed-oom-q4b-lora-lowlr/`, round 5's four LoRAs trained on a quantized base, and the stalled first attempt at one of them in `runs/week5/_stalled-q06q3-lora/`. The two Qwen3-4B configurations show `iters: 1000` because mlx-lm counts micro-batches; with 2-step accumulation that is 500 optimizer steps.
-- `runs/weekN/sweep.log`, `runs/week5/week5.log` and `runs/orchestrate.log`: the time-stamped accuracy and wall time of every evaluation, and every pipeline step and failure.
-- `runs/smoke*/` and `runs/dryrun/`: the pipeline smoke tests and dry runs (reduced test sets; not used for any result). `runs/smoke5/` is round 5's 20-item plumbing test.
+- `runs/week5/<config>/eval/` and `runs/week6/<config>/eval/`: the per-item predictions of rounds 5 and 6, in the same format; files ending in `-valid` hold the 499 validation items of round 6's adapter check, and `-lora` files an adapter applied at load time.
+- `runs/week6/`: besides the predictions, `base-files.json` and `imatrix-files.json` record the SHA-256 of round 6's Qwen3-0.6B base GGUF files and of its six importance matrices; `rebuild-*.json` are the acceptance tests of the two rebuilt training models; `*/lora-check.json` are the adapter conversion checks (a); `*/TRAINED.json` records each training run's attempt, time, last step and validation loss; `*/adapter/adapter_config.json` holds the full training configuration of each new LoRA, including mlx-lm's defaults for `q06-def*`; and `update-norms.json` caches the update norms of the two LoRAs trained with mlx-lm's defaults. The GGUF files, importance matrices and adapter weights are not included: they are large, and the matrices and the files quantized with them record local paths. Re-scoring does not need them.
+- `runs/weekN/sweep.log`, `runs/week5/week5.log`, `runs/week6/week6.log` and `runs/orchestrate.log`: the time-stamped accuracy and wall time of every evaluation, and every pipeline step and failure.
+- `runs/smoke*/` and `runs/dryrun/`: the pipeline smoke tests and dry runs (reduced test sets; not used for any result). `runs/smoke5/` is round 5's 20-item plumbing test, and `runs/smoke6/` round 6's smoke run on 20 validation items per evaluation.
 - `runs/**/analysis*.json`, `runs/weekN/mechanism-*.json`, `runs/weekN/summary.json`, `runs/weekN/verdicts.json`, `runs/week1/confirmatory.json`, `runs/kld/`, `runs/bpw/`: the computed results.
 - `runs/revision/revision.json`: every number the paper reports that is in none of the files above: absolute accuracy, accuracy-retention intervals, the base-free check of the ten replication tests, update norms, predictor baselines, the measurement bands, the 168-of-192 count, the Spearman values, drift counts, the noise floor, confidence strata, validation losses and the list of fine-tunes. `runs/revision/week4-norms.json` caches the round-4 update norms, which are computed from adapter weights that are not included.
 - `RESULTS-week1.md` to `RESULTS-week4.md`: the results write-up after each round. `NOTEBOOK.md`: the lab notebook, written as the runs happened.
@@ -126,21 +125,22 @@ This is an anonymized copy of the project files behind the submission. Round n i
 
 ## Names used in the files
 
-- Configurations are `<base>-<kind>`. Bases: `q06` Qwen3-0.6B, `q17` Qwen3-1.7B, `q4b` Qwen3-4B and `olmo1` OLMo-2 1B, all on banking77, and `mas06` Qwen3-0.6B on MASSIVE. Kinds: `lora` is the LoRA at learning rate 1e-4 (strong), `lora-lowlr` the LoRA at 1e-5 (gentle), `full` full fine-tuning at 1e-5, and `-lrXeY` another learning rate; `-s1` marks seed 1 and `-base` the base model. In round 5, `q06q4-*` and `q06q3-*` are LoRAs trained on the Qwen3-0.6B base already quantized to MLX 4 and 3 bits.
-- Formats: `mlx-bf16` and `mlx-qN` (MLX affine, group 64, N bits); `gguf-bf16` and `gguf-<TYPE>` (llama.cpp types such as `gguf-Q3_K_M`). Suffixes: `-unfused` is an adapter loaded on top of the quantized base, `-qlora` an adapter trained on that quantized base, `-labels` a GGUF run whose outputs were restricted to the 77 intent names, and `-npN` a llama-server run with N parallel slots.
+- Configurations are `<base>-<kind>`. Bases: `q06` Qwen3-0.6B, `q17` Qwen3-1.7B, `q4b` Qwen3-4B and `olmo1` OLMo-2 1B, all on banking77, and `mas06` Qwen3-0.6B on MASSIVE. Kinds: `lora` is the LoRA at learning rate 1e-4 (strong), `lora-lowlr` the LoRA at 1e-5 (gentle), `full` full fine-tuning at 1e-5, and `-lrXeY` another learning rate; `-s1` marks seed 1 and `-base` the base model. In round 5, `q06q4-*` and `q06q3-*` are LoRAs trained on the Qwen3-0.6B base already quantized to MLX 4 and 3 bits. In round 6, `q06-def-lowlr` and `q06-def` are LoRAs at 1e-5 and 1e-4 trained with mlx-lm's defaults, `q06dq3-*` and `q06dq2-*` are LoRAs trained on the dequantized weights of the base Q3_K_M and Q2_K files, and `runs/week6/q06-lora*` and `runs/week6/olmo1-lora*` hold round-6 evaluations of the round-1 and round-3 LoRAs.
+- Formats: `mlx-bf16` and `mlx-qN` (MLX affine, group 64, N bits); `gguf-bf16` and `gguf-<TYPE>` (llama.cpp types such as `gguf-Q3_K_M`). Suffixes: `-unfused` is an adapter loaded on top of the quantized base, `-qlora` an adapter trained on that quantized base, `-labels` a GGUF run whose outputs were restricted to the 77 intent names, and `-npN` a llama-server run with N parallel slots. In round 6, `-im` is a GGUF file quantized with an importance matrix, `-lora` an adapter applied by llama-server at load time, `-lora0` an adapter loaded at scale 0 (not applied), and `-valid` an evaluation on the 499 validation items.
 - Fields: `retention` is gain retention R, `signal_retained` is update kept, `noise_to_signal` is NSR, `delta_norm` is the update norm and `kld` or `KLD_base` is base damage, in nats per token.
 
 ## Checking the pre-registrations
 
-    shasum -a 256 PREREGISTRATION.md PREREGISTRATION-week2.md PREREGISTRATION-week3.md PREREGISTRATION-week4.md PREREGISTRATION-week5.md
+    shasum -a 256 PREREGISTRATION.md PREREGISTRATION-week2.md PREREGISTRATION-week3.md PREREGISTRATION-week4.md PREREGISTRATION-week5.md PREREGISTRATION-week6.md
+    shasum -a 256 src/ftquant/verdicts_w6.py
     shasum -a 256 records/prereg-originals/*.md
     shasum -a 256 runs/predictor/predictor-v1.json runs/predictor/predictor-v2.json
 
-Each plan's hash equals the last line of its log in `runs/week1/`, and each file in `records/prereg-originals/` equals the first line; the builder checks both. Predictor v1's hash and freeze time are logged in `runs/predictor/predictor-v1.sha256`; v2's full hash is quoted in `PREREGISTRATION-week3.md` and `PREREGISTRATION-week4.md`. Both match the prefixes in the paper (v1 `5df7d620`, v2 `6fd78627`).
+Each plan's hash equals the last line of its log in `runs/week1/` that names it, and each file in `records/prereg-originals/` equals the first such line; `src/ftquant/verdicts_w6.py` equals the line of `PREREG-week6.sha256` that names it. The builder checks all of these. Predictor v1's hash and freeze time are logged in `runs/predictor/predictor-v1.sha256`; v2's full hash is quoted in `PREREGISTRATION-week3.md` and `PREREGISTRATION-week4.md`. Both match the prefixes in the paper (v1 `5df7d620`, v2 `6fd78627`).
 
 ## What was anonymized
 
-Local file paths were replaced by `.` (the project root) or `~` (the home folder). Version-control commit identifiers were replaced by `[commit]`, and two notebook sentences that pointed to the private version history now point to the hash logs instead. One notebook entry about rewriting the version history was shortened to leave out where the history is hosted. Two notebook sentences that named the local tooling in use were generalized. The per-item archives were re-packed with anonymous file owners and without macOS metadata files. No result, number or timestamp was changed. The plans, their hash logs and the predictor files are byte-identical to the originals, so their hashes verify.
+Local file paths were replaced by `.` (the project root) or `~` (the home folder). Version-control commit identifiers were replaced by `[commit]`, and two notebook sentences that pointed to the private version history now point to the hash logs instead. One notebook entry about rewriting the version history was shortened to leave out where the history is hosted. Two notebook sentences that named the local tooling in use were generalized. The per-item archives were re-packed with anonymous file owners and without macOS metadata files. No result, number or timestamp was changed. The plans, their hash logs, the round-6 analysis code and the predictor files are byte-identical to the originals, so their hashes verify.
 
 ## Re-scoring from the archived predictions
 
@@ -160,10 +160,11 @@ This needs no model, no GPU and no llama.cpp: only Python 3 with numpy, plus PyY
     python3 -m ftquant.verdicts_w4
     python3 -m ftquant.week4
     python3 -m ftquant.verdicts_w5
+    python3 -m ftquant.verdicts_w6
     python3 -m ftquant.revision
     python3 -m ftquant.findings --check
 
-These overwrite the shipped result files with regenerated ones, which should match them. Without the adapter weights, `ftquant.revision` reads the round-4 update norms from `runs/revision/week4-norms.json` and says so. The last command recomputes every number quoted in the paper, from the per-item predictions, the run logs and the files above, and exits with an error unless `runs/findings/findings.json` matches the recomputation byte for byte.
+These overwrite the shipped result files with regenerated ones, which match them with one exception: without the adapter weights, `ftquant.verdicts_w6` writes `null` for the update norms of the two LoRAs trained with mlx-lm's defaults, which the shipped `runs/week6/verdicts.json` gives as 14.27 and 66.62, and `ftquant.findings` then reads them from `runs/week6/update-norms.json`. Likewise, `ftquant.revision` reads the round-4 update norms from `runs/revision/week4-norms.json` and says so. The last command recomputes every number quoted in the paper, from the per-item predictions, the run logs and the files above, and exits with an error unless `runs/findings/findings.json` matches the recomputation byte for byte.
 
 ## Rebuilding the paper's tables and figures
 
@@ -180,6 +181,7 @@ These overwrite the shipped result files with regenerated ones, which should mat
 | Accuracy-retention table | `pattern` | `runs/revision/revision.json` |
 | Measurement bands table | `bands` | `runs/revision/revision.json` |
 | Round-5 table | `round5` | `runs/week5/verdicts.json` |
+| Round-6 table | `round6` | `runs/week6/verdicts.json`, and for the post hoc intervals `runs/week6/*/eval/*.jsonl` through `src/ftquant/posthoc_w6.py` |
 | Predictor tests table | `predictor` | `runs/predictor/verdicts.json`, `runs/week3/verdicts.json`, `runs/week4/verdicts.json`, `runs/week4/summary.json` |
 | Predictor baselines table | `baselines` | `runs/revision/revision.json` |
 | Absolute accuracy table | `absolute` | `runs/revision/revision.json` |
@@ -195,15 +197,16 @@ Every number quoted in the text is in `runs/findings/findings.json`: `values` gi
 
 ## Re-running the study
 
-Everything ran on one Apple silicon laptop with 16 GB of memory: about 51 hours for rounds 1 to 4 and 14.5 hours for round 5, including a stalled run that was restarted (see the deviation in `PREREGISTRATION-week5.md`).
+Everything ran on one Apple silicon laptop with 16 GB of memory: about 51 hours for rounds 1 to 4, 14.5 hours for round 5, including a stalled run that was restarted (see the deviation in `PREREGISTRATION-week5.md`), and 5.7 hours of running time for round 6, in three sessions separated by two stops at its free-disk rule (see `PREREGISTRATION-week6.md`).
 
 1. `sh scripts/fetch_llama_cpp.sh` fetches llama.cpp's converter and `gguf-py` at commit 7fe450e19. Run it before `uv sync`, because `gguf-py` is a workspace member.
 2. `uv sync` installs the environment from `uv.lock`.
 3. `sh scripts/fetch_data.sh` downloads banking77 and MASSIVE from their original sources, checks their SHA-256 hashes and builds the splits.
-4. Put `llama-server` and `llama-quantize` from llama.cpp build 11146 (commit 7fe450e19) on `PATH`, for example Homebrew's llama.cpp 0.5.0. The orchestrators set `PATH` to `/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin`; edit that line elsewhere.
+4. Put `llama-server`, `llama-quantize` and, for round 6, `llama-imatrix` from llama.cpp build 11146 (commit 7fe450e19) on `PATH`, for example Homebrew's llama.cpp 0.5.0. The orchestrators set `PATH` to `/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin`; edit that line elsewhere.
 5. Round 1 and 2: `PYTHONPATH=src uv run python -m ftquant.sweep --plan week1`, then `PYTHONPATH=src uv run python -m ftquant.orchestrate`, which waits for that sweep and runs the base-damage, mechanism, predictor and round-2 steps.
 6. Rounds 3 and 4: `PYTHONPATH=src uv run python -m ftquant.orchestrate_w3`, then `PYTHONPATH=src uv run python -m ftquant.orchestrate_w4`.
 7. Round 5: `PYTHONPATH=src uv run python -m ftquant.week5`. It needs the round-1, round-3 and round-4 adapters, which are not included here, so it re-runs only after steps 5 and 6.
+8. Round 6: in a copy without the shipped `runs/week6/`, `PYTHONPATH=src uv run python -m ftquant.week6`. It needs the round-1 and round-3 adapters (not included), llama.cpp build 11146 and mlx-lm 0.31.3, and stops if either version differs or if free disk falls below 10 GB. Importance matrices and the files quantized with them record local paths, so their hashes will differ from the ones in `runs/week6/`.
 
 Each step skips outputs that already exist, so an interrupted run can be resumed with the same command.
 
@@ -301,19 +304,22 @@ def repack(data: bytes, links: list[tuple[str, str]]) -> bytes:
 
 def check_plan_hashes() -> None:
     for plan, log in PLAN_LOGS.items():
-        logged = [
-            line.split()[0]
+        rows = [
+            line.split()
             for line in (ROOT / log).read_text().splitlines()
             if line.strip()
         ]
-        first = hashlib.sha256(
-            (ROOT / "records/prereg-originals" / plan).read_bytes()
-        ).hexdigest()
-        last = hashlib.sha256((ROOT / plan).read_bytes()).hexdigest()
-        assert (
-            first == logged[0]
-        ), f"{plan}: first-hashed version does not match its log"
-        assert last == logged[-1], f"{plan}: current version does not match its log"
+        for name in {r[1] for r in rows}:
+            logged = [r[0] for r in rows if r[1] == name]
+            last = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+            assert last == logged[-1], f"{name}: current version does not match its log"
+            if name == plan:
+                first = hashlib.sha256(
+                    (ROOT / "records/prereg-originals" / plan).read_bytes()
+                ).hexdigest()
+                assert (
+                    first == logged[0]
+                ), f"{plan}: first-hashed version does not match its log"
 
 
 def main() -> None:

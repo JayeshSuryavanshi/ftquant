@@ -1,0 +1,23 @@
+\multicolumn{6}{l}{\emph{Qwen3-0.6B LoRA shipped as GGUF; values are $S$ / $R$ of the bf16-trained LoRA, fused and quantized}} \\
+W6-H1 & $10^{-5}$ & Q3\_K\_M & trained on the shipped weights & $0.986$ / $0.795$ & $+0.089$ [$+0.071$, $+0.108$] \\
+W6-H2 & $10^{-5}$ & Q3\_K\_M & adapter at load time & $0.733$ / $0.795$ & ${-}0.164$ [${-}0.183$, ${-}0.146$] \\
+contrast & $10^{-5}$ & Q3\_K\_M & trained minus load time & $0.986$ / $0.733$ & $+0.253$ [$+0.229$, $+0.279$] \\
+exploratory & $10^{-4}$ & Q3\_K\_M & trained on the shipped weights & $0.895$ / $1.010$ & ${-}0.115$ [${-}0.137$, ${-}0.094$] \\
+exploratory & $10^{-4}$ & Q3\_K\_M & adapter at load time & $1.010$ / $1.010$ & $+0.000$ [${-}0.015$, $+0.014$] \\
+exploratory & $10^{-5}$ & Q2\_K & trained on the shipped weights & $0.947$ / $0.000$ & $+0.947$ [$+0.922$, $+0.975$] \\
+exploratory & $10^{-5}$ & Q2\_K & adapter at load time & $0.000$ / $0.000$ & $+0.000$ [$+0.000$, $+0.000$] \\
+exploratory & $10^{-4}$ & Q2\_K & trained on the shipped weights & $1.024$ / $0.868$ & $+0.156$ [$+0.131$, $+0.182$] \\
+exploratory & $10^{-4}$ & Q2\_K & adapter at load time & $0.842$ / $0.868$ & ${-}0.026$ [${-}0.052$, $+0.001$] \\
+\addlinespace
+\multicolumn{6}{l}{\emph{Qwen3-0.6B LoRAs trained with mlx-lm's defaults; values are $R(10^{-4})$ / $R(10^{-5})$, the statistic their difference}} \\
+W6-H3 & both & Q3\_K\_M & mlx-lm defaults & $0.861$ / $0.382$ & $+0.479$ [$+0.449$, $+0.509$] \\
+W6-H3 & both & MLX 4-bit & mlx-lm defaults & $0.909$ / $0.650$ & $+0.259$ [$+0.231$, $+0.286$] \\
+exploratory & both & MLX 3-bit & mlx-lm defaults & $0.004$ / $0.000$ & $+0.004$ [$+0.002$, $+0.007$] \\
+exploratory & both & Q4\_K\_M & mlx-lm defaults & $0.934$ / $0.849$ & $+0.085$ [$+0.063$, $+0.107$] \\
+exploratory & both & Q2\_K & mlx-lm defaults & $0.000$ / $0.000$ & $+0.000$ [$+0.000$, $+0.000$] \\
+\addlinespace
+\multicolumn{6}{l}{\emph{Gap $R(10^{-4}) - R(10^{-5})$ without / with an importance matrix; the statistic is the second gap minus half the first}} \\
+W6-H4 & both & Q3\_K\_M & Qwen3-0.6B & $0.215$ / $0.146$ & $+0.038$ [$+0.019$, $+0.057$] \\
+W6-H4 & both & Q3\_K\_M & OLMo-2 1B & $0.059$ / $0.034$ & $+0.005$ [${-}0.011$, $+0.021$] \\
+exploratory & both & Q2\_K & Qwen3-0.6B & $0.868$ / $0.652$ & $+0.218$ [$+0.191$, $+0.245$] \\
+exploratory & both & Q2\_K & OLMo-2 1B & $0.497$ / $0.347$ & $+0.099$ [$+0.071$, $+0.126$] \\
